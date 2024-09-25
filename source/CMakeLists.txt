@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 add_library(
     elecstruct_elecstruct
     elecstruct.cpp
+    input_file_parser.cpp
 )
 add_library(
     elecstruct::elecstruct
@@ -43,6 +44,7 @@ target_include_directories(
     ${warning_guard}
     PUBLIC
     "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+    "$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/extern>"
 )
 
 target_include_directories(

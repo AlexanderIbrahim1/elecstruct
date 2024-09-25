@@ -27,4 +27,6 @@ target_include_directories(
     SYSTEM PRIVATE "${EIGEN_PATH}"
 )
 
+add_example(input_file_parser_example)
+
 add_folders(Example)

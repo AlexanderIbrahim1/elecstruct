@@ -2,6 +2,7 @@
 
 #include <string>
 
+#include "elecstruct/input_file_parser.hpp"
 #include "elecstruct/elecstruct_export.hpp"
 
 /**
