@@ -3,6 +3,8 @@ This source file contains the InputFileParser class, which parses a toml file to
 the input for the electronic structure calculation.
 */
 
+#include <iostream>
+
 #include <filesystem>
 #include <iosfwd>
 #include <stdexcept>
@@ -73,22 +75,22 @@ void InputFileParser::parse_atoms_(const toml::table& table)
             throw std::runtime_error("Each row needs 4 elements; the atom ID, and the three Cartesian coordinates.");
         }
 
-        const auto atom_name = atom_and_positions[0].value<std::string>();
+        const auto atom_name = atom_and_positions->at(0).value<std::string>();
         if (!atom_name) {
             throw std::runtime_error("Failed to parse the atom name.");
         }
 
-        const auto atom_x_position = atom_and_positions[1].value<double>();
+        const auto atom_x_position = atom_and_positions->at(1).value<double>();
         if (!atom_x_position) {
             throw std::runtime_error("Failed to parse the x-position of the atom.");
         }
 
-        const auto atom_y_position = atom_and_positions[2].value<double>();
+        const auto atom_y_position = atom_and_positions->at(2).value<double>();
         if (!atom_y_position) {
             throw std::runtime_error("Failed to parse the y-position of the atom.");
         }
 
-        const auto atom_z_position = atom_and_positions[3].value<double>();
+        const auto atom_z_position = atom_and_positions->at(3).value<double>();
         if (!atom_z_position) {
             throw std::runtime_error("Failed to parse the z-position of the atom.");
         }
