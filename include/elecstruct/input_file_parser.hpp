@@ -1,7 +1,4 @@
-/*
-This source file contains the InputFileParser class, which parses a toml file to get
-the input for the electronic structure calculation.
-*/
+#pragma once
 
 #include <filesystem>
 #include <sstream>
@@ -10,6 +7,11 @@ the input for the electronic structure calculation.
 #include <vector>
 
 #include <tomlplusplus/toml.hpp>
+
+/*
+This source file contains the InputFileParser class, which parses a toml file to get
+the input for the electronic structure calculation.
+*/
 
 namespace elec
 {
@@ -35,8 +37,8 @@ class InputFileParser
 public:
     explicit InputFileParser(std::istream& toml_stream);
 
-    constexpr auto error_message() const noexcept -> std::string;
-    constexpr auto is_valid() const noexcept -> bool;
+    auto error_message() const noexcept -> std::string;
+    auto is_valid() const noexcept -> bool;
 
     std::vector<AtomInfo> atom_information;
 

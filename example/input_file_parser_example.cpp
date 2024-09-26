@@ -6,6 +6,16 @@
 #include <sstream>
 
 #include "elecstruct/elecstruct.hpp"
+#include "elecstruct/input_file_parser.hpp"
+
+// auto main() -> int {
+//     auto const exported = exported_class {};
+//     std::cout << exported.name() << '\n';
+// 
+//     std::cout << get_message() << '\n';
+// 
+//     return 0;
+// }
 
 
 auto main() -> int {
@@ -17,6 +27,7 @@ auto main() -> int {
 
     if (!parser.is_valid()) {
         std::cout << "Unable to parse the input file\n";
+        std::cout << parser.error_message() << '\n';
         std::exit(EXIT_FAILURE);
     }
 

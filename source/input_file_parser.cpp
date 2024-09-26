@@ -11,7 +11,7 @@ the input for the electronic structure calculation.
 
 #include <tomlplusplus/toml.hpp>
 
-#include <elecstruct/input_file_parser.hpp>
+#include "elecstruct/input_file_parser.hpp"
 
 namespace elec
 {
@@ -21,12 +21,12 @@ InputFileParser::InputFileParser(std::istream& toml_stream)
     parse_helper_(toml_stream);
 }
 
-constexpr auto InputFileParser::is_valid() const noexcept -> bool
+auto InputFileParser::is_valid() const noexcept -> bool
 {
     return parse_success_flag_;
 }
 
-constexpr auto InputFileParser::error_message() const noexcept -> std::string
+auto InputFileParser::error_message() const noexcept -> std::string
 {
     return error_message_;
 }
