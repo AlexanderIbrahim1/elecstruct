@@ -1,10 +1,11 @@
 #include <string>
 
+#include <catch2/catch_test_macros.hpp>
+
 #include "elecstruct/elecstruct.hpp"
 
-auto main() -> int
+TEST_CASE("elecstruct test")
 {
-  auto const exported = exported_class {};
-
-  return std::string("elecstruct") == exported.name() ? 0 : 1;
+    const auto exported = exported_class {};
+    REQUIRE(exported.name() == std::string {"elecstruct"});
 }
