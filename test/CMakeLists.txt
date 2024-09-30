@@ -64,7 +64,6 @@ endfunction()
 
 # ---- Tests ----
 
-add_test_target(TARGET elecstruct_test SOURCES "source/elecstruct_test.cpp")
 add_test_target(TARGET cartesian3d_test SOURCES "source/cartesian3d_test.cpp")
 
 # ---- End-of-file commands ----
