@@ -1,7 +1,8 @@
 #include <iostream>
 #include <Eigen/Dense>
 
-auto main() -> int {
+auto main() -> int
+{
     // Define a 2x2 matrix
     Eigen::Matrix2d mat;
     mat(0, 0) = 3;
@@ -21,4 +22,3 @@ auto main() -> int {
 
     return 0;
 }
-

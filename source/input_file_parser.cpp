@@ -64,7 +64,7 @@ void InputFileParser::parse_atoms_(const toml::table& table)
 
     atom_information.reserve(atom_info->size());
 
-    for (auto&& atom_info_node: *atom_info) {
+    for (auto&& atom_info_node : *atom_info) {
         const auto atom_and_positions = atom_info_node.as_array();
 
         if (!atom_and_positions) {

@@ -9,7 +9,6 @@
     Cartesian space.
 */
 
-
 namespace coord
 {
 
@@ -135,6 +134,5 @@ auto operator/(Cartesian3D point, Number other) -> Cartesian3D
     point /= other;
     return point;
 }
-
 
 }  // namespace coord

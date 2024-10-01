@@ -4,8 +4,6 @@
 
 #include "cartesian3d.hpp"
 
-
-
 namespace coord
 {
 

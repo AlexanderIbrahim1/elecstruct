@@ -1,8 +1,8 @@
 // TODO: put this into a unit test instead
 
-#include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
 #include "elecstruct/elecstruct.hpp"
@@ -11,14 +11,14 @@
 // auto main() -> int {
 //     auto const exported = exported_class {};
 //     std::cout << exported.name() << '\n';
-// 
+//
 //     std::cout << get_message() << '\n';
-// 
+//
 //     return 0;
 // }
 
-
-auto main() -> int {
+auto main() -> int
+{
     namespace fs = std::filesystem;
 
     const auto path = fs::path {"/home/a68ibrah/research/elecstruct/playground/example_input_file.toml"};
