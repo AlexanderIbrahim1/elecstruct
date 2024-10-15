@@ -8,6 +8,8 @@
 
 #include <tomlplusplus/toml.hpp>
 
+#include "elecstruct/atoms.hpp"
+
 /*
 This source file contains the InputFileParser class, which parses a toml file to get
 the input for the electronic structure calculation.
@@ -15,22 +17,6 @@ the input for the electronic structure calculation.
 
 namespace elec
 {
-
-enum class AtomLabel
-{
-    H,
-    C,
-    N,
-    O
-};
-
-struct AtomInfo
-{
-    std::string label;
-    double x;
-    double y;
-    double z;
-};
 
 class InputFileParser
 {

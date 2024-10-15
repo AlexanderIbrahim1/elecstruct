@@ -13,6 +13,7 @@ the input for the electronic structure calculation.
 
 #include <tomlplusplus/toml.hpp>
 
+#include "elecstruct/atoms.hpp"
 #include "elecstruct/input_file_parser.hpp"
 
 namespace elec
@@ -80,6 +81,8 @@ void InputFileParser::parse_atoms_(const toml::table& table)
             throw std::runtime_error("Failed to parse the atom name.");
         }
 
+        const auto atom_label = atom_label_from_name(atom_name->c_str());
+
         const auto atom_x_position = atom_and_positions->at(1).value<double>();
         if (!atom_x_position) {
             throw std::runtime_error("Failed to parse the x-position of the atom.");
@@ -95,7 +98,7 @@ void InputFileParser::parse_atoms_(const toml::table& table)
             throw std::runtime_error("Failed to parse the z-position of the atom.");
         }
 
-        atom_information.emplace_back(*atom_name, *atom_x_position, *atom_y_position, *atom_z_position);
+        atom_information.emplace_back(atom_label, *atom_x_position, *atom_y_position, *atom_z_position);
     }
 }
 

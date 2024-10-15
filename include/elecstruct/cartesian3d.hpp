@@ -103,13 +103,13 @@ struct Cartesian3D
     }
 };
 
-auto operator+(Cartesian3D left, const Cartesian3D& right) noexcept -> Cartesian3D
+inline auto operator+(Cartesian3D left, const Cartesian3D& right) noexcept -> Cartesian3D
 {
     left += right;
     return left;
 }
 
-auto operator-(Cartesian3D left, const Cartesian3D& right) noexcept -> Cartesian3D
+inline auto operator-(Cartesian3D left, const Cartesian3D& right) noexcept -> Cartesian3D
 {
     left -= right;
     return left;
@@ -136,7 +136,7 @@ auto operator/(Cartesian3D point, Number other) -> Cartesian3D
     return point;
 }
 
-auto almost_equals(
+inline auto almost_equals(
     const Cartesian3D& point0,
     const Cartesian3D& point1,
     double distance_sq_tolerance = ALMOST_EQUALS_DISTANCE_SQ_TOLERANCE

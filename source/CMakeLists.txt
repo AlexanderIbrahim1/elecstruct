@@ -5,7 +5,9 @@ cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 add_library(
     elecstruct_elecstruct
     elecstruct.cpp
+    geometry.cpp
     input_file_parser.cpp
+    atoms/atoms_mapper.cpp
 )
 add_library(
     elecstruct::elecstruct
