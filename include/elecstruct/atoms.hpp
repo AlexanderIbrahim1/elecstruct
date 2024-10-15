@@ -8,9 +8,14 @@ namespace elec
 enum class AtomLabel
 {
     H,
+    He,
+    Li,
+    Be,
+    B,
     C,
     N,
-    O
+    O,
+    F
 };
 
 struct AtomInfo

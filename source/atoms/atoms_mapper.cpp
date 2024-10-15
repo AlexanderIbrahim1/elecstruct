@@ -28,9 +28,14 @@ struct AtomMapEntry
 
 constexpr AtomMapEntry atom_names_and_labels[] = {
     {"H", AL::H},
+    {"He", AL::He},
+    {"Li", AL::Li},
+    {"Be", AL::Be},
+    {"B", AL::B},
     {"C", AL::C},
     {"N", AL::N},
-    {"O", AL::O}
+    {"O", AL::O},
+    {"F", AL::F}
 };
 
 }  // anonymous namespace
