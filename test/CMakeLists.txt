@@ -69,6 +69,7 @@ add_test_target(TARGET grid2d_test SOURCES "source/grid2d_test.cpp")
 add_test_target(TARGET grid3d_test SOURCES "source/grid3d_test.cpp")
 add_test_target(TARGET grid4d_test SOURCES "source/grid4d_test.cpp")
 add_test_target(TARGET geometry_test SOURCES "source/geometry_test.cpp")
+add_test_target(TARGET integrals_test SOURCES "source/integrals_test.cpp")
 
 # ---- End-of-file commands ----
 
