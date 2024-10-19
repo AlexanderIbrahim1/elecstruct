@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "elecstruct/atoms.hpp"
+#include "elecstruct/atoms/atoms.hpp"
 #include "elecstruct/elecstruct.hpp"
 #include "elecstruct/input_file_parser.hpp"
 
@@ -26,7 +26,7 @@ auto main() -> int
     for (const auto& atom_info : parser.atom_information) {
         const auto atom_name = elec::atom_name_from_label(atom_info.label);
         std::cout << atom_name << " : ";
-        std::cout << atom_info.x << ", " << atom_info.y << ", " << atom_info.z << '\n';
+        std::cout << atom_info.position.x << ", " << atom_info.position.y << ", " << atom_info.position.z << '\n';
     }
 
     return 0;

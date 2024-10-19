@@ -13,7 +13,7 @@ the input for the electronic structure calculation.
 
 #include <tomlplusplus/toml.hpp>
 
-#include "elecstruct/atoms.hpp"
+#include "elecstruct/atoms/atoms.hpp"
 #include "elecstruct/input_file_parser.hpp"
 
 namespace elec
@@ -53,6 +53,8 @@ void InputFileParser::parse_helper_(std::istream& toml_stream)
 
 void InputFileParser::parse_atoms_(const toml::table& table)
 {
+    using EmptyOrbitalVector = std::vector<AtomicOrbitalLabel>;
+
     const auto atom_info = table["positions"].as_array();
 
     if (!atom_info) {
@@ -98,7 +100,9 @@ void InputFileParser::parse_atoms_(const toml::table& table)
             throw std::runtime_error("Failed to parse the z-position of the atom.");
         }
 
-        atom_information.emplace_back(atom_label, *atom_x_position, *atom_y_position, *atom_z_position);
+        const auto position = coord::Cartesian3D {*atom_x_position, *atom_y_position, *atom_z_position};
+
+        atom_information.emplace_back(atom_label, position, EmptyOrbitalVector {});
     }
 }
 
