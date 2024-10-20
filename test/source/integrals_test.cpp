@@ -4,8 +4,8 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
-#include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/basis/gaussian_info.hpp"
+#include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/integrals/integrals.hpp"
 
 constexpr auto ABS_TOL = double {1.0e-8};
@@ -16,8 +16,8 @@ TEST_CASE("gaussian product")
     {
         const auto centre0 = coord::Cartesian3D {1.0, 0.0, 0.0};
         const auto centre1 = coord::Cartesian3D {-1.0, 0.0, 0.0};
-        const auto info0 = elec::GaussianInfo {2.0, 1.0/2.0};
-        const auto info1 = elec::GaussianInfo {3.0, 1.0/3.0};
+        const auto info0 = elec::GaussianInfo {2.0, 1.0 / 2.0};
+        const auto info1 = elec::GaussianInfo {3.0, 1.0 / 3.0};
 
         const auto expected_centre = coord::Cartesian3D {0.2, 0.0, 0.0};
         const auto expected_coefficient = double {2.6959737847};

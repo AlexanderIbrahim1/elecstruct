@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <cstdint>
 #include <vector>
 
 namespace elec
@@ -27,9 +28,9 @@ enum class AtomicOrbitalLabel
 */
 struct AngularMomentumNumbers
 {
-    std::size_t x;
-    std::size_t y;
-    std::size_t z;
+    std::uint64_t x;
+    std::uint64_t y;
+    std::uint64_t z;
 };
 
 inline auto atomic_orbitals_to_angular_momentum_numbers(AtomicOrbitalLabel label) -> std::vector<AngularMomentumNumbers>
