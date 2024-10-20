@@ -69,12 +69,12 @@ inline auto gaussian_product(
     };
 }
 
-inline auto gaussian_norm(const elec::AngularMomentumNumbers& angular_momenta, const elec::GaussianInfo& info) -> double
+inline auto gaussian_norm(const elec::AngularMomentumNumbers& angular_momenta, double gauss_exponent) -> double
 {
-    const auto ang_mom_sum = static_cast<double>(angular_momenta.x + angular_momenta.y + angular_momenta.z);
+    const auto ang_mom_sum = static_cast<double>(total_angular_momentum(angular_momenta));
 
-    const auto gauss1d_component = std::pow(2.0 * info.exponent / M_PI, 3.0 / 4.0);
-    const auto ang_mom_numerator = std::pow(4.0 * info.exponent, ang_mom_sum / 2.0);
+    const auto gauss1d_component = std::pow(2.0 * gauss_exponent / M_PI, 3.0 / 4.0);
+    const auto ang_mom_numerator = std::pow(4.0 * gauss_exponent, ang_mom_sum / 2.0);
 
     // NOTE: maybe the behaviour of scipy changed since the reference was created?
     // - the author used `scipy.misc.factorial2()`, which returns 0 for negative numbers (according to docs I've seen)

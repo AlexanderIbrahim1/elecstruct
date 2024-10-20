@@ -17,7 +17,7 @@ namespace grid
 class Grid2D
 {
 public:
-    Grid2D(std::vector<double> data, std::size_t size0, std::size_t size1)
+    constexpr Grid2D(std::vector<double> data, std::size_t size0, std::size_t size1)
         : data_ {std::move(data)}
         , size0_ {size0}
         , size1_ {size1}
@@ -26,7 +26,7 @@ public:
         check_grid_sizes_();
     }
 
-    Grid2D(std::size_t size0, std::size_t size1)
+    constexpr Grid2D(std::size_t size0, std::size_t size1)
         : data_ {}
         , size0_ {size0}
         , size1_ {size1}
@@ -35,13 +35,13 @@ public:
         data_.resize(n_elements_);
     }
 
-    auto get(std::size_t i0, std::size_t i1) const noexcept -> double
+    constexpr auto get(std::size_t i0, std::size_t i1) const noexcept -> double
     {
         const auto idx = index_(i0, i1);
         return data_[idx];
     }
 
-    void set(std::size_t i0, std::size_t i1, double value) noexcept
+    constexpr void set(std::size_t i0, std::size_t i1, double value) noexcept
     {
         const auto idx = index_(i0, i1);
         data_[idx] = value;
@@ -69,7 +69,7 @@ public:
         data_[idx] = value;
     }
 
-    auto sizes() const noexcept -> std::tuple<std::size_t, std::size_t>
+    constexpr auto sizes() const noexcept -> std::tuple<std::size_t, std::size_t>
     {
         return {size0_, size1_};
     }
@@ -80,23 +80,18 @@ private:
     std::size_t size1_;
     std::size_t n_elements_;
 
-    auto index_(std::size_t i0, std::size_t i1) const noexcept -> std::size_t
+    constexpr auto index_(std::size_t i0, std::size_t i1) const noexcept -> std::size_t
     {
         return i1 + i0 * size1_;
     }
 
-    void check_grid_sizes_() const
+    constexpr void check_grid_sizes_() const
     {
         const auto actual_n_elements = data_.size();
         const auto expected_n_elements = size0_ * size1_;
 
         if (actual_n_elements != expected_n_elements) {
-            auto err_msg = std::stringstream {};
-            err_msg << "Attempt to create Grid2D instance with inconsistent sizes.\n";
-            err_msg << "actual number of elements in data: " << actual_n_elements << '\n';
-            err_msg << "expected number of elements based on sizes passed: " << expected_n_elements << '\n';
-
-            throw std::runtime_error {err_msg.str()};
+            throw std::runtime_error {"Attempt to create Grid2D instance with inconsistent sizes.\n"};
         }
     }
 

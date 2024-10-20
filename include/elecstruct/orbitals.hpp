@@ -54,4 +54,13 @@ inline auto atomic_orbitals_to_angular_momentum_numbers(AtomicOrbitalLabel label
     }
 }
 
+/*
+    The total angular momentum is required frequently enough that we may as well create
+    a convenience function to calculate it.
+*/
+inline auto total_angular_momentum(const AngularMomentumNumbers& ang_mom_nums) -> std::uint64_t
+{
+    return ang_mom_nums.x + ang_mom_nums.y + ang_mom_nums.z;
+}
+
 }  // namespace elec
