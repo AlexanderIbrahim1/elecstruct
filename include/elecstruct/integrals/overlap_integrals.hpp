@@ -4,110 +4,65 @@
 #include <cstdint>
 
 #include "elecstruct/integrals/integrals.hpp"
-
-namespace impl_elec
-{
-
-template <typename T, std::size_t SIZE0, std::size_t SIZE1>
-class CompileTimeSquareGrid2D
-{
-public:
-    using Data = std::array<T, SIZE0 * SIZE1>;
-
-    constexpr CompileTimeSquareGrid2D(const Data& data)
-        : data_ {data}
-    {}
-
-    constexpr auto at(std::size_t i0, std::size_t i1) const noexcept -> const T&
-    {
-        return data_[index(i0, i1)];
-    }
-
-    constexpr auto at(std::size_t i0, std::size_t i1) noexcept -> T&
-    {
-        return data_[index(i0, i1)];
-    }
-
-    constexpr auto size0() const noexcept -> std::size_t
-    {
-        return SIZE0;
-    }
-
-    constexpr auto size1() const noexcept -> std::size_t
-    {
-        return SIZE1;
-    }
-
-private:
-    constexpr auto index(std::size_t i0, std::size_t i1) const noexcept -> std::size_t
-    {
-        return i1 + SIZE0 * i0;
-    }
-
-    Data data_;
-};
-
-/*
-    Angular momenta don't get very large in electronic structure theory, and having a grid
-    to calculate N-choose-K instead of an equation is both faster and probably simpler to
-    understand than having a recursive equation.
-*/
-
-// clang-format off
-constexpr auto N_CHOOSE_K_GRID = CompileTimeSquareGrid2D<std::uint64_t, 11, 11> {
-    {
-    1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-    1,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,
-    1,   2,   1,   0,   0,   0,   0,   0,   0,   0,   0,
-    1,   3,   3,   1,   0,   0,   0,   0,   0,   0,   0,
-    1,   4,   6,   4,   1,   0,   0,   0,   0,   0,   0,
-    1,   5,  10,  10,   5,   1,   0,   0,   0,   0,   0,
-    1,   6,  15,  20,  15,   6,   1,   0,   0,   0,   0,
-    1,   7,  21,  35,  35,  21,   7,   1,   0,   0,   0,
-    1,   8,  28,  56,  70,  56,  28,   8,   1,   0,   0,
-    1,   9,  36,  84, 126, 126,  84,  36,   9,   1,   0,
-    1,  10,  45, 120, 210, 252, 210, 120,  45,  10,   1
-    },
-};
-// clang-format on
-
-}  // namespace impl_elec
+#include "elecstruct/mathtools/factorial.hpp"
+#include "elecstruct/mathtools/n_choose_k.hpp"
 
 namespace elec
 {
 
-struct OverlapIntegralInfo1D
+struct OverlapIntegralGaussianInfo1D
 {
     std::uint64_t angular_momentum;
-    double gaussian_exponent;
-    double centre_coordinate;
+    double exponent;
+    double centre;
 };
 
 inline auto overlap_integral_1d(
-    const OverlapIntegralInfo1D& gaussian0,
-    const OverlapIntegralInfo1D& gaussian1,
+    const OverlapIntegralGaussianInfo1D& gaussian0,
+    const OverlapIntegralGaussianInfo1D& gaussian1,
     double total_centre
 ) -> double
 {
-    if (gaussian0.angular_momentum >= impl_elec::N_CHOOSE_K_GRID.size0()) {
+    if (gaussian0.angular_momentum >= elec::math::N_CHOOSE_K_GRID.size0()) {
         throw std::runtime_error {"Encountered an angular momentum beyond the N-choose-K grid size bounds."};
     }
 
-    if (gaussian1.angular_momentum >= impl_elec::N_CHOOSE_K_GRID.size1()) {
+    if (gaussian1.angular_momentum >= elec::math::N_CHOOSE_K_GRID.size1()) {
         throw std::runtime_error {"Encountered an angular momentum beyond the N-choose-K grid size bounds."};
     }
 
     auto overlap = double {0.0};
+    const auto ang_mom0 = gaussian0.angular_momentum;
+    const auto ang_mom1 = gaussian1.angular_momentum;
 
-    for (std::uint64_t sub_ang_mom0 {0}; sub_ang_mom0 < gaussian0.angular_momentum + 1; ++sub_ang_mom0) {
-        for (std::uint64_t sub_ang_mom1 {0}; sub_ang_mom1 < gaussian1.angular_momentum + 1; ++sub_ang_mom1) {
-            if ((sub_ang_mom0 + sub_ang_mom1) % 2 != 0) {
+    for (std::uint64_t i0 {0}; i0 < ang_mom0 + 1; ++i0) {
+        for (std::uint64_t i1 {0}; i1 < ang_mom1 + 1; ++i1) {
+            if ((i0 + i1) % 2 != 0) {
                 continue;
             }
 
-            
+            const auto choose_term0 = elec::math::N_CHOOSE_K_GRID.at(ang_mom0, i0);
+            const auto choose_term1 = elec::math::N_CHOOSE_K_GRID.at(ang_mom1, i1);
+            const auto factorial_term = elec::math::double_factorial(i0 + i1 - 1);
+
+            const auto gauss_1d_coeff = [&]()
+            {
+                const auto argument = 2.0 * (gaussian0.exponent + gaussian1.exponent);
+                const auto power = 0.5 * static_cast<double>(i0 + i1);
+                return std::pow(argument, power);
+            }();
+
+            const auto gauss0_contrib = std::pow(total_centre - gaussian0.centre, ang_mom0 - i0);
+            const auto gauss1_contrib = std::pow(total_centre - gaussian1.centre, ang_mom1 - i1);
+
+            const auto combinatoric_part = static_cast<double>(choose_term0 * choose_term1 * factorial_term);
+            const auto gaussian_part = gauss0_contrib * gauss1_contrib / gauss_1d_coeff;
+
+            overlap += (combinatoric_part * gaussian_part);
         }
     }
+
+    return overlap;
 }
 
 }  // namespace elec

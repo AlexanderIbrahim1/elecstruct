@@ -1,3 +1,4 @@
+#include <cmath>
 #include <cstdint>
 
 #include <catch2/catch_test_macros.hpp>
@@ -7,34 +8,9 @@
 #include "elecstruct/basis/gaussian_info.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/integrals/integrals.hpp"
+#include "elecstruct/orbitals.hpp"
 
 constexpr auto ABS_TOL = double {1.0e-8};
-
-TEST_CASE("double factorial")
-{
-    struct TestPair
-    {
-        std::uint64_t input;
-        std::uint64_t expected_output;
-    };
-
-    auto pair = GENERATE(
-        TestPair {0, 1},
-        TestPair {1, 1},
-        TestPair {2, 2},
-        TestPair {3, 3 * 1},
-        TestPair {4, 4 * 2},
-        TestPair {5, 5 * 3},
-        TestPair {6, 6 * 4 * 2},
-        TestPair {7, 7 * 5 * 3 * 1},
-        TestPair {8, 8 * 6 * 4 * 2},
-        TestPair {9, 9 * 7 * 5 * 3 * 1},
-        TestPair {10, 10 * 8 * 6 * 4 * 2}
-    );
-
-    const auto actual_output = impl_elec::double_factorial(pair.input);
-    REQUIRE(actual_output == pair.expected_output);
-}
 
 TEST_CASE("gaussian product")
 {
