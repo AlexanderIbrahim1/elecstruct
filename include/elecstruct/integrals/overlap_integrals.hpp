@@ -3,9 +3,12 @@
 #include <array>
 #include <cstdint>
 
+#include "elecstruct/basis/gaussian_info.hpp"
+#include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/integrals/integrals.hpp"
 #include "elecstruct/mathtools/factorial.hpp"
 #include "elecstruct/mathtools/n_choose_k.hpp"
+#include "elecstruct/orbitals.hpp"
 
 namespace elec
 {
@@ -31,7 +34,7 @@ inline auto unnormalized_overlap_integral_1d(
         throw std::runtime_error {"Encountered an angular momentum beyond the N-choose-K grid size bounds."};
     }
 
-    auto overlap = double {0.0};
+    auto unnormalized_overlap = double {0.0};
     const auto ang_mom0 = gaussian0.angular_momentum;
     const auto ang_mom1 = gaussian1.angular_momentum;
 
@@ -58,13 +61,56 @@ inline auto unnormalized_overlap_integral_1d(
             const auto combinatoric_part = static_cast<double>(choose_term0 * choose_term1 * factorial_term);
             const auto gaussian_part = gauss0_contrib * gauss1_contrib / gauss_1d_coeff;
 
-            overlap += (combinatoric_part * gaussian_part);
+            unnormalized_overlap += (combinatoric_part * gaussian_part);
         }
     }
 
-    const auto coefficient = std::sqrt(M_PI / (gaussian0.exponent + gaussian1.exponent));
+    return unnormalized_overlap;
+}
 
-    return coefficient * overlap;
+inline auto overlap_integral_3d_norm(const GaussianInfo& info0, const GaussianInfo& info1) -> double
+{
+    const auto argument = M_PI / (info0.exponent + info1.exponent);
+    return std::sqrt(argument * argument * argument);
+}
+
+inline auto overlap_integral(
+    const AngularMomentumNumbers& angmom0,
+    const AngularMomentumNumbers& angmom1,
+    const coord::Cartesian3D& position0,
+    const coord::Cartesian3D& position1,
+    const GaussianInfo& info0,
+    const GaussianInfo& info1
+) -> double
+{
+    [[maybe_unused]] const auto [new_position, new_info] = gaussian_product(position0, position1, info0, info1);
+
+    const auto norm0 = gaussian_norm(angmom0, info0.exponent);
+    const auto norm1 = gaussian_norm(angmom1, info1.exponent);
+
+    // clang-format off
+    const auto overlap_x = unnormalized_overlap_integral_1d(
+        {angmom0.x, info0.exponent, position0.x},
+        {angmom1.x, info1.exponent, position1.x},
+        new_position.x
+    );
+
+    const auto overlap_y = unnormalized_overlap_integral_1d(
+        {angmom0.y, info0.exponent, position0.y},
+        {angmom1.y, info1.exponent, position1.y},
+        new_position.y
+    );
+
+    const auto overlap_z = unnormalized_overlap_integral_1d(
+        {angmom0.z, info0.exponent, position0.z},
+        {angmom1.z, info1.exponent, position1.z},
+        new_position.z
+    );
+    // clang-format on
+
+    const auto coefficient = overlap_integral_3d_norm(info0, info1);
+
+    return coefficient * norm0 * norm1 * overlap_x * overlap_y * overlap_z;
 }
 
 }  // namespace elec

@@ -59,7 +59,7 @@ TEST_CASE("gaussian norm")
     }
 }
 
-TEST_CASE("overlap integrals")
+TEST_CASE("unnormalized overlap integrals")
 {
     // Test case results are compared with the values provided in the body of
     //
@@ -69,53 +69,52 @@ TEST_CASE("overlap integrals")
 
     SECTION("s-function with itself")
     {
-        const auto exponent = GENERATE(1.0, 1.5, 2.0);
-        const auto coefficient = GENERATE(1.0, 2.0, 3.0);
+        // the point of including these is to show that they should not affect the final result
+        // - but maybe I should remove them, since we're running 16 unit tests here?
+        const auto exponent0 = GENERATE(1.0, 1.5);
+        const auto exponent1 = GENERATE(1.25, 1.75);
+        const auto coefficient0 = GENERATE(1.0, 2.0);
+        const auto coefficient1 = GENERATE(1.5, 2.5);
 
         const auto centre0 = coord::Cartesian3D {0.0, 0.0, 0.0};
         const auto centre1 = coord::Cartesian3D {0.0, 0.0, 0.0};
-        const auto gauss0 = elec::GaussianInfo {coefficient, exponent};
-        const auto gauss1 = elec::GaussianInfo {coefficient, exponent};
+        const auto gauss0 = elec::GaussianInfo {coefficient0, exponent0};
+        const auto gauss1 = elec::GaussianInfo {coefficient1, exponent1};
         const auto angmom0 = elec::AngularMomentumNumbers {0, 0, 0};
         const auto angmom1 = elec::AngularMomentumNumbers {0, 0, 0};
 
-        const auto [new_centre, new_info] = elec::gaussian_product(centre0, centre1, gauss0, gauss1);
+        [[maybe_unused]] const auto [new_centre, new_info] = elec::gaussian_product(centre0, centre1, gauss0, gauss1);
 
         // clang-format off
-        const auto overlap_x = elec::unnormalized_overlap_integral_1d(
+        const auto unorm_overlap_x = elec::unnormalized_overlap_integral_1d(
             {angmom0.x, gauss0.exponent, centre0.x},
             {angmom1.x, gauss1.exponent, centre1.x},
             new_centre.x
         );
 
-        const auto overlap_y = elec::unnormalized_overlap_integral_1d(
+        const auto unorm_overlap_y = elec::unnormalized_overlap_integral_1d(
             {angmom0.y, gauss0.exponent, centre0.y},
             {angmom1.y, gauss1.exponent, centre1.y},
             new_centre.y
         );
 
-        const auto overlap_z = elec::unnormalized_overlap_integral_1d(
+        const auto unorm_overlap_z = elec::unnormalized_overlap_integral_1d(
             {angmom0.z, gauss0.exponent, centre0.z},
             {angmom1.z, gauss1.exponent, centre1.z},
             new_centre.z
         );
         // clang-format on
 
-        const auto actual_total_overlap = new_info.coefficient * overlap_x * overlap_y * overlap_z;
-
-        const auto expected_overlap_1d = std::sqrt(M_PI / (gauss0.exponent + gauss1.exponent));
-        const auto expected_coefficient = gauss0.coefficient * gauss1.coefficient;
-        const auto expected_total_overlap = expected_coefficient * std::pow(expected_overlap_1d, 3);
-
-        REQUIRE_THAT(new_info.coefficient, Catch::Matchers::WithinRel(expected_coefficient));
-        REQUIRE_THAT(overlap_x, Catch::Matchers::WithinRel(expected_overlap_1d));
-        REQUIRE_THAT(overlap_y, Catch::Matchers::WithinRel(expected_overlap_1d));
-        REQUIRE_THAT(overlap_z, Catch::Matchers::WithinRel(expected_overlap_1d));
-        REQUIRE_THAT(actual_total_overlap, Catch::Matchers::WithinRel(expected_total_overlap));
+        const auto expected_unorm_overlap_s = 1.0;
+        REQUIRE_THAT(unorm_overlap_x, Catch::Matchers::WithinRel(expected_unorm_overlap_s));
+        REQUIRE_THAT(unorm_overlap_y, Catch::Matchers::WithinRel(expected_unorm_overlap_s));
+        REQUIRE_THAT(unorm_overlap_z, Catch::Matchers::WithinRel(expected_unorm_overlap_s));
     }
 
     SECTION("p-function with itself")
     {
+        // the point of including these is to show that they should not affect the final result
+        // - but maybe I should remove them, since we're running 16 unit tests here?
         const auto exponent0 = GENERATE(1.0, 1.5);
         const auto exponent1 = GENERATE(1.25, 1.75);
         const auto coefficient0 = GENERATE(1.0, 2.0);
@@ -131,50 +130,31 @@ TEST_CASE("overlap integrals")
         const auto [new_centre, new_info] = elec::gaussian_product(centre0, centre1, gauss0, gauss1);
 
         // clang-format off
-        const auto overlap_x = elec::unnormalized_overlap_integral_1d(
+        const auto unorm_overlap_x = elec::unnormalized_overlap_integral_1d(
             {angmom0.x, gauss0.exponent, centre0.x},
             {angmom1.x, gauss1.exponent, centre1.x},
             new_centre.x
         );
 
-        const auto overlap_y = elec::unnormalized_overlap_integral_1d(
+        const auto unorm_overlap_y = elec::unnormalized_overlap_integral_1d(
             {angmom0.y, gauss0.exponent, centre0.y},
             {angmom1.y, gauss1.exponent, centre1.y},
             new_centre.y
         );
 
-        const auto overlap_z = elec::unnormalized_overlap_integral_1d(
+        const auto unorm_overlap_z = elec::unnormalized_overlap_integral_1d(
             {angmom0.z, gauss0.exponent, centre0.z},
             {angmom1.z, gauss1.exponent, centre1.z},
             new_centre.z
         );
         // clang-format on
 
-        const auto actual_total_overlap = new_info.coefficient * overlap_x * overlap_y * overlap_z;
+        const auto expected_unorm_overlap_x = 1.0 / (2.0 * (gauss0.exponent + gauss1.exponent));
+        const auto expected_unorm_overlap_y = 1.0;
+        const auto expected_unorm_overlap_z = 1.0;
 
-        const auto expected_overlap_x = [&]()
-        {
-            const auto sum_expon = gauss0.exponent + gauss1.exponent;
-            const auto overlap_s = std::sqrt(M_PI / sum_expon);
-            const auto overlap_due_to_p = 1.0 / (2.0 * sum_expon);
-
-            return overlap_s * overlap_due_to_p;
-        }();
-
-        const auto expected_overlap_y = std::sqrt(M_PI / (gauss0.exponent + gauss1.exponent));
-        const auto expected_overlap_z = std::sqrt(M_PI / (gauss0.exponent + gauss1.exponent));
-
-        const auto expected_coefficient = gauss0.coefficient * gauss1.coefficient;
-        const auto expected_total_overlap = [&]()
-        {
-            const auto expected_overlap_xyz = expected_overlap_x * expected_overlap_y * expected_overlap_z;
-            return expected_coefficient * expected_overlap_xyz;
-        }();
-
-        REQUIRE_THAT(new_info.coefficient, Catch::Matchers::WithinRel(expected_coefficient));
-        REQUIRE_THAT(overlap_x, Catch::Matchers::WithinRel(expected_overlap_x));
-        REQUIRE_THAT(overlap_y, Catch::Matchers::WithinRel(expected_overlap_y));
-        REQUIRE_THAT(overlap_z, Catch::Matchers::WithinRel(expected_overlap_z));
-        REQUIRE_THAT(actual_total_overlap, Catch::Matchers::WithinRel(expected_total_overlap));
+        REQUIRE_THAT(unorm_overlap_x, Catch::Matchers::WithinRel(expected_unorm_overlap_x));
+        REQUIRE_THAT(unorm_overlap_y, Catch::Matchers::WithinRel(expected_unorm_overlap_y));
+        REQUIRE_THAT(unorm_overlap_z, Catch::Matchers::WithinRel(expected_unorm_overlap_z));
     }
 }
