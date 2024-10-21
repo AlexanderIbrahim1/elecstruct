@@ -61,9 +61,9 @@ inline auto gaussian_norm(const elec::AngularMomentumNumbers& angular_momenta, d
     // - if the angular momentum component is 0, then the argument `2l - 1` to the double factorial is negative
     //   - this would make the denominator 0
     // - this probably isn't what is supposed to happen
-    const auto ang_mom_denom_x = elec::math::double_factorial(2 * angular_momenta.x - 1);
-    const auto ang_mom_denom_y = elec::math::double_factorial(2 * angular_momenta.y - 1);
-    const auto ang_mom_denom_z = elec::math::double_factorial(2 * angular_momenta.z - 1);
+    const auto ang_mom_denom_x = elec::math::double_factorial_minus_1(2 * angular_momenta.x);
+    const auto ang_mom_denom_y = elec::math::double_factorial_minus_1(2 * angular_momenta.y);
+    const auto ang_mom_denom_z = elec::math::double_factorial_minus_1(2 * angular_momenta.z);
     const auto ang_mom_denominator = std::sqrt(ang_mom_denom_x * ang_mom_denom_y * ang_mom_denom_z);
 
     return gauss1d_component * ang_mom_numerator / ang_mom_denominator;

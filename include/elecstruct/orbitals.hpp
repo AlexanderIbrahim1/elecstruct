@@ -33,9 +33,9 @@ enum class AtomicOrbitalLabel
 */
 struct AngularMomentumNumbers
 {
-    std::int64_t x;
-    std::int64_t y;
-    std::int64_t z;
+    std::uint64_t x;
+    std::uint64_t y;
+    std::uint64_t z;
 };
 
 inline auto atomic_orbitals_to_angular_momentum_numbers(AtomicOrbitalLabel label) -> std::vector<AngularMomentumNumbers>
@@ -63,7 +63,7 @@ inline auto atomic_orbitals_to_angular_momentum_numbers(AtomicOrbitalLabel label
     The total angular momentum is required frequently enough that we may as well create
     a convenience function to calculate it.
 */
-inline auto total_angular_momentum(const AngularMomentumNumbers& ang_mom_nums) -> std::int64_t
+inline auto total_angular_momentum(const AngularMomentumNumbers& ang_mom_nums) -> std::uint64_t
 {
     return ang_mom_nums.x + ang_mom_nums.y + ang_mom_nums.z;
 }

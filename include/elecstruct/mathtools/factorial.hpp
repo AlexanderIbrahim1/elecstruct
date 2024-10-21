@@ -21,4 +21,20 @@ inline auto double_factorial(std::int64_t n) -> std::int64_t
     return result;
 }
 
+inline auto double_factorial_minus_1(std::uint64_t n) -> std::uint64_t
+{
+    if (n == 0) {
+        return 1;
+    }
+
+    auto result = std::uint64_t {1};
+
+    // guaranteed that n - 1 >= 0 here
+    for (std::uint64_t value {n - 1}; value >= 2; value -= 2) {
+        result *= value;
+    }
+
+    return result;
+}
+
 }  // namespace elec::math

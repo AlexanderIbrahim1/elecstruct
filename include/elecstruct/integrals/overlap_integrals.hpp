@@ -17,7 +17,7 @@ struct OverlapIntegralGaussianInfo1D
     double centre;
 };
 
-inline auto overlap_integral_1d(
+inline auto unnormalized_overlap_integral_1d(
     const OverlapIntegralGaussianInfo1D& gaussian0,
     const OverlapIntegralGaussianInfo1D& gaussian1,
     double total_centre
@@ -43,7 +43,7 @@ inline auto overlap_integral_1d(
 
             const auto choose_term0 = elec::math::N_CHOOSE_K_GRID.at(ang_mom0, i0);
             const auto choose_term1 = elec::math::N_CHOOSE_K_GRID.at(ang_mom1, i1);
-            const auto factorial_term = elec::math::double_factorial(i0 + i1 - 1);
+            const auto factorial_term = elec::math::double_factorial_minus_1(i0 + i1);
 
             const auto gauss_1d_coeff = [&]()
             {
@@ -62,7 +62,9 @@ inline auto overlap_integral_1d(
         }
     }
 
-    return overlap;
+    const auto coefficient = std::sqrt(M_PI / (gaussian0.exponent + gaussian1.exponent));
+
+    return coefficient * overlap;
 }
 
 }  // namespace elec
