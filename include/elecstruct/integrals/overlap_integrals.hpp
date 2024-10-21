@@ -87,30 +87,30 @@ inline auto overlap_integral(
 
     const auto norm0 = gaussian_norm(angmom0, info0.exponent);
     const auto norm1 = gaussian_norm(angmom1, info1.exponent);
+    const auto overlap_norm = overlap_integral_3d_norm(info0, info1);
+    const auto total_norm = norm0 * norm1 * overlap_norm;
 
     // clang-format off
-    const auto overlap_x = unnormalized_overlap_integral_1d(
+    const auto unorm_overlap_x = unnormalized_overlap_integral_1d(
         {angmom0.x, info0.exponent, position0.x},
         {angmom1.x, info1.exponent, position1.x},
         new_position.x
     );
 
-    const auto overlap_y = unnormalized_overlap_integral_1d(
+    const auto unorm_overlap_y = unnormalized_overlap_integral_1d(
         {angmom0.y, info0.exponent, position0.y},
         {angmom1.y, info1.exponent, position1.y},
         new_position.y
     );
 
-    const auto overlap_z = unnormalized_overlap_integral_1d(
+    const auto unorm_overlap_z = unnormalized_overlap_integral_1d(
         {angmom0.z, info0.exponent, position0.z},
         {angmom1.z, info1.exponent, position1.z},
         new_position.z
     );
     // clang-format on
 
-    const auto coefficient = overlap_integral_3d_norm(info0, info1);
-
-    return coefficient * norm0 * norm1 * overlap_x * overlap_y * overlap_z;
+    return new_info.coefficient * total_norm * unorm_overlap_x * unorm_overlap_y * unorm_overlap_z;
 }
 
 }  // namespace elec
