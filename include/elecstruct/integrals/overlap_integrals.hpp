@@ -68,9 +68,9 @@ inline auto unnormalized_overlap_integral_1d(
     return unnormalized_overlap;
 }
 
-inline auto overlap_integral_3d_norm(const GaussianInfo& info0, const GaussianInfo& info1) -> double
+inline auto overlap_integral_3d_norm(double exponent0, double exponent1) -> double
 {
-    const auto argument = M_PI / (info0.exponent + info1.exponent);
+    const auto argument = M_PI / (exponent0 + exponent1);
     return std::sqrt(argument * argument * argument);
 }
 
@@ -87,7 +87,7 @@ inline auto overlap_integral(
 
     const auto norm0 = gaussian_norm(angmom0, info0.exponent);
     const auto norm1 = gaussian_norm(angmom1, info1.exponent);
-    const auto overlap_norm = overlap_integral_3d_norm(info0, info1);
+    const auto overlap_norm = overlap_integral_3d_norm(info0.exponent, info1.exponent);
     const auto total_norm = norm0 * norm1 * overlap_norm;
 
     // clang-format off
