@@ -13,11 +13,11 @@ namespace impl_elec::unorm_kinetic_integral
 {
 
 inline auto term_minusa_minusb(
-    const elec::AngularMomentumKineticIntegral& angmom_a,
-    const elec::AngularMomentumKineticIntegral& angmom_b,
-    const elec::CartesianKineticIntegral& position_a,
-    const elec::CartesianKineticIntegral& position_b,
-    const elec::CartesianKineticIntegral& position_centre,
+    const elec::DirectedAngularMomentumNumbers& angmom_a,
+    const elec::DirectedAngularMomentumNumbers& angmom_b,
+    const elec::DirectedCartesian3D& position_a,
+    const elec::DirectedCartesian3D& position_b,
+    const elec::DirectedCartesian3D& position_centre,
     double exponent_a,
     double exponent_b
 ) -> double
@@ -38,11 +38,11 @@ inline auto term_minusa_minusb(
 }
 
 inline auto term_plusa_minusb(
-    const elec::AngularMomentumKineticIntegral& angmom_a,
-    const elec::AngularMomentumKineticIntegral& angmom_b,
-    const elec::CartesianKineticIntegral& position_a,
-    const elec::CartesianKineticIntegral& position_b,
-    const elec::CartesianKineticIntegral& position_centre,
+    const elec::DirectedAngularMomentumNumbers& angmom_a,
+    const elec::DirectedAngularMomentumNumbers& angmom_b,
+    const elec::DirectedCartesian3D& position_a,
+    const elec::DirectedCartesian3D& position_b,
+    const elec::DirectedCartesian3D& position_centre,
     double exponent_a,
     double exponent_b
 ) -> double
@@ -63,11 +63,11 @@ inline auto term_plusa_minusb(
 }
 
 inline auto term_minusa_plusb(
-    const elec::AngularMomentumKineticIntegral& angmom_a,
-    const elec::AngularMomentumKineticIntegral& angmom_b,
-    const elec::CartesianKineticIntegral& position_a,
-    const elec::CartesianKineticIntegral& position_b,
-    const elec::CartesianKineticIntegral& position_centre,
+    const elec::DirectedAngularMomentumNumbers& angmom_a,
+    const elec::DirectedAngularMomentumNumbers& angmom_b,
+    const elec::DirectedCartesian3D& position_a,
+    const elec::DirectedCartesian3D& position_b,
+    const elec::DirectedCartesian3D& position_centre,
     double exponent_a,
     double exponent_b
 ) -> double
@@ -88,11 +88,11 @@ inline auto term_minusa_plusb(
 }
 
 inline auto term_plusa_plusb(
-    const elec::AngularMomentumKineticIntegral& angmom_a,
-    const elec::AngularMomentumKineticIntegral& angmom_b,
-    const elec::CartesianKineticIntegral& position_a,
-    const elec::CartesianKineticIntegral& position_b,
-    const elec::CartesianKineticIntegral& position_centre,
+    const elec::DirectedAngularMomentumNumbers& angmom_a,
+    const elec::DirectedAngularMomentumNumbers& angmom_b,
+    const elec::DirectedCartesian3D& position_a,
+    const elec::DirectedCartesian3D& position_b,
+    const elec::DirectedCartesian3D& position_centre,
     double exponent_a,
     double exponent_b
 ) -> double
@@ -107,12 +107,12 @@ inline auto term_plusa_plusb(
     return coeff * unorm_overlap;
 }
 
-inline auto term_second_direction(
-    const elec::AngularMomentumKineticIntegral& angmom_a,
-    const elec::AngularMomentumKineticIntegral& angmom_b,
-    const elec::CartesianKineticIntegral& position_a,
-    const elec::CartesianKineticIntegral& position_b,
-    const elec::CartesianKineticIntegral& position_centre,
+inline auto term_direction_other0(
+    const elec::DirectedAngularMomentumNumbers& angmom_a,
+    const elec::DirectedAngularMomentumNumbers& angmom_b,
+    const elec::DirectedCartesian3D& position_a,
+    const elec::DirectedCartesian3D& position_b,
+    const elec::DirectedCartesian3D& position_centre,
     double exponent_a,
     double exponent_b
 ) -> double
@@ -124,12 +124,12 @@ inline auto term_second_direction(
     );
 }
 
-inline auto term_third_direction(
-    const elec::AngularMomentumKineticIntegral& angmom_a,
-    const elec::AngularMomentumKineticIntegral& angmom_b,
-    const elec::CartesianKineticIntegral& position_a,
-    const elec::CartesianKineticIntegral& position_b,
-    const elec::CartesianKineticIntegral& position_centre,
+inline auto term_direction_other1(
+    const elec::DirectedAngularMomentumNumbers& angmom_a,
+    const elec::DirectedAngularMomentumNumbers& angmom_b,
+    const elec::DirectedCartesian3D& position_a,
+    const elec::DirectedCartesian3D& position_b,
+    const elec::DirectedCartesian3D& position_centre,
     double exponent_a,
     double exponent_b
 ) -> double
@@ -157,27 +157,48 @@ namespace elec
       - the "third" direction (other1)
 */
 
-struct AngularMomentumKineticIntegral
+struct DirectedAngularMomentumNumbers
 {
     std::uint64_t main;
     std::uint64_t other0;
     std::uint64_t other1;
 
+    explicit DirectedAngularMomentumNumbers(const AngularMomentumNumbers& angmom)
+        : main {angmom.x}
+        , other0 {angmom.y}
+        , other1 {angmom.z}
+    {}
 };
 
-struct CartesianKineticIntegral
+struct DirectedCartesian3D
 {
     double main;
     double other0;
     double other1;
+
+    explicit DirectedCartesian3D(const coord::Cartesian3D& position)
+        : main {position.x}
+        , other0 {position.y}
+        , other1 {position.z}
+    {}
 };
 
+template <typename T>
+auto left_cyclic_shift(const T& coordinates) -> T {
+    return {coordinates.other0, coordinates.other1, coordinates.main};
+}
+
+template <typename T>
+auto right_cyclic_shift(const T& coordinates) -> T {
+    return {coordinates.other1, coordinates.main, coordinates.other0};
+}
+
 inline auto unnormalized_kinetic_integral_1d(
-    const AngularMomentumKineticIntegral& angmom_a,
-    const AngularMomentumKineticIntegral& angmom_b,
-    const CartesianKineticIntegral& position_a,
-    const CartesianKineticIntegral& position_b,
-    const CartesianKineticIntegral& position_centre,
+    const DirectedAngularMomentumNumbers& angmom_a,
+    const DirectedAngularMomentumNumbers& angmom_b,
+    const DirectedCartesian3D& position_a,
+    const DirectedCartesian3D& position_b,
+    const DirectedCartesian3D& position_centre,
     double exponent_a,
     double exponent_b,
     double centre_coefficient
@@ -190,8 +211,8 @@ inline auto unnormalized_kinetic_integral_1d(
     const auto term_pa_mb = uki::term_plusa_minusb(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
     const auto term_ma_pb = uki::term_minusa_plusb(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
     const auto term_pa_pb = uki::term_plusa_plusb(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
-    const auto term_dir2 = uki::term_second_direction(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
-    const auto term_dir3 = uki::term_third_direction(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
+    const auto term_dir2 = uki::term_direction_other0(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
+    const auto term_dir3 = uki::term_direction_other1(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
     // clang-format on
 
     double kinetic_coefficient = centre_coefficient * overlap_integral_3d_norm(exponent_a, exponent_b);
@@ -208,6 +229,51 @@ inline auto kinetic_integral(
     const GaussianInfo& info1
 ) -> double
 {
+    const auto [new_centre, new_info] = gaussian_product(position0, position1, info0, info1);
+
+    const auto angmom0_integ_x = DirectedAngularMomentumNumbers {angmom0};
+    const auto angmom1_integ_x = DirectedAngularMomentumNumbers {angmom1};
+    const auto original0_integ_x = DirectedCartesian3D {position0};
+    const auto original1_integ_x = DirectedCartesian3D {position1};
+    const auto product_integ_x = DirectedCartesian3D {new_centre};
+
+    const auto kinetic_x = unnormalized_kinetic_integral_1d(
+        angmom0_integ_x,
+        angmom1_integ_x,
+        original0_integ_x,
+        original1_integ_x,
+        product_integ_x,
+        info0.exponent,
+        info1.exponent,
+        new_info.coefficient
+    );
+
+    const auto kinetic_y = unnormalized_kinetic_integral_1d(
+        left_cyclic_shift(angmom0_integ_x),
+        left_cyclic_shift(angmom1_integ_x),
+        left_cyclic_shift(original0_integ_x),
+        left_cyclic_shift(original1_integ_x),
+        left_cyclic_shift(product_integ_x),
+        info0.exponent,
+        info1.exponent,
+        new_info.coefficient
+    );
+
+    const auto kinetic_z = unnormalized_kinetic_integral_1d(
+        right_cyclic_shift(angmom0_integ_x),
+        right_cyclic_shift(angmom1_integ_x),
+        right_cyclic_shift(original0_integ_x),
+        right_cyclic_shift(original1_integ_x),
+        right_cyclic_shift(product_integ_x),
+        info0.exponent,
+        info1.exponent,
+        new_info.coefficient
+    );
+
+    const auto norm0 = gaussian_norm(angmom0, info0.exponent);
+    const auto norm1 = gaussian_norm(angmom1, info1.exponent);
+
+    return norm0 * norm1 * (kinetic_x + kinetic_y + kinetic_z);
 }
 
 }  // namespace elec
