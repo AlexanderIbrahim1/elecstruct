@@ -51,22 +51,22 @@ inline auto gaussian_product(
 
 inline auto gaussian_norm(const elec::AngularMomentumNumbers& angular_momenta, double gauss_exponent) -> double
 {
-    const auto ang_mom_sum = static_cast<double>(total_angular_momentum(angular_momenta));
+    const auto angmom_sum = static_cast<double>(total_angular_momentum(angular_momenta));
 
     const auto gauss1d_component = std::pow(2.0 * gauss_exponent / M_PI, 3.0 / 4.0);
-    const auto ang_mom_numerator = std::pow(4.0 * gauss_exponent, ang_mom_sum / 2.0);
+    const auto angmom_numerator = std::pow(4.0 * gauss_exponent, angmom_sum / 2.0);
 
     // NOTE: maybe the behaviour of scipy changed since the reference was created?
     // - the author used `scipy.misc.factorial2()`, which returns 0 for negative numbers (according to docs I've seen)
     // - if the angular momentum component is 0, then the argument `2l - 1` to the double factorial is negative
     //   - this would make the denominator 0
     // - this probably isn't what is supposed to happen
-    const auto ang_mom_denom_x = elec::math::double_factorial_minus_1(2 * angular_momenta.x);
-    const auto ang_mom_denom_y = elec::math::double_factorial_minus_1(2 * angular_momenta.y);
-    const auto ang_mom_denom_z = elec::math::double_factorial_minus_1(2 * angular_momenta.z);
-    const auto ang_mom_denominator = std::sqrt(ang_mom_denom_x * ang_mom_denom_y * ang_mom_denom_z);
+    const auto angmom_denom_x = elec::math::double_factorial(2 * angular_momenta.x - 1);
+    const auto angmom_denom_y = elec::math::double_factorial(2 * angular_momenta.y - 1);
+    const auto angmom_denom_z = elec::math::double_factorial(2 * angular_momenta.z - 1);
+    const auto angmom_denominator = std::sqrt(angmom_denom_x * angmom_denom_y * angmom_denom_z);
 
-    return gauss1d_component * ang_mom_numerator / ang_mom_denominator;
+    return gauss1d_component * angmom_numerator / angmom_denominator;
 }
 
 }  // namespace elec

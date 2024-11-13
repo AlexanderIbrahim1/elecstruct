@@ -26,16 +26,15 @@ enum class AtomicOrbitalLabel
 /*
     This object holds the number of angular momentum quanta for a given orbital.
 
-    NOTE: even though an angular momentum quantum number can never be negative, there are many cases
-    where we perform an operation on the number to make it a negative integer, and use the result in
-    a funciton. To avoid constantly calling `static_cast()` to suppress warnings, we can make it a
-    signed integer to begin with.
+    NOTE: there are many cases in the code where we perform an operation on an angular quantum
+    number, with a negative result, which is then used in a function. To avoid constantly calling
+    `static_cast()` before using these results, we can make it a signed integer to begin with.
 */
 struct AngularMomentumNumbers
 {
-    std::uint64_t x;
-    std::uint64_t y;
-    std::uint64_t z;
+    std::int64_t x;
+    std::int64_t y;
+    std::int64_t z;
 };
 
 inline auto atomic_orbitals_to_angular_momentum_numbers(AtomicOrbitalLabel label) -> std::vector<AngularMomentumNumbers>
@@ -63,7 +62,7 @@ inline auto atomic_orbitals_to_angular_momentum_numbers(AtomicOrbitalLabel label
     The total angular momentum is required frequently enough that we may as well create
     a convenience function to calculate it.
 */
-inline auto total_angular_momentum(const AngularMomentumNumbers& ang_mom_nums) -> std::uint64_t
+inline auto total_angular_momentum(const AngularMomentumNumbers& ang_mom_nums) -> std::int64_t
 {
     return ang_mom_nums.x + ang_mom_nums.y + ang_mom_nums.z;
 }

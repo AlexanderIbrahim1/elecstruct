@@ -9,6 +9,59 @@
 #include "elecstruct/integrals/overlap_integrals.hpp"
 #include "elecstruct/orbitals.hpp"
 
+namespace elec
+{
+
+/*
+    The calculation for the component of the kinetic integral along each axis is complicated,
+    and involves mixing the different x-, y-, and z-axis compoments of the angular momenta and
+    the cartesian positions.
+
+    Instead of just having an (x, y, z) split, we have a split into:
+      - the direction of interest (main)
+      - the "second" direction (other0)
+      - the "third" direction (other1)
+*/
+
+struct DirectedAngularMomentumNumbers
+{
+    std::int64_t main;
+    std::int64_t other0;
+    std::int64_t other1;
+
+    explicit DirectedAngularMomentumNumbers(const AngularMomentumNumbers& angmom)
+        : main {angmom.x}
+        , other0 {angmom.y}
+        , other1 {angmom.z}
+    {}
+};
+
+struct DirectedCartesian3D
+{
+    double main;
+    double other0;
+    double other1;
+
+    explicit DirectedCartesian3D(const coord::Cartesian3D& position)
+        : main {position.x}
+        , other0 {position.y}
+        , other1 {position.z}
+    {}
+};
+
+template <typename T>
+auto left_cyclic_shift(const T& coordinates) -> T {
+    return {coordinates.other0, coordinates.other1, coordinates.main};
+}
+
+template <typename T>
+auto right_cyclic_shift(const T& coordinates) -> T {
+    return {coordinates.other1, coordinates.main, coordinates.other0};
+}
+
+}  // namespace elec
+
+
 namespace impl_elec::unorm_kinetic_integral
 {
 
@@ -22,19 +75,14 @@ inline auto term_minusa_minusb(
     double exponent_b
 ) -> double
 {
-    if (angmom_a.main == 0 || angmom_b.main == 0) {
-        return 0.0;
-    }
-    else {
-        const auto coeff = 0.5 * static_cast<double>(angmom_a.main * angmom_b.main);
-        const auto unorm_overlap = elec::unnormalized_overlap_integral_1d(
-            {angmom_a.main - 1, exponent_a, position_a.main},
-            {angmom_b.main - 1, exponent_b, position_b.main},
-            position_centre.main
-        );
+    const auto coeff = 0.5 * static_cast<double>(angmom_a.main * angmom_b.main);
+    const auto unorm_overlap = elec::unnormalized_overlap_integral_1d(
+        {angmom_a.main - 1, exponent_a, position_a.main},
+        {angmom_b.main - 1, exponent_b, position_b.main},
+        position_centre.main
+    );
 
-        return coeff * unorm_overlap;
-    }
+    return coeff * unorm_overlap;
 }
 
 inline auto term_plusa_minusb(
@@ -47,19 +95,14 @@ inline auto term_plusa_minusb(
     double exponent_b
 ) -> double
 {
-    if (angmom_b.main == 0) {
-        return 0.0;
-    }
-    else {
-        const auto coeff = -1.0 * exponent_a * static_cast<double>(angmom_b.main);
-        const auto unorm_overlap = elec::unnormalized_overlap_integral_1d(
-            {angmom_a.main + 1, exponent_a, position_a.main},
-            {angmom_b.main - 1, exponent_b, position_b.main},
-            position_centre.main
-        );
+    const auto coeff = -1.0 * exponent_a * static_cast<double>(angmom_b.main);
+    const auto unorm_overlap = elec::unnormalized_overlap_integral_1d(
+        {angmom_a.main + 1, exponent_a, position_a.main},
+        {angmom_b.main - 1, exponent_b, position_b.main},
+        position_centre.main
+    );
 
-        return coeff * unorm_overlap;
-    }
+    return coeff * unorm_overlap;
 }
 
 inline auto term_minusa_plusb(
@@ -72,19 +115,14 @@ inline auto term_minusa_plusb(
     double exponent_b
 ) -> double
 {
-    if (angmom_a.main == 0) {
-        return 0.0;
-    }
-    else {
-        const auto coeff = -1.0 * static_cast<double>(angmom_a.main) * exponent_b;
-        const auto unorm_overlap = elec::unnormalized_overlap_integral_1d(
-            {angmom_a.main - 1, exponent_a, position_a.main},
-            {angmom_b.main + 1, exponent_b, position_b.main},
-            position_centre.main
-        );
+    const auto coeff = -1.0 * static_cast<double>(angmom_a.main) * exponent_b;
+    const auto unorm_overlap = elec::unnormalized_overlap_integral_1d(
+        {angmom_a.main - 1, exponent_a, position_a.main},
+        {angmom_b.main + 1, exponent_b, position_b.main},
+        position_centre.main
+    );
 
-        return coeff * unorm_overlap;
-    }
+    return coeff * unorm_overlap;
 }
 
 inline auto term_plusa_plusb(
@@ -143,55 +181,9 @@ inline auto term_direction_other1(
 
 }  // namespace impl_elec
 
+
 namespace elec
 {
-
-/*
-    The calculation for the component of the kinetic integral along each axis is complicated,
-    and involves mixing the different x-, y-, and z-axis compoments of the angular momenta and
-    the cartesian positions.
-
-    Instead of just having an (x, y, z) split, we have a split into:
-      - the direction of interest (main)
-      - the "second" direction (other0)
-      - the "third" direction (other1)
-*/
-
-struct DirectedAngularMomentumNumbers
-{
-    std::uint64_t main;
-    std::uint64_t other0;
-    std::uint64_t other1;
-
-    explicit DirectedAngularMomentumNumbers(const AngularMomentumNumbers& angmom)
-        : main {angmom.x}
-        , other0 {angmom.y}
-        , other1 {angmom.z}
-    {}
-};
-
-struct DirectedCartesian3D
-{
-    double main;
-    double other0;
-    double other1;
-
-    explicit DirectedCartesian3D(const coord::Cartesian3D& position)
-        : main {position.x}
-        , other0 {position.y}
-        , other1 {position.z}
-    {}
-};
-
-template <typename T>
-auto left_cyclic_shift(const T& coordinates) -> T {
-    return {coordinates.other0, coordinates.other1, coordinates.main};
-}
-
-template <typename T>
-auto right_cyclic_shift(const T& coordinates) -> T {
-    return {coordinates.other1, coordinates.main, coordinates.other0};
-}
 
 inline auto unnormalized_kinetic_integral_1d(
     const DirectedAngularMomentumNumbers& angmom_a,
@@ -206,18 +198,22 @@ inline auto unnormalized_kinetic_integral_1d(
 {
     namespace uki = impl_elec::unorm_kinetic_integral;
 
+    // if any of these cases are true, then either `term_other0 == 0` or `term_other1 == 0`, and the entire result is 0
+    if (angmom_a.other0 == 0 || angmom_a.other1 == 0 || angmom_b.other0 == 0 || angmom_b.other1 == 0) {
+        return 0.0;
+    }
+
     // clang-format off
+    const auto kinetic_coefficient = centre_coefficient * overlap_integral_3d_norm(exponent_a, exponent_b);
+    const auto term_other0 = uki::term_direction_other0(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
+    const auto term_other1 = uki::term_direction_other1(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
     const auto term_ma_mb = uki::term_minusa_minusb(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
     const auto term_pa_mb = uki::term_plusa_minusb(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
     const auto term_ma_pb = uki::term_minusa_plusb(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
     const auto term_pa_pb = uki::term_plusa_plusb(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
-    const auto term_dir2 = uki::term_direction_other0(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
-    const auto term_dir3 = uki::term_direction_other1(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);
     // clang-format on
 
-    double kinetic_coefficient = centre_coefficient * overlap_integral_3d_norm(exponent_a, exponent_b);
-
-    return kinetic_coefficient * term_ma_mb * term_pa_mb * term_ma_pb * term_pa_pb * term_dir2 * term_dir3;
+    return kinetic_coefficient * term_other0 * term_other1 * (term_ma_mb + term_pa_mb + term_ma_pb + term_pa_pb);
 }
 
 inline auto kinetic_integral(

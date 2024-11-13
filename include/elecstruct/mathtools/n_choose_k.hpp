@@ -13,7 +13,7 @@ namespace elec::math
 */
 
 // clang-format off
-constexpr auto N_CHOOSE_K_GRID = elec::grid::CompileTimeGrid2D<std::uint64_t, 11, 11> {
+constexpr auto N_CHOOSE_K_GRID = elec::grid::CompileTimeGrid2D<std::int64_t, 11, 11> {
     {
     1,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
     1,   1,   0,   0,   0,   0,   0,   0,   0,   0,   0,

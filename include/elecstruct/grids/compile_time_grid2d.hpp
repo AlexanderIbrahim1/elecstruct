@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstddef>
+#include <cstdint>
 
 namespace elec::grid
 {
@@ -16,14 +17,28 @@ public:
         : data_ {data}
     {}
 
-    constexpr auto at(std::size_t i0, std::size_t i1) const noexcept -> const T&
+    constexpr auto at_unsigned(std::size_t i0, std::size_t i1) const noexcept -> const T&
     {
         return data_[index(i0, i1)];
     }
 
-    constexpr auto at(std::size_t i0, std::size_t i1) noexcept -> T&
+    constexpr auto at_unsigned(std::size_t i0, std::size_t i1) noexcept -> T&
     {
         return data_[index(i0, i1)];
+    }
+
+    constexpr auto at(std::int64_t i0, std::int64_t i1) const noexcept -> const T&
+    {
+        const auto i0_ = static_cast<std::size_t>(i0);
+        const auto i1_ = static_cast<std::size_t>(i1);
+        return data_[index(i0_, i1_)];
+    }
+
+    constexpr auto at(std::int64_t i0, std::int64_t i1) noexcept -> T&
+    {
+        const auto i0_ = static_cast<std::size_t>(i0);
+        const auto i1_ = static_cast<std::size_t>(i1);
+        return data_[index(i0_, i1_)];
     }
 
     constexpr auto size0() const noexcept -> std::size_t
