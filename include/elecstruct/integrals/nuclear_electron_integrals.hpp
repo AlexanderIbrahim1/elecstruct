@@ -2,8 +2,12 @@
 
 #include <cstdint>
 
+#include "elecstruct/basis/gaussian_info.hpp"
+#include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/integrals/expansion_coefficient.hpp"
+#include "elecstruct/integrals/integrals.hpp"
 #include "elecstruct/mathtools/factorial.hpp"
+#include "elecstruct/orbitals.hpp"
 
 namespace impl_elec::nuclear_electron_integrals
 {
@@ -16,11 +20,6 @@ inline auto neg_1_power(std::int64_t arg) -> std::int64_t
         return -1;
     }
 }
-
-}  // namespace impl_elec::nuclear_electron_integrals
-
-namespace elec
-{
 
 /*
     The expansion coefficient for the calculation of Gaussian-Type Functions, given in:
@@ -49,15 +48,13 @@ inline auto nuclear_a_factor(
     double epsilon
 ) -> double
 {
-    namespace nei = impl_elec::nuclear_electron_integrals;
-
     const auto diff_a = position_relative - position_a;
     const auto diff_b = position_relative - position_b;
     const auto diff_c = position_relative - position_c;
     const auto idx_c = idx_l - 2 * (idx_r + idx_i);
 
-    const auto sign = nei::neg_1_power(idx_l + idx_i);
-    const auto expansion = expansion_coefficient(idx_l, angmom0, angmom1, diff_a, diff_b);
+    const auto sign = neg_1_power(idx_l + idx_i);
+    const auto expansion = elec::expansion_coefficient(idx_l, angmom0, angmom1, diff_a, diff_b);
     const auto epsilon_exponent = std::pow(epsilon, idx_r + idx_i);
     const auto diff_c_exponent = std::pow(diff_c, idx_c);
     const auto fact_l = elec::math::factorial(idx_l);
@@ -70,6 +67,29 @@ inline auto nuclear_a_factor(
     const auto denominator = static_cast<double>(fact_r * fact_i * fact_diff_c);
 
     return numerator / denominator;
+}
+
+}  // namespace impl_elec::nuclear_electron_integrals
+
+
+namespace elec
+{
+
+inline auto nuclear_electron_intergral(
+    const AngularMomentumNumbers& angmom0,
+    const AngularMomentumNumbers& angmom1,
+    const coord::Cartesian3D& position_gauss0,
+    const coord::Cartesian3D& position_gauss1,
+    const coord::Cartesian3D& position_nuclear,
+    const GaussianInfo& info0,
+    const GaussianInfo& info1,
+    std::int64_t nuclear_charge
+) -> double
+{
+    const auto epsilon = 0.25 / (info0.exponent + info1.exponent);
+    const auto [new_position_gauss, new_info] = gaussian_product(position_gauss0, position_gauss1, info0, info1);
+
+    // Vn *= - Zn * Na * Nb * c * 8 * np.pi * epsilon
 }
 
 }  // namespace elec
