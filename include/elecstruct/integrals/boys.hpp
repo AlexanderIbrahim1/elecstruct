@@ -8,7 +8,8 @@
 namespace elec
 {
 
-constexpr auto N_TERMS_BOYS_SERIES_EXPANSION = std::int64_t {50};
+// NOTE: too large a number, and it won't fit in a 64-bit signed integer
+constexpr auto N_TERMS_BOYS_SERIES_EXPANSION = std::int64_t {30};
 
 /*
     NOTE: there are many much faster ways of calculating the Boys function, and its evaluation is
