@@ -72,6 +72,7 @@ add_test_target(TARGET geometry_test SOURCES "source/geometry_test.cpp")
 add_test_target(TARGET integrals_test SOURCES "source/integrals_test.cpp")
 add_test_target(TARGET mathtools_test SOURCES "source/mathtools_test.cpp")
 add_test_target(TARGET nuclear_electron_index_iterator_test SOURCES "source/nuclear_electron_index_iterator_test.cpp")
+add_test_target(TARGET electron_electron_index_iterator_test SOURCES "source/electron_electron_index_iterator_test.cpp")
 
 # ---- End-of-file commands ----
 
