@@ -10,19 +10,11 @@
 #include "elecstruct/integrals/integrals.hpp"
 #include "elecstruct/integrals/nuclear_electron_index_iterator.hpp"
 #include "elecstruct/mathtools/factorial.hpp"
+#include "elecstruct/mathtools/misc.hpp"
 #include "elecstruct/orbitals.hpp"
 
 namespace impl_elec::nuclear_electron_integrals
 {
-
-inline auto neg_1_power(std::int64_t arg) -> std::int64_t
-{
-    if (arg % 2 == 0) {
-        return 1;
-    } else {
-        return -1;
-    }
-}
 
 struct AngularMomenta1D
 {
@@ -39,7 +31,6 @@ struct Positions1D
 };
 
 /*
-    The expansion coefficient for the calculation of Gaussian-Type Functions, given in:
     This function calculates the "A-factor" that repeatedly appears in the calculation of
     the nuclear-electron attraction integrals.
 
@@ -66,7 +57,7 @@ inline auto nuclear_a_factor(
     const auto diff_c = positions.position_relative - positions.position_c;
     const auto idx_c = idx_l - 2 * (idx_r + idx_i);
 
-    const auto sign = neg_1_power(idx_l + idx_i);
+    const auto sign = elec::math::neg_1_power(idx_l + idx_i);
     const auto expansion = elec::expansion_coefficient(idx_l, angmoms.angmom_0, angmoms.angmom_1, diff_a, diff_b);
     const auto epsilon_exponent = std::pow(epsilon, idx_r + idx_i);
     const auto diff_c_exponent = std::pow(diff_c, idx_c);
