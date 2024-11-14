@@ -18,12 +18,31 @@
 namespace elec
 {
 
+struct ElectronElectronIntegralIndices
+{
+    std::int64_t idx_l_01;
+    std::int64_t idx_r_01;
+    std::int64_t idx_l_23;
+    std::int64_t idx_r_23;
+    std::int64_t idx_i;
+
+    constexpr bool operator==(const ElectronElectronIntegralIndices&) const noexcept = default;
+};
+
+struct AngularMomenta1D
+{
+    std::int64_t angmom_0;
+    std::int64_t angmom_1;
+    std::int64_t angmom_2;
+    std::int64_t angmom_3;
+};
+
 class ElectronElectronIndexIterator
 {
 public:
     // clang-format off
     using iterator_category = std::forward_iterator_tag;
-    using value_type        = std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t, std::int64_t>;
+    using value_type        = ElectronElectronIntegralIndices;
     using size_type         = std::size_t;
     using difference_type   = std::ptrdiff_t;
     using pointer           = value_type*;
@@ -42,7 +61,7 @@ public:
 
     constexpr auto operator*() const noexcept -> value_type
     {
-        return {idx_l_01_, idx_r_01_, idx_l_23_, idx_r_23_, idx_i_};
+        return ElectronElectronIntegralIndices {idx_l_01_, idx_r_01_, idx_l_23_, idx_r_23_, idx_i_};
     }
 
     constexpr auto operator->() const noexcept -> value_type
@@ -108,22 +127,7 @@ public:
         idx_i_max_ = calculate_idx_i_max_(idx_l_01_, idx_l_23_, idx_r_01_, idx_r_23_);
     }
 
-    friend constexpr auto operator==(const ElectronElectronIndexIterator& left, const ElectronElectronIndexIterator& right) noexcept -> bool
-    {
-        // clang-format off
-        return \
-            left.idx_l_01_max_ == right.idx_l_01_max_ && \
-            left.idx_l_23_max_ == right.idx_l_23_max_ && \
-            left.idx_r_01_max_ == right.idx_r_01_max_ && \
-            left.idx_r_23_max_ == right.idx_r_23_max_ && \
-            left.idx_i_max_ == right.idx_i_max_ && \
-            left.idx_l_01_ == right.idx_l_01_ && \
-            left.idx_l_23_ == right.idx_l_23_ && \
-            left.idx_r_01_ == right.idx_r_01_ && \
-            left.idx_r_23_ == right.idx_r_23_ && \
-            left.idx_i_ == right.idx_i_;
-        // clang-format on
-    }
+    constexpr bool operator==(const ElectronElectronIndexIterator&) const noexcept = default;
 
     friend constexpr auto operator!=(const ElectronElectronIndexIterator& left, const ElectronElectronIndexIterator& right) noexcept -> bool
     {
@@ -160,10 +164,10 @@ private:
 };
 
 
-class ElectronElectronIndices
+class ElectronElectronIndexGenerator
 {
 public:
-    constexpr explicit ElectronElectronIndices(
+    constexpr explicit ElectronElectronIndexGenerator(
         std::int64_t angmom_gauss0,
         std::int64_t angmom_gauss1,
         std::int64_t angmom_gauss2,
@@ -171,6 +175,11 @@ public:
     )
         : idx_l_01_max_ {angmom_gauss0 + angmom_gauss1 + 1}
         , idx_l_23_max_ {angmom_gauss2 + angmom_gauss3 + 1}
+    {}
+
+    constexpr explicit ElectronElectronIndexGenerator(const AngularMomenta1D& angmoms)
+        : idx_l_01_max_ {angmoms.angmom_0 + angmoms.angmom_1 + 1}
+        , idx_l_23_max_ {angmoms.angmom_2 + angmoms.angmom_3 + 1}
     {}
 
     constexpr auto begin() noexcept -> ElectronElectronIndexIterator

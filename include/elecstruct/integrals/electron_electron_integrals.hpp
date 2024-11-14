@@ -2,20 +2,18 @@
 
 #include <cmath>
 
+#include "elecstruct/basis/gaussian_info.hpp"
+#include "elecstruct/cartesian3d.hpp"
+#include "elecstruct/integrals/boys.hpp"
+#include "elecstruct/integrals/electron_electron_index_iterator.hpp"
 #include "elecstruct/integrals/expansion_coefficient.hpp"
+#include "elecstruct/integrals/integrals.hpp"
 #include "elecstruct/mathtools/factorial.hpp"
 #include "elecstruct/mathtools/misc.hpp"
+#include "elecstruct/orbitals.hpp"
 
 namespace impl_elec::electron_electron_integrals
 {
-
-struct AngularMomenta1D
-{
-    std::int64_t angmom_0;
-    std::int64_t angmom_1;
-    std::int64_t angmom_2;
-    std::int64_t angmom_3;
-};
 
 struct Positions1D
 {
@@ -27,19 +25,10 @@ struct Positions1D
     double position_prod23;
 };
 
-struct ElectronElectronIntegralIndices
-{
-    std::int64_t idx_l_01;
-    std::int64_t idx_r_01;
-    std::int64_t idx_l_23;
-    std::int64_t idx_r_23;
-    std::int64_t idx_i;
-};
-
 struct GaussianExponentInfo
 {
-    double exponent_01;
-    double exponent_23;
+    double g_value_01;
+    double g_value_23;
     double delta;
 };
 
@@ -76,8 +65,8 @@ inline auto electron_electron_theta_factor(
 }
 
 inline auto electron_electron_b_factor(
-    const ElectronElectronIntegralIndices& indices,
-    const AngularMomenta1D& angmoms,
+    const elec::ElectronElectronIntegralIndices& indices,
+    const elec::AngularMomenta1D& angmoms,
     const Positions1D& positions,
     const GaussianExponentInfo& info
 ) -> double
@@ -97,10 +86,10 @@ inline auto electron_electron_b_factor(
 
     // numerator
     const auto theta01 = electron_electron_theta_factor(
-        indices.idx_l_01, angmoms.angmom_0, angmoms.angmom_1, indices.idx_r_01, diff_0, diff_1, info.exponent_01
+        indices.idx_l_01, angmoms.angmom_0, angmoms.angmom_1, indices.idx_r_01, diff_0, diff_1, info.g_value_01
     );
     const auto theta23 = electron_electron_theta_factor(
-        indices.idx_l_23, angmoms.angmom_2, angmoms.angmom_3, indices.idx_r_23, diff_2, diff_3, info.exponent_23
+        indices.idx_l_23, angmoms.angmom_2, angmoms.angmom_3, indices.idx_r_23, diff_2, diff_3, info.g_value_23
     );
     const auto k_factorial = static_cast<double>(elec::math::factorial(idx_k));
     const auto expon_position = std::pow(diff_prod, idx_k - 2 * indices.idx_i);
@@ -115,6 +104,104 @@ inline auto electron_electron_b_factor(
     const auto denominator = pow_2_coeff * delta_factor * i_factorial * k2i_factorial;
 
     return sign * numerator / denominator;
+}
+
+inline auto boys_index(
+    const elec::ElectronElectronIntegralIndices& indices_x,
+    const elec::ElectronElectronIntegralIndices& indices_y,
+    const elec::ElectronElectronIntegralIndices& indices_z
+) noexcept -> std::int64_t
+{
+    // clang-format off
+    const auto idx_l_sum = indices_x.idx_l_01 + indices_x.idx_l_23
+                         + indices_y.idx_l_01 + indices_y.idx_l_23
+                         + indices_z.idx_l_01 + indices_z.idx_l_23;
+
+    const auto idx_r_sum = indices_x.idx_r_01 + indices_x.idx_r_23
+                         + indices_y.idx_r_01 + indices_y.idx_r_23
+                         + indices_z.idx_r_01 + indices_z.idx_r_23;
+
+    const auto idx_i_sum = indices_x.idx_i + indices_y.idx_i + indices_z.idx_i;
+    // clang-format on
+
+    return idx_l_sum - 2 * idx_r_sum - idx_i_sum;
+}
+
+}  // namespace impl_elec::electron_electron_integrals
+
+
+namespace elec
+{
+
+inline auto nuclear_electron_intergral(
+    const AngularMomentumNumbers& angmom_0,
+    const AngularMomentumNumbers& angmom_1,
+    const AngularMomentumNumbers& angmom_2,
+    const AngularMomentumNumbers& angmom_3,
+    const coord::Cartesian3D& pos_gauss0,
+    const coord::Cartesian3D& pos_gauss1,
+    const coord::Cartesian3D& pos_gauss2,
+    const coord::Cartesian3D& pos_gauss3,
+    const GaussianInfo& info0,
+    const GaussianInfo& info1,
+    const GaussianInfo& info2,
+    const GaussianInfo& info3
+) -> double
+{
+    namespace eli = impl_elec::electron_electron_integrals;
+
+    const auto [pos_product_01, info_product_01] = gaussian_product(pos_gauss0, pos_gauss1, info0, info1);
+    const auto [pos_product_23, info_product_23] = gaussian_product(pos_gauss2, pos_gauss3, info2, info3);
+
+    const auto norm0 = gaussian_norm(angmom_0, info0.exponent);
+    const auto norm1 = gaussian_norm(angmom_1, info1.exponent);
+    const auto norm2 = gaussian_norm(angmom_2, info2.exponent);
+    const auto norm3 = gaussian_norm(angmom_3, info3.exponent);
+
+    const auto g_value_01 = info0.exponent + info1.exponent;
+    const auto g_value_23 = info2.exponent + info3.exponent;
+    const auto delta = 0.25 * (1.0 / g_value_01 + 1.0 / g_value_23);
+    const auto expon_info = eli::GaussianExponentInfo {g_value_01, g_value_23, delta};
+
+    // clang-format off
+    const auto angmoms_x = AngularMomenta1D {angmom_0.x, angmom_1.x, angmom_2.x, angmom_3.x};
+    const auto angmoms_y = AngularMomenta1D {angmom_0.y, angmom_1.y, angmom_2.y, angmom_3.y};
+    const auto angmoms_z = AngularMomenta1D {angmom_0.z, angmom_1.z, angmom_2.z, angmom_3.z};
+    const auto positions_x = eli::Positions1D {pos_gauss0.x, pos_gauss1.x, pos_gauss2.x, pos_gauss3.x, pos_product_01.x, pos_product_23.x};
+    const auto positions_y = eli::Positions1D {pos_gauss0.y, pos_gauss1.y, pos_gauss2.y, pos_gauss3.y, pos_product_01.y, pos_product_23.y};
+    const auto positions_z = eli::Positions1D {pos_gauss0.z, pos_gauss1.z, pos_gauss2.z, pos_gauss3.z, pos_product_01.z, pos_product_23.z};
+    // clang-format on
+
+    // clang-format off
+    auto integral = double {0.0};
+
+    for (const auto indices_x : ElectronElectronIndexGenerator {angmoms_x}) {
+        const auto b_factor_x = eli::electron_electron_b_factor(indices_x, angmoms_x, positions_x, expon_info);
+
+        for (const auto indices_y : ElectronElectronIndexGenerator {angmoms_y}) {
+            const auto b_factor_y = eli::electron_electron_b_factor(indices_y, angmoms_y, positions_y, expon_info);
+
+            for (const auto indices_z : ElectronElectronIndexGenerator {angmoms_z}) {
+                const auto b_factor_z = eli::electron_electron_b_factor(indices_z, angmoms_z, positions_z, expon_info);
+
+                const auto idx_boys = eli::boys_index(indices_x, indices_y, indices_z);
+                const auto boys_arg = 0.25 * coord::norm_squared(pos_product_01 - pos_product_23) / delta;
+                const auto boys_factor = boys_function_via_series_expansion(boys_arg, idx_boys);
+                
+                const auto contribution = b_factor_x * b_factor_y * b_factor_z * boys_factor;
+                integral += contribution;
+            }
+        }
+    }
+    // clang-format on
+
+    const auto norm_tot = norm0 * norm1 * norm2 * norm3;
+    const auto coeff_tot = info_product_01.coefficient * info_product_23.coefficient;
+    const auto expon_tot = std::pow(M_PI, 5.0/2.0) / std::pow(g_value_01 + g_value_23, 3.0/2.0);
+
+    return 2.0 * integral * coeff_tot * norm_tot * expon_tot;
+
+    // Vn *= - Zn * Na * Nb * c * 8 * np.pi * epsilon
 }
 
 }  // namespace elec

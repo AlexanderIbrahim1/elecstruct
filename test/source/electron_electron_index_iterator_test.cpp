@@ -27,7 +27,7 @@ auto indices_via_standard_nested_loops(
     for (std::int64_t idx_r_23 {0}; idx_r_23 < static_cast<std::int64_t>(idx_l_23 / 2) + 1; ++idx_r_23)
     for (std::int64_t idx_i {0}; idx_i < static_cast<std::int64_t>((idx_l_01 + idx_l_23 - 2 * (idx_r_01 + idx_r_23)) / 2) + 1; ++idx_i)
     {
-        output.push_back({idx_l_01, idx_r_01, idx_l_23, idx_r_23, idx_i});
+        output.emplace_back(idx_l_01, idx_r_01, idx_l_23, idx_r_23, idx_i);
     }
 
     return output;
@@ -43,10 +43,10 @@ auto indices_via_custom_iterator(
 {
     auto output = std::vector<Indices> {};
 
-    const auto index_generator = elec::ElectronElectronIndices(angmom_0, angmom_1, angmom_2, angmom_3);
+    const auto index_generator = elec::ElectronElectronIndexGenerator(angmom_0, angmom_1, angmom_2, angmom_3);
 
     for (const auto [idx_l_01, idx_r_01, idx_l_23, idx_r_23, idx_i] : index_generator) {
-        output.push_back({idx_l_01, idx_r_01, idx_l_23, idx_r_23, idx_i});
+        output.emplace_back(idx_l_01, idx_r_01, idx_l_23, idx_r_23, idx_i);
     }
 
     return output;
