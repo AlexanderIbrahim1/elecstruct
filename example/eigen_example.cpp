@@ -15,6 +15,8 @@ auto main() -> int
 
     // Perform some simple operations
     Eigen::Vector2d vec(1, 2);
+    vec = vec.array().pow(2.0);
+    std::cout << "vec = " << vec << '\n';
     Eigen::Vector2d result = mat * vec;
 
     // Print the result of the matrix-vector multiplication

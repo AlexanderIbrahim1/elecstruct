@@ -33,9 +33,10 @@ cmake_path(GET PROJECT_SOURCE_DIR PARENT_PATH PIMC_SIM_SOURCE_DIR)
 set(SOURCE_FILES_DIR "${PIMC_SIM_SOURCE_DIR}/source")
 
 function(add_test_target)
+    set(EIGEN_OPTION_ARG ENABLE_EIGEN)
     set(ONE_VALUE_ARGS TARGET)
     set(MULTI_VALUE_ARGS SOURCES)
-    cmake_parse_arguments(add_test_target "" "${ONE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" "${ARGN}")
+    cmake_parse_arguments(add_test_target "${EIGEN_OPTION_ARG}" "${ONE_VALUE_ARGS}" "${MULTI_VALUE_ARGS}" "${ARGN}")
 
     add_executable(
         ${add_test_target_TARGET}
@@ -47,11 +48,21 @@ function(add_test_target)
         PRIVATE cxx_std_20
     )
 
-    target_include_directories(
-        ${add_test_target_TARGET}
-        ${warning_guard}
-        PRIVATE "${SOURCE_FILES_DIR}"
-    )
+    if(add_test_target_ENABLE_EIGEN)
+        target_include_directories(
+            ${add_test_target_TARGET}
+            ${warning_guard}
+            PRIVATE "${SOURCE_FILES_DIR}"
+            SYSTEM PRIVATE "${EIGEN_PATH}"
+            SYSTEM PRIVATE "${PIMC_SIM_SOURCE_DIR}"
+        )
+    else()
+        target_include_directories(
+            ${add_test_target_TARGET}
+            ${warning_guard}
+            PRIVATE "${SOURCE_FILES_DIR}"
+        )
+    endif()
 
     target_link_libraries(
         ${add_test_target_TARGET}
@@ -73,6 +84,7 @@ add_test_target(TARGET integrals_test SOURCES "source/integrals_test.cpp")
 add_test_target(TARGET mathtools_test SOURCES "source/mathtools_test.cpp")
 add_test_target(TARGET nuclear_electron_index_iterator_test SOURCES "source/nuclear_electron_index_iterator_test.cpp")
 add_test_target(TARGET electron_electron_index_iterator_test SOURCES "source/electron_electron_index_iterator_test.cpp")
+add_test_target(ENABLE_EIGEN TARGET overlap_matrix_test SOURCES "source/overlap_matrix_test.cpp")
 
 # ---- End-of-file commands ----
 

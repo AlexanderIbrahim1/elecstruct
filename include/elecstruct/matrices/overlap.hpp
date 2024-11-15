@@ -1,5 +1,9 @@
 #pragma once
 
+// TODO: remove
+#include <iostream>
+
+#include <stdexcept>
 #include <vector>
 
 #include <Eigen/Dense>
@@ -15,7 +19,7 @@ using Basis = std::vector<AtomicOrbitalInfoSTO3G>;
 
 // TODO: change the type of the gaussian coefficients to complex, because technically we take
 // the product between the complex conjugate of `info0.coefficient1` and `info1.coefficient`
-auto overlap_matrix_s(const Basis& basis) -> Eigen::MatrixXd
+inline auto overlap_matrix_s(const Basis& basis) -> Eigen::MatrixXd
 {
     const auto size = basis.size();
 
@@ -44,13 +48,33 @@ auto overlap_matrix_s(const Basis& basis) -> Eigen::MatrixXd
     return output;
 }
 
-// inline auto overlap_integral(
-//     const AngularMomentumNumbers& angmom0,
-//     const AngularMomentumNumbers& angmom1,
-//     const coord::Cartesian3D& position0,
-//     const coord::Cartesian3D& position1,
-//     const GaussianInfo& info0,
-//     const GaussianInfo& info1
-// ) -> double
+
+inline auto transformation_matrix(const Eigen::MatrixXd& s_overlap) -> Eigen::MatrixXd
+{
+    std::cout << s_overlap << '\n';
+
+    const auto eigensolver = Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> {s_overlap};
+    if (eigensolver.info() != Eigen::Success) {
+        throw std::runtime_error {"Failed to perform eigenvalue decomposition on overlap matrix"};
+    }
+
+    const auto eigenvectors = eigensolver.eigenvectors().transpose();
+
+    std::cout << eigenvectors << '\n';
+
+    const auto eigenvalues = eigensolver.eigenvalues();
+    const auto inv_sqrt_eigenvalues = eigenvalues.array().pow(-0.5).matrix();
+    const auto diagonal_inv_sqrt = inv_sqrt_eigenvalues.asDiagonal();
+
+    std::cout << inv_sqrt_eigenvalues << '\n';
+
+    const auto result = eigenvectors * diagonal_inv_sqrt;
+
+    std::cout << result << '\n';
+
+    return result;
+}
+
+
 
 }  // namespace elec
