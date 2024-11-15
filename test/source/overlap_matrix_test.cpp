@@ -59,13 +59,13 @@ TEST_CASE("transformation matrix")
     const auto tolerance = 1.0e-5;
 
     const auto input = [&]() {
-        auto input = Eigen::MatrixXd {2, 2};
-        input(0, 0) = 5.0;
-        input(1, 0) = 1.0;
-        input(0, 1) = 1.0;
-        input(1, 1) = 4.0;
+        auto input_ = Eigen::MatrixXd {2, 2};
+        input_(0, 0) = 5.0;
+        input_(1, 0) = 1.0;
+        input_(0, 1) = 1.0;
+        input_(1, 1) = 4.0;
 
-        return input;
+        return input_;
     }();
 
     const auto expected_columns = std::vector<Eigen::Vector2d> {

@@ -53,8 +53,20 @@ function(add_test_target)
             ${add_test_target_TARGET}
             ${warning_guard}
             PRIVATE "${SOURCE_FILES_DIR}"
-            SYSTEM PRIVATE "${EIGEN_PATH}"
+        )
+
+        # separating the statements makes the warning guards work; otherwise we get lots of compilation warnings
+        # from these external libraries
+        target_include_directories(
+            ${add_test_target_TARGET}
+            ${warning_guard}
             SYSTEM PRIVATE "${PIMC_SIM_SOURCE_DIR}"
+        )
+
+        target_include_directories(
+            ${add_test_target_TARGET}
+            ${warning_guard}
+            SYSTEM PRIVATE "${EIGEN_PATH}"
         )
     else()
         target_include_directories(
