@@ -51,28 +51,18 @@ inline auto overlap_matrix_s(const Basis& basis) -> Eigen::MatrixXd
 
 inline auto transformation_matrix(const Eigen::MatrixXd& s_overlap) -> Eigen::MatrixXd
 {
-    std::cout << s_overlap << '\n';
-
     const auto eigensolver = Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> {s_overlap};
     if (eigensolver.info() != Eigen::Success) {
         throw std::runtime_error {"Failed to perform eigenvalue decomposition on overlap matrix"};
     }
 
-    const auto eigenvectors = eigensolver.eigenvectors().transpose();
-
-    std::cout << eigenvectors << '\n';
+    const auto eigenvectors = eigensolver.eigenvectors();
 
     const auto eigenvalues = eigensolver.eigenvalues();
     const auto inv_sqrt_eigenvalues = eigenvalues.array().pow(-0.5).matrix();
     const auto diagonal_inv_sqrt = inv_sqrt_eigenvalues.asDiagonal();
 
-    std::cout << inv_sqrt_eigenvalues << '\n';
-
-    const auto result = eigenvectors * diagonal_inv_sqrt;
-
-    std::cout << result << '\n';
-
-    return result;
+    return eigenvectors * diagonal_inv_sqrt;
 }
 
 
