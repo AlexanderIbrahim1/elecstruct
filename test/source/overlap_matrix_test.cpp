@@ -6,7 +6,7 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <Eigen/Dense>
 
-#include "elecstruct/matrices/overlap.hpp"
+#include "elecstruct/matrices.hpp"
 
 
 auto approx_equal(const Eigen::Vector2d& eig0, const Eigen::Vector2d& eig1, double tolerance) -> bool
