@@ -6,10 +6,12 @@
 #include <Eigen/Dense>
 
 #include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/grids/grid4d.hpp"
 #include "elecstruct/basis/basis_sets/sto3g.hpp"
 #include "elecstruct/integrals/overlap_integrals.hpp"
 #include "elecstruct/integrals/kinetic_integrals.hpp"
 #include "elecstruct/integrals/nuclear_electron_integrals.hpp"
+#include "elecstruct/integrals/electron_electron_integrals.hpp"
 
 
 // --- TODO ----------
@@ -28,12 +30,53 @@
 // - if we fix those variables, then we can get three different matrices created with the same interface
 //   - and we can pass it as a template argument and reduce a ton of code duplication 
 
+namespace impl_elec::matrices
+{
+
+// TODO: change coefficients of the integral so that they might be complex, since technically this is required
+inline auto two_electron_integral_grid(
+    const elec::AtomicOrbitalInfoSTO3G& orbital0,
+    const elec::AtomicOrbitalInfoSTO3G& orbital1,
+    const elec::AtomicOrbitalInfoSTO3G& orbital2,
+    const elec::AtomicOrbitalInfoSTO3G& orbital3
+) -> double
+{
+    const auto pos_gauss0 = orbital0.position;
+    const auto pos_gauss1 = orbital1.position;
+    const auto pos_gauss2 = orbital2.position;
+    const auto pos_gauss3 = orbital3.position;
+    const auto angmom_0 = orbital0.angular_momentum;
+    const auto angmom_1 = orbital1.angular_momentum;
+    const auto angmom_2 = orbital2.angular_momentum;
+    const auto angmom_3 = orbital3.angular_momentum;
+
+    // clang-format off
+    auto output = double {0.0};
+    for (const auto& info0 : orbital0.gaussians)
+    for (const auto& info1 : orbital1.gaussians)
+    for (const auto& info2 : orbital2.gaussians)
+    for (const auto& info3 : orbital3.gaussians) {
+        const auto coeff = info0.coefficient * info1.coefficient * info2.coefficient * info3.coefficient;
+        const auto integral = elec::electron_electron_integral(
+            angmom_0, angmom_1, angmom_2, angmom_3,
+            pos_gauss0, pos_gauss1, pos_gauss2, pos_gauss3,
+            info0, info1, info2, info3
+        );
+
+        output += coeff * integral;
+    }
+    // clang-format on
+
+    return output;
+}
+
+}  // namespace impl_elec::matrices
+
+
 namespace elec
 {
 
-using Basis = std::vector<AtomicOrbitalInfoSTO3G>;
-
-inline auto overlap_matrix(const Basis& basis) -> Eigen::MatrixXd
+inline auto overlap_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> Eigen::MatrixXd
 {
     const auto size = basis.size();
 
@@ -78,7 +121,7 @@ inline auto transformation_matrix(const Eigen::MatrixXd& s_overlap) -> Eigen::Ma
     return eigenvectors * diagonal_inv_sqrt;
 }
 
-inline auto kinetic_matrix(const Basis& basis) -> Eigen::MatrixXd
+inline auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> Eigen::MatrixXd
 {
     const auto size = basis.size();
 
@@ -107,7 +150,7 @@ inline auto kinetic_matrix(const Basis& basis) -> Eigen::MatrixXd
     return output;
 }
 
-inline auto nuclear_electron_matrix(const Basis& basis, const AtomInfo& atom) -> Eigen::MatrixXd
+inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis, const AtomInfo& atom) -> Eigen::MatrixXd
 {
     const auto size = basis.size();
     const auto charge = atom_charge_map.at(atom.label);
@@ -135,6 +178,48 @@ inline auto nuclear_electron_matrix(const Basis& basis, const AtomInfo& atom) ->
     }
 
     return output;
+}
+
+
+/*
+    Calculates the core Hamiltonian matrix, which is the sum of the kinetic energy matrix
+    and all the nuclear-electron interaction matrices.
+*/
+inline auto core_hamiltonian_matrix(
+    const std::vector<AtomicOrbitalInfoSTO3G>& basis,
+    const std::vector<AtomInfo>& atoms
+) -> Eigen::MatrixXd
+{
+    const auto size = basis.size();
+
+    auto output = kinetic_matrix(basis);
+    for (const auto& atom : atoms) {
+        output += nuclear_electron_matrix(basis, atom);
+    }
+
+    return output;
+}
+
+
+/*
+    NOTE: I'm pretty sure exchanging i0 <-> i1, and i2 <-> i3, only change the result by a complex
+    conjugate; once I get the code running, I should take advantage of that symmetry
+*/
+inline auto two_electron_integral_grid(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> grid::Grid4D
+{
+    namespace emat = impl_elec::matrices;
+
+    const auto size = basis.size();
+    auto integral_grid = grid::Grid4D {size, size, size, size};
+
+    for (std::size_t i0 {0}; i0 < size; ++i0)
+    for (std::size_t i1 {0}; i1 < size; ++i1)
+    for (std::size_t i2 {0}; i2 < size; ++i2)
+    for (std::size_t i3 {0}; i3 < size; ++i3) {
+        integral_grid.set(i0, i1, i2, i3, emat::two_electron_integral_grid(basis[i0], basis[i1], basis[i2], basis[i3]));
+    }
+
+    return integral_grid;
 }
 
 

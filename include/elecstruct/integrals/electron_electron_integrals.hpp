@@ -64,6 +64,7 @@ inline auto electron_electron_theta_factor(
     return f_factor * ltot_fact * expon / (r_fact * ltot_r_fact);
 }
 
+// NOTE: according to the reference code, the book has the wrong formula
 inline auto electron_electron_b_factor(
     const elec::ElectronElectronIntegralIndices& indices,
     const elec::AngularMomenta1D& angmoms,
@@ -81,7 +82,7 @@ inline auto electron_electron_b_factor(
 
     // NOTE: code and book have a different variable here:
     // code: indices.idx_l_01 (i.e. l in the reference,  l in the book)
-    // book: indices.idx_l_01 (i.e. ll in the reference, l' in the book)
+    // book: indices.idx_l_23 (i.e. ll in the reference, l' in the book)
     const auto sign = elec::math::neg_1_power(indices.idx_l_01 + indices.idx_i);
 
     // numerator
@@ -133,7 +134,7 @@ inline auto boys_index(
 namespace elec
 {
 
-inline auto nuclear_electron_intergral(
+inline auto electron_electron_integral(
     const AngularMomentumNumbers& angmom_0,
     const AngularMomentumNumbers& angmom_1,
     const AngularMomentumNumbers& angmom_2,
@@ -200,8 +201,6 @@ inline auto nuclear_electron_intergral(
     const auto expon_tot = std::pow(M_PI, 5.0/2.0) / std::pow(g_value_01 + g_value_23, 3.0/2.0);
 
     return 2.0 * integral * coeff_tot * norm_tot * expon_tot;
-
-    // Vn *= - Zn * Na * Nb * c * 8 * np.pi * epsilon
 }
 
 }  // namespace elec
