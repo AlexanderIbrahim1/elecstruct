@@ -9,7 +9,7 @@ TEST_CASE("Grid4D construction with sizes")
 {
     SECTION("Create a 2x2x2x2 Grid4D and verify sizes")
     {
-        const auto grid = grid::Grid4D {2, 2, 2, 2};
+        const auto grid = elec::grid::Grid4D {2, 2, 2, 2};
         const auto [size0, size1, size2, size3] = grid.sizes();
         REQUIRE(size0 == 2);
         REQUIRE(size1 == 2);
@@ -19,7 +19,7 @@ TEST_CASE("Grid4D construction with sizes")
 
     SECTION("Create a 3x4x5x6 Grid4D and verify sizes")
     {
-        const auto grid = grid::Grid4D {3, 4, 5, 6};
+        const auto grid = elec::grid::Grid4D {3, 4, 5, 6};
         const auto [size0, size1, size2, size3] = grid.sizes();
         REQUIRE(size0 == 3);
         REQUIRE(size1 == 4);
@@ -30,7 +30,7 @@ TEST_CASE("Grid4D construction with sizes")
 
 TEST_CASE("Grid4D set and get in bounds")
 {
-    auto grid = grid::Grid4D {2, 2, 2, 2};
+    auto grid = elec::grid::Grid4D {2, 2, 2, 2};
 
     SECTION("Set and get values in bounds using set() and get()")
     {
@@ -87,7 +87,7 @@ TEST_CASE("Grid4D constructed from std::vector<double>")
     };
     // clang-format on
 
-    const auto grid = grid::Grid4D {data, 2, 3, 4, 5};
+    const auto grid = elec::grid::Grid4D {data, 2, 3, 4, 5};
 
     std::size_t index = 0;
     for (std::size_t i0 = 0; i0 < 2; ++i0) {
@@ -104,7 +104,7 @@ TEST_CASE("Grid4D constructed from std::vector<double>")
 
 TEST_CASE("Grid4D out-of-bounds access")
 {
-    auto grid = grid::Grid4D {2, 2, 2, 2};
+    auto grid = elec::grid::Grid4D {2, 2, 2, 2};
 
     SECTION("Calling get_at out-of-bounds should throw")
     {

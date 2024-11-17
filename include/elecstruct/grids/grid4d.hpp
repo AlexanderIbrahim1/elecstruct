@@ -11,7 +11,7 @@
     vector as the underlying data type.
 */
 
-namespace grid
+namespace elec::grid
 {
 
 class Grid4D
@@ -119,4 +119,4 @@ private:
     }
 };
 
-}  // namespace grid
+}  // namespace elec::grid

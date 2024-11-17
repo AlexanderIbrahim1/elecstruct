@@ -8,7 +8,7 @@ TEST_CASE("Grid3D construction with sizes")
 {
     SECTION("Create a 3x3x3 Grid3D and verify sizes")
     {
-        const auto grid = grid::Grid3D {3, 3, 3};
+        const auto grid = elec::grid::Grid3D {3, 3, 3};
         const auto [size0, size1, size2] = grid.sizes();
         REQUIRE(size0 == 3);
         REQUIRE(size1 == 3);
@@ -17,7 +17,7 @@ TEST_CASE("Grid3D construction with sizes")
 
     SECTION("Create a 3x4x5 Grid3D and verify sizes")
     {
-        const auto grid = grid::Grid3D {3, 4, 5};
+        const auto grid = elec::grid::Grid3D {3, 4, 5};
         const auto [size0, size1, size2] = grid.sizes();
         REQUIRE(size0 == 3);
         REQUIRE(size1 == 4);
@@ -27,7 +27,7 @@ TEST_CASE("Grid3D construction with sizes")
 
 TEST_CASE("Grid3D set and get in bounds")
 {
-    auto grid = grid::Grid3D {3, 3, 3};
+    auto grid = elec::grid::Grid3D {3, 3, 3};
 
     SECTION("Set and get values in bounds using set() and get()")
     {
@@ -60,7 +60,7 @@ TEST_CASE("Grid3D constructed from std::vector<double>")
     };
     // clang-format on
 
-    const auto grid = grid::Grid3D {data, 2, 3, 4};
+    const auto grid = elec::grid::Grid3D {data, 2, 3, 4};
 
     std::size_t index = 0;
     for (std::size_t i0 = 0; i0 < 2; ++i0) {
@@ -75,7 +75,7 @@ TEST_CASE("Grid3D constructed from std::vector<double>")
 
 TEST_CASE("Grid3D out-of-bounds access")
 {
-    auto grid = grid::Grid3D {3, 3, 3};
+    auto grid = elec::grid::Grid3D {3, 3, 3};
 
     SECTION("Calling get_at out-of-bounds should throw")
     {

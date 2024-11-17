@@ -9,7 +9,7 @@ TEST_CASE("Grid2D construction with sizes")
 {
     SECTION("Create a 3x3 Grid2D and verify sizes")
     {
-        const auto grid = grid::Grid2D {3, 3};
+        const auto grid = elec::grid::Grid2D {3, 3};
         const auto [size0, size1] = grid.sizes();
         REQUIRE(size0 == 3);
         REQUIRE(size1 == 3);
@@ -17,7 +17,7 @@ TEST_CASE("Grid2D construction with sizes")
 
     SECTION("Create a 3x5 Grid2D and verify sizes")
     {
-        const auto grid = grid::Grid2D {3, 5};
+        const auto grid = elec::grid::Grid2D {3, 5};
         const auto [size0, size1] = grid.sizes();
         REQUIRE(size0 == 3);
         REQUIRE(size1 == 5);
@@ -26,7 +26,7 @@ TEST_CASE("Grid2D construction with sizes")
 
 TEST_CASE("Grid2D set and get in bounds")
 {
-    auto grid = grid::Grid2D {3, 3};
+    auto grid = elec::grid::Grid2D {3, 3};
 
     SECTION("Set and get values in bounds using set() and get()")
     {
@@ -55,7 +55,7 @@ TEST_CASE("Grid2D constructed from std::vector<double>")
     };
     // clang-format on
 
-    const auto grid = grid::Grid2D {data, 3, 5};
+    const auto grid = elec::grid::Grid2D {data, 3, 5};
 
     std::size_t index = 0;
     for (std::size_t i0 = 0; i0 < 3; ++i0) {
@@ -68,7 +68,7 @@ TEST_CASE("Grid2D constructed from std::vector<double>")
 
 TEST_CASE("Grid2D out-of-bounds access")
 {
-    auto grid = grid::Grid2D {3, 3};
+    auto grid = elec::grid::Grid2D {3, 3};
 
     SECTION("Calling get_at out-of-bounds should throw")
     {
