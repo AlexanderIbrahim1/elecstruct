@@ -79,7 +79,13 @@ inline auto nuclear_a_factor(
 namespace elec
 {
 
-inline auto nuclear_electron_intergral(
+// TODO: maybe turn this into a class with a callable member function?
+// - the interface is very similar to the overlap and kinetic integrals, except for the nuclear position and charge
+// - but those two variables stay the same when calculating a nuclear-electron integral for a given atom
+//
+// - if we fix those variables, then we can get three different matrices created with the same interface
+//   - and we can pass it as a template argument and reduce a ton of code duplication 
+inline auto nuclear_electron_integral(
     const AngularMomentumNumbers& angmom_0,
     const AngularMomentumNumbers& angmom_1,
     const coord::Cartesian3D& pos_gauss0,
