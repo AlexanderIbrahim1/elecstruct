@@ -96,7 +96,7 @@ inline auto overlap_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
                     const auto coeff = info0.coefficient * info1.coefficient;
                     const auto overlap = overlap_integral(angmom_0, angmom_1, pos0, pos1, info0, info1);
 
-                    output(static_cast<int>(i0), static_cast<int>(i1)) = coeff * overlap;
+                    output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = coeff * overlap;
                 }
             }
         }
@@ -141,7 +141,7 @@ inline auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
                     const auto coeff = info0.coefficient * info1.coefficient;
                     const auto overlap = kinetic_integral(angmom_0, angmom_1, pos0, pos1, info0, info1);
 
-                    output(static_cast<int>(i0), static_cast<int>(i1)) = coeff * overlap;
+                    output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = coeff * overlap;
                 }
             }
         }
@@ -171,7 +171,7 @@ inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& b
                     const auto coeff = info0.coefficient * info1.coefficient;
                     const auto overlap = nuclear_electron_integral(angmom_0, angmom_1, pos0, pos1, atom.position, info0, info1, charge);
 
-                    output(static_cast<int>(i0), static_cast<int>(i1)) = coeff * overlap;
+                    output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = coeff * overlap;
                 }
             }
         }
@@ -190,8 +190,6 @@ inline auto core_hamiltonian_matrix(
     const std::vector<AtomInfo>& atoms
 ) -> Eigen::MatrixXd
 {
-    const auto size = basis.size();
-
     auto output = kinetic_matrix(basis);
     for (const auto& atom : atoms) {
         output += nuclear_electron_matrix(basis, atom);
@@ -222,5 +220,65 @@ inline auto two_electron_integral_grid(const std::vector<AtomicOrbitalInfoSTO3G>
     return integral_grid;
 }
 
+
+/*
+    NOTE: the density elements are actually given by the sum of:
+        `coefficient_mtx(i0, j)` * CONJUGATE(coefficient_mtx(i1, j))`;
+
+    I think the examples used here all have real elements, so it won't matter
+      - but it might change if the orbitals start off using complex coefficients
+*/
+inline auto density_matrix_restricted_hartree_fock(const Eigen::MatrixXd& coefficient_mtx, std::size_t n_electrons) -> Eigen::MatrixXd
+{
+    const auto size = coefficient_mtx.cols();
+    const auto half = static_cast<Eigen::Index>(n_electrons / 2);
+
+    auto output = Eigen::MatrixXd {size, size};
+
+    for (Eigen::Index i0 {0}; i0 < size; ++i0) {
+        for (Eigen::Index i1 {0}; i1 < size; ++i1) {
+            auto density_element = double {0.0};
+            for (Eigen::Index j {0}; j < half; ++j) {
+                density_element += coefficient_mtx(i0, j) * coefficient_mtx(i1, j);
+            }
+            output(i0, i1) = 2.0 * density_element;
+        }
+    }
+
+    return output;
+}
+
+inline auto electron_electron_matrix(
+    const std::vector<AtomicOrbitalInfoSTO3G>& basis,
+    const std::vector<AtomInfo>& atoms,
+    const Eigen::MatrixXd& density_matrix,
+    const grid::Grid4D& two_electron_integrals
+) -> Eigen::MatrixXd
+{
+    const auto size = basis.size();
+    auto output = Eigen::MatrixXd {size, size};
+
+    for (std::size_t i0 {0}; i0 < size; ++i0) {
+        for (std::size_t i1 {0}; i1 < size; ++i1) {
+            auto element = double {0.0};
+            for (std::size_t i2 {0}; i2 < size; ++i2) {
+                for (std::size_t i3 {0}; i3 < size; ++i3) {
+                    const auto i2_eig = static_cast<Eigen::Index>(i2);
+                    const auto i3_eig = static_cast<Eigen::Index>(i3);
+                    const auto density_part = density_matrix(i2_eig, i3_eig);
+
+                    const auto coulombic_term = two_electron_integrals.get(i0, i1, i2, i3);
+                    const auto exchange_term = two_electron_integrals.get(i0, i3, i2, i1);
+                    const auto electron_part = coulombic_term - 0.5 * exchange_term;
+
+                    element += density_part * electron_part;
+                }
+            }
+            output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = element;
+        }
+    }
+
+    return output;
+}
 
 }  // namespace elec
