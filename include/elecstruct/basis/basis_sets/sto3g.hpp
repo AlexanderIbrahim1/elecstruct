@@ -4,17 +4,20 @@
 #include <numeric>
 #include <vector>
 
-#include "extern/mapbox/eternal.hpp"
+#include <extern/mapbox/eternal.hpp>
 
 #include "elecstruct/atoms/atoms.hpp"
 #include "elecstruct/basis/gaussian_info.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/orbitals.hpp"
 
+namespace elec
+{
+
 namespace impl_elec
 {
 
-constexpr auto total_number_of_atomic_orbitals(const std::vector<elec::AtomInfo>& atom_infos) -> std::size_t
+inline auto total_number_of_atomic_orbitals(const std::vector<elec::AtomInfo>& atom_infos) -> std::size_t
 {
     auto n_orbitals = std::size_t {0};
     for (const auto& atom_info : atom_infos) {
@@ -25,9 +28,6 @@ constexpr auto total_number_of_atomic_orbitals(const std::vector<elec::AtomInfo>
 }
 
 }  // namespace impl_elec
-
-namespace elec
-{
 
 struct GaussianConstantsSTO3G
 {

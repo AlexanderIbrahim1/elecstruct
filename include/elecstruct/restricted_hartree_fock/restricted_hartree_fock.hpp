@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iomanip>
 #include <iostream>
 #include <string_view>
 #include <vector>
@@ -28,15 +29,14 @@ inline void maybe_print(Verbose is_verbose, const Eigen::MatrixXd& matrix, std::
 {
     if (is_verbose == Verbose::TRUE) {
         std::cout << name << '\n';
-        std::cout << matrix << '\n\n';
+        std::cout << matrix << "\n\n";
     }
 }
 
-template <typename... Args>
-inline void maybe_print(Verbose is_verbose, Args&&... elements)
+inline void maybe_print(Verbose is_verbose, std::string_view text)
 {
     if (is_verbose == Verbose::TRUE) {
-        (std::cout << .. << elements) << '\n\n';
+        std::cout << text << "\n\n";
     }
 }
 
@@ -85,6 +85,8 @@ inline void perform_restricted_hartree_fock(
     const auto core_hamiltonian_mtx = core_hamiltonian_matrix(basis, atoms);
     ierhf::maybe_print(is_verbose, core_hamiltonian_mtx, "core_hamiltonian_mtx");
 
+    std::exit(EXIT_FAILURE);
+
     ierhf::maybe_print(is_verbose, "Calculating 'two_electron_integrals'");
     const auto two_electron_integrals = two_electron_integral_grid(basis);
     ierhf::maybe_print(is_verbose, two_electron_integrals, "two_electron_integrals");
@@ -93,14 +95,14 @@ inline void perform_restricted_hartree_fock(
 
     for (std::size_t i_iter {0}; i_iter < n_max_iter; ++i_iter) {
         std::cout << "Performing iteration " << i_iter << '\n';
-        const auto fock_mtx = fock_matrix(prev_density_mtx, basis, atoms, two_electron_integrals, core_hamiltonian_mtx);
+        const auto fock_mtx = fock_matrix(prev_density_mtx, basis, two_electron_integrals, core_hamiltonian_mtx);
         const auto curr_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
 
         const auto tot_energy = total_energy(curr_density_mtx, fock_mtx, core_hamiltonian_mtx, atoms);
         std::cout << "Total energy = " << tot_energy << '\n';
 
         const auto difference = density_matrix_difference(prev_density_mtx, curr_density_mtx);
-        std::cout << "Density matrix difference = " << difference;
+        std::cout << "Density matrix difference = " << std::fixed << std::setprecision(12) << difference;
 
         if (difference < density_mtx_convergence) {
             std::cout << "Converged!\n";

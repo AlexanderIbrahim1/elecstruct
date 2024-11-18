@@ -30,7 +30,7 @@ inline auto boys_function_via_series_expansion(double x, std::int64_t order) -> 
         summ += contribution;
     }
 
-    return summ;
+    return coeff * summ;
 }
 
 }  // namespace elec

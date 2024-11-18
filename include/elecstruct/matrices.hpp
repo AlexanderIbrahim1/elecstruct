@@ -1,5 +1,8 @@
 #pragma once
 
+// TODO: remove
+#include <iostream>
+
 #include <stdexcept>
 #include <vector>
 
@@ -29,6 +32,9 @@
 //
 // - if we fix those variables, then we can get three different matrices created with the same interface
 //   - and we can pass it as a template argument and reduce a ton of code duplication 
+
+namespace elec
+{
 
 namespace impl_elec::matrices
 {
@@ -70,11 +76,8 @@ inline auto two_electron_integral_grid(
     return output;
 }
 
-}  // namespace impl_elec::matrices
+}  // namespace elec::impl_elec::matrices
 
-
-namespace elec
-{
 
 inline auto overlap_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> Eigen::MatrixXd
 {
@@ -191,8 +194,17 @@ inline auto core_hamiltonian_matrix(
 ) -> Eigen::MatrixXd
 {
     auto output = kinetic_matrix(basis);
+
+    std::cout << "kinetic_mtx\n";
+    std::cout << output << "\n\n";
+
     for (const auto& atom : atoms) {
-        output += nuclear_electron_matrix(basis, atom);
+        const auto nuclear_mtx = nuclear_electron_matrix(basis, atom);
+
+        std::cout << "nuclear_mtx\n";
+        std::cout << nuclear_mtx << "\n\n";
+
+        output += nuclear_mtx;
     }
 
     return output;
@@ -250,7 +262,6 @@ inline auto density_matrix_restricted_hartree_fock(const Eigen::MatrixXd& coeffi
 
 inline auto electron_electron_matrix(
     const std::vector<AtomicOrbitalInfoSTO3G>& basis,
-    const std::vector<AtomInfo>& atoms,
     const Eigen::MatrixXd& density_matrix,
     const grid::Grid4D& two_electron_integrals
 ) -> Eigen::MatrixXd

@@ -12,6 +12,9 @@
 #include "elecstruct/mathtools/misc.hpp"
 #include "elecstruct/orbitals.hpp"
 
+namespace elec
+{
+
 namespace impl_elec::electron_electron_integrals
 {
 
@@ -128,11 +131,8 @@ inline auto boys_index(
     return idx_l_sum - 2 * idx_r_sum - idx_i_sum;
 }
 
-}  // namespace impl_elec::electron_electron_integrals
+}  // namespace elec::impl_elec::electron_electron_integrals
 
-
-namespace elec
-{
 
 inline auto electron_electron_integral(
     const AngularMomentumNumbers& angmom_0,

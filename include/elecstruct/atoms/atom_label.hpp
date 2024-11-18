@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "extern/mapbox/eternal.hpp"
+#include <extern/mapbox/eternal.hpp>
 
 namespace elec
 {

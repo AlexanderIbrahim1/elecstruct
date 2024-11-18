@@ -8,6 +8,9 @@
 #include "elecstruct/mathtools/n_choose_k.hpp"
 
 
+namespace elec
+{
+
 namespace impl_elec::expansion_coefficient
 {
 
@@ -30,11 +33,8 @@ inline auto range_limits_(
     return {minimum, maximum};
 }
 
-}  // namespace impl_elec::expansion_coefficient
+}  // namespace elec::impl_elec::expansion_coefficient
 
-
-namespace elec
-{
 
 /*
     The expansion coefficient for the calculation of Gaussian-Type Functions, given in:
@@ -47,16 +47,18 @@ namespace elec
     at the bottom on page 219.
 */
 inline auto expansion_coefficient(
-    std::uint64_t angmom_j,
-    std::uint64_t angmom_l,
-    std::uint64_t angmom_m,
+    std::int64_t angmom_j,
+    std::int64_t angmom_l,
+    std::int64_t angmom_m,
     double separation0,
     double separation1
 ) -> double
 {
+    namespace ieec = impl_elec::expansion_coefficient;
+
     auto result = double {0.0};
 
-    const auto [minimum, maximum] = impl_elec::expansion_coefficient::range_limits_(angmom_j, angmom_l, angmom_m);
+    const auto [minimum, maximum] = ieec::range_limits_(angmom_j, angmom_l, angmom_m);
     for (std::int64_t angmom_k {minimum}; angmom_k < maximum; ++angmom_k) {
         const auto binom0 = elec::math::N_CHOOSE_K_GRID.at(angmom_l, angmom_k);
         const auto coeff0 = std::pow(separation0, angmom_l - angmom_k);

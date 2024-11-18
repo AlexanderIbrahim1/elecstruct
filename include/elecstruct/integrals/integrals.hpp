@@ -10,6 +10,9 @@
 #include "elecstruct/mathtools/factorial.hpp"
 #include "elecstruct/orbitals.hpp"
 
+namespace elec
+{
+
 namespace impl_elec
 {
 
@@ -28,10 +31,8 @@ inline auto gaussian_product_coefficient(
     return coefficients * std::exp(expon_scaling * norm_sq);
 }
 
-}  // namespace impl_elec
+}  // namespace elec::impl_elec
 
-namespace elec
-{
 
 inline auto gaussian_product(
     const coord::Cartesian3D& centre0,
@@ -45,7 +46,7 @@ inline auto gaussian_product(
     const auto new_exponent = info0.exponent + info1.exponent;
 
     return {
-        new_centre, {new_coefficient, new_exponent}
+        new_centre, GaussianInfo {new_coefficient, new_exponent}
     };
 }
 

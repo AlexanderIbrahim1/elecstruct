@@ -29,6 +29,12 @@ struct DirectedAngularMomentumNumbers
     std::int64_t other0;
     std::int64_t other1;
 
+    DirectedAngularMomentumNumbers(std::int64_t main_, std::int64_t other0_, std::int64_t other1_)
+        : main {main_}
+        , other0 {other0_}
+        , other1 {other1_}
+    {}
+
     explicit DirectedAngularMomentumNumbers(const AngularMomentumNumbers& angmom)
         : main {angmom.x}
         , other0 {angmom.y}
@@ -42,6 +48,12 @@ struct DirectedCartesian3D
     double other0;
     double other1;
 
+    DirectedCartesian3D(double main_, double other0_, double other1_)
+        : main {main_}
+        , other0 {other0_}
+        , other1 {other1_}
+    {}
+
     explicit DirectedCartesian3D(const coord::Cartesian3D& position)
         : main {position.x}
         , other0 {position.y}
@@ -51,16 +63,13 @@ struct DirectedCartesian3D
 
 template <typename T>
 auto left_cyclic_shift(const T& coordinates) -> T {
-    return {coordinates.other0, coordinates.other1, coordinates.main};
+    return T {coordinates.other0, coordinates.other1, coordinates.main};
 }
 
 template <typename T>
 auto right_cyclic_shift(const T& coordinates) -> T {
-    return {coordinates.other1, coordinates.main, coordinates.other0};
+    return T {coordinates.other1, coordinates.main, coordinates.other0};
 }
-
-}  // namespace elec
-
 
 namespace impl_elec::unorm_kinetic_integral
 {
@@ -179,11 +188,8 @@ inline auto term_direction_other1(
     );
 }
 
-}  // namespace impl_elec
+}  // namespace elec::impl_elec::unorm_kinetic_integral
 
-
-namespace elec
-{
 
 inline auto unnormalized_kinetic_integral_1d(
     const DirectedAngularMomentumNumbers& angmom_a,

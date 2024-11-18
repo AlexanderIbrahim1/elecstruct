@@ -20,13 +20,20 @@ function(add_example NAME)
   add_dependencies(run-examples "run_${NAME}")
 endfunction()
 
-add_example(eigen_example)
+# add_example(eigen_example)
+# target_include_directories(
+#     eigen_example
+#     ${warning_guard}
+#     SYSTEM PRIVATE "${EIGEN_PATH}"
+# )
+# 
+# add_example(input_file_parser_example)
+
+add_example(water_sto3g_example)
 target_include_directories(
-    eigen_example
+    water_sto3g_example
     ${warning_guard}
     SYSTEM PRIVATE "${EIGEN_PATH}"
 )
-
-add_example(input_file_parser_example)
 
 add_folders(Example)
