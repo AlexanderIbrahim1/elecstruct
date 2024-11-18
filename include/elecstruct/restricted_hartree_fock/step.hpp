@@ -7,6 +7,7 @@
 #include <Eigen/Dense>
 
 #include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/basis/basis_sets/sto3g.hpp"
 #include "elecstruct/grids/grid4d.hpp"
 #include "elecstruct/matrices.hpp"
@@ -84,11 +85,11 @@ inline auto fock_matrix(
       - the Fock matrix in the original basis (not the orthonormalized basis where S -> I)
       - the eigenvalues of the Fock matrix
 */
-inline auto rhf_step(
+inline auto new_density_matrix(
     const Eigen::MatrixXd& fock_mtx,
     const Eigen::MatrixXd& basis_transformation_mtx,
     std::size_t n_electrons
-) -> std::tuple<Eigen::MatrixXd, Eigen::MatrixXd, Eigen::VectorXd>
+) -> Eigen::MatrixXd
 {
     namespace ies = impl_elec::step;
 
@@ -110,6 +111,8 @@ inline auto rhf_step(
     const auto coefficient_mtx = basis_transformation_mtx * coefficient_mtx_trans;
 
     const auto new_density_mtx = density_matrix_restricted_hartree_fock(coefficient_mtx, n_electrons);
+
+    return new_density_mtx;
 }
 
 
@@ -132,7 +135,12 @@ inline auto density_matrix_difference(
 }
 
 
-inline auto electronic_energy(
+/*
+    This function returns the sum of the:
+      - electron-electron repulsion energies
+      - nuclear-electron attraction energies
+*/
+inline auto electron_energy(
     const Eigen::MatrixXd& density_mtx,
     const Eigen::MatrixXd& fock_mtx,
     const Eigen::MatrixXd& core_hamiltonain_mtx
@@ -149,6 +157,45 @@ inline auto electronic_energy(
     }
 
     return energy;
+}
+
+
+/*
+    This function returns the sum of the nuclear-nuclear repulsion energies.
+*/
+inline auto nuclear_energy(
+    const std::vector<AtomInfo>& atoms
+) -> double
+{
+    const auto size = atoms.size();
+
+    auto energy = double {0.0};
+    for (std::size_t i0 {0}; i0 < size - 1; ++i0) {
+        for (std::size_t i1 {i0 + 1}; i1 < size; ++i1) {
+            const auto pos0 = atoms[i0].position;
+            const auto pos1 = atoms[i1].position;
+            const auto charge0 = atom_charge_map.at(atoms[i0].label);
+            const auto charge1 = atom_charge_map.at(atoms[i1].label);
+
+            energy += charge0 * charge1 / coord::distance(pos0, pos1);
+        }
+    }
+
+    return energy;
+}
+
+
+inline auto total_energy(
+    const Eigen::MatrixXd& density_mtx,
+    const Eigen::MatrixXd& fock_mtx,
+    const Eigen::MatrixXd& core_hamiltonain_mtx,
+    const std::vector<AtomInfo>& atoms
+) -> double
+{
+    const auto elec_energy = electron_energy(density_mtx, fock_mtx, core_hamiltonain_mtx);
+    const auto nucl_energy = nuclear_energy(atoms);
+
+    return elec_energy + nucl_energy;
 }
 
 

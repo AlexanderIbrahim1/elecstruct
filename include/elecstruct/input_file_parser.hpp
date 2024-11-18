@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include <tomlplusplus/toml.hpp>
+#include "extern/tomlplusplus/toml.hpp"
 
 #include "elecstruct/atoms/atoms.hpp"
 
