@@ -183,7 +183,7 @@ namespace impl {
 
 template <typename Compare, typename Iterator, typename Key>
 MAPBOX_ETERNAL_CONSTEXPR auto bound(Iterator left, Iterator right, const Key& key) noexcept {
-    std::size_t count = right - left;
+    std::size_t count = static_cast<std::size_t>(right - left);
     while (count > 0) {
         const std::size_t step = count / 2;
         right = left + step;

@@ -116,7 +116,8 @@ inline auto overlap_integral(
     );
     // clang-format on
 
-    return new_info.coefficient * total_norm * unorm_overlap_x * unorm_overlap_y * unorm_overlap_z;
+    // return new_info.coefficient * total_norm * unorm_overlap_x * unorm_overlap_y * unorm_overlap_z;
+    return new_info.coefficient * unorm_overlap_x * unorm_overlap_y * unorm_overlap_z * total_norm;
 }
 
 }  // namespace elec

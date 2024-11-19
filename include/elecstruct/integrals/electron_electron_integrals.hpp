@@ -86,7 +86,7 @@ inline auto electron_electron_b_factor(
     // NOTE: code and book have a different variable here:
     // code: indices.idx_l_01 (i.e. l in the reference,  l in the book)
     // book: indices.idx_l_23 (i.e. ll in the reference, l' in the book)
-    const auto sign = elec::math::neg_1_power(indices.idx_l_01 + indices.idx_i);
+    const auto sign = static_cast<double>(elec::math::neg_1_power(indices.idx_l_01 + indices.idx_i));
 
     // numerator
     const auto theta01 = electron_electron_theta_factor(

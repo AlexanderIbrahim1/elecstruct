@@ -14,7 +14,8 @@ namespace elec
 */
 inline auto zero_matrix(std::size_t size) -> Eigen::MatrixXd
 {
-    return Eigen::MatrixXd::Zero(size, size);
+    const auto size_ = static_cast<Eigen::Index>(size);
+    return Eigen::MatrixXd::Zero(size_, size_);
 }
 
 }  // namespace elec

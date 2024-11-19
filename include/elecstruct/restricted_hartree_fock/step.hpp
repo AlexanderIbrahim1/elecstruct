@@ -33,7 +33,7 @@ inline auto matrix_with_sorted_columns(const Eigen::MatrixXd& matrix, const std:
     auto output = Eigen::MatrixXd {size, size};
 
     for (Eigen::Index i {0}; i < size; ++i) {
-        output.col(i) = matrix.col(indices[i]);
+        output.col(i) = matrix.col(indices[static_cast<std::size_t>(i)]);
     }
 
     return output;
@@ -100,12 +100,9 @@ inline auto new_density_matrix(
     }
 
     // get the sorted eigenvalues and eigenvectors
-    auto eigenvalues = eigensolver.eigenvalues();
+    const auto eigenvalues = eigensolver.eigenvalues();
     const auto sorted_indices = ies::sorted_indices(eigenvalues);
 
-    std::sort(eigenvalues.begin(), eigenvalues.end());
-
-    const auto eigenvalue_mtx = eigenvalues.asDiagonal();
     const auto coefficient_mtx_trans = ies::matrix_with_sorted_columns(eigensolver.eigenvectors(), sorted_indices);
     const auto coefficient_mtx = basis_transformation_mtx * coefficient_mtx_trans;
 

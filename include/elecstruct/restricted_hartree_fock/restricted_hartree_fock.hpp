@@ -77,6 +77,8 @@ inline void perform_restricted_hartree_fock(
     const auto overlap_mtx = overlap_matrix(basis);
     ierhf::maybe_print(is_verbose, overlap_mtx, "overlap_mtx");
 
+    std::exit(EXIT_FAILURE);
+
     ierhf::maybe_print(is_verbose, "Calculating 'transformation_mtx'");
     const auto transformation_mtx = transformation_matrix(overlap_mtx);
     ierhf::maybe_print(is_verbose, transformation_mtx, "transformation_mtx");
@@ -84,8 +86,6 @@ inline void perform_restricted_hartree_fock(
     ierhf::maybe_print(is_verbose, "Calculating 'core_hamiltonian_mtx'");
     const auto core_hamiltonian_mtx = core_hamiltonian_matrix(basis, atoms);
     ierhf::maybe_print(is_verbose, core_hamiltonian_mtx, "core_hamiltonian_mtx");
-
-    std::exit(EXIT_FAILURE);
 
     ierhf::maybe_print(is_verbose, "Calculating 'two_electron_integrals'");
     const auto two_electron_integrals = two_electron_integral_grid(basis);
