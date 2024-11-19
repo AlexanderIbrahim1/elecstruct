@@ -6,6 +6,10 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <Eigen/Dense>
 
+#include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/basis/gaussian_info.hpp"
+#include "elecstruct/basis/basis_sets/sto3g.hpp"
+#include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/matrices.hpp"
 
 
@@ -50,6 +54,24 @@ auto are_columns_equal(
     }
 
     return true;
+}
+
+
+TEST_CASE("overlap matrix : 1s orbital")
+{
+    using AOL = elec::AtomicOrbitalLabel;
+
+    const auto atoms = std::vector<elec::AtomInfo> {
+        elec::AtomInfo {elec::AtomLabel::H, coord::Cartesian3D {0.0, 0.0, 0.0}, {AOL::S1}}
+    };
+
+    const auto basis = elec::create_atomic_orbitals_sto3g(atoms);
+
+    const auto overlap_mtx = elec::overlap_matrix(basis);
+
+    REQUIRE(overlap_mtx.cols() == 1);
+    REQUIRE(overlap_mtx.rows() == 1);
+    REQUIRE_THAT(overlap_mtx(0, 0), Catch::Matchers::WithinRel(1.0));
 }
 
 

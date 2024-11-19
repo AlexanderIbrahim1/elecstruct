@@ -16,6 +16,11 @@ namespace elec
 namespace impl_elec
 {
 
+/*
+    NOTE: this function calculates product of two gaussians with coefficients of 1 each
+      - the actual coefficients of the two input gaussians are handled by the functions that
+        calculate the matrices
+*/
 inline auto gaussian_product_coefficient(
     const coord::Cartesian3D& centre0,
     const coord::Cartesian3D& centre1,
@@ -26,14 +31,18 @@ inline auto gaussian_product_coefficient(
     const auto diff = centre1 - centre0;
     const auto norm_sq = coord::dot_product(diff, diff);
     const auto expon_scaling = -(info0.exponent * info1.exponent) / (info0.exponent + info1.exponent);
-    const auto coefficients = info0.coefficient * info1.coefficient;
 
-    return coefficients * std::exp(expon_scaling * norm_sq);
+    return std::exp(expon_scaling * norm_sq);
 }
 
 }  // namespace elec::impl_elec
 
 
+/*
+    NOTE: this function calculates product of two gaussians with coefficients of 1 each
+      - the actual coefficients of the two input gaussians are handled by the functions that
+        calculate the matrices
+*/
 inline auto gaussian_product(
     const coord::Cartesian3D& centre0,
     const coord::Cartesian3D& centre1,

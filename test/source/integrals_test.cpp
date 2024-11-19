@@ -19,11 +19,11 @@ TEST_CASE("gaussian product")
     {
         const auto centre0 = coord::Cartesian3D {1.0, 0.0, 0.0};
         const auto centre1 = coord::Cartesian3D {-1.0, 0.0, 0.0};
-        const auto info0 = elec::GaussianInfo {2.0, 1.0 / 2.0};
-        const auto info1 = elec::GaussianInfo {3.0, 1.0 / 3.0};
+        const auto info0 = elec::GaussianInfo {1.0, 1.0 / 2.0};
+        const auto info1 = elec::GaussianInfo {1.0, 1.0 / 3.0};
 
         const auto expected_centre = coord::Cartesian3D {0.2, 0.0, 0.0};
-        const auto expected_coefficient = double {2.6959737847};
+        const auto expected_coefficient = double {0.449328964117}; // from DESMOS
         const auto expected_exponent = info0.exponent + info1.exponent;
 
         const auto [centre, gauss] = elec::gaussian_product(centre0, centre1, info0, info1);
