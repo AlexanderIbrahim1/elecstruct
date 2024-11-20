@@ -95,11 +95,13 @@ inline void perform_restricted_hartree_fock(
         nuclear_mtx += atom_nuclear_electron_mtx;
     }
 
-    std::exit(EXIT_FAILURE);
+    ierhf::maybe_print(is_verbose, nuclear_mtx, "nuclear_mtx");
 
     ierhf::maybe_print(is_verbose, "Calculating 'transformation_mtx'");
     const auto transformation_mtx = transformation_matrix(overlap_mtx);
     ierhf::maybe_print(is_verbose, transformation_mtx, "transformation_mtx");
+
+    std::exit(EXIT_FAILURE);
 
     ierhf::maybe_print(is_verbose, "Calculating 'two_electron_integrals'");
     const auto two_electron_integrals = two_electron_integral_grid(basis);

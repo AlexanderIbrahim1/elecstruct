@@ -21,14 +21,14 @@ inline auto range_limits_(
 ) -> std::tuple<std::int64_t, std::int64_t>
 {
     const auto minimum = [&]() {
-        if (angmom_j < angmom_m) {
-            return std::int64_t {0};
-        } else {
+        if (angmom_j > angmom_m) {
             return angmom_j - angmom_m;
+        } else {
+            return std::int64_t {0};
         }
     }();
 
-    const auto maximum = std::max(angmom_j, angmom_l) + 1;
+    const auto maximum = std::min(angmom_j, angmom_l) + 1;
 
     return {minimum, maximum};
 }

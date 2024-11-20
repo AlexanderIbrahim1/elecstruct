@@ -187,6 +187,8 @@ inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& b
                     element += coeff * overlap;
                 }
             }
+            std::cout << "NE(i0, i1) = (" << i0 << ", " << i1 << ") = " << element << '\n';
+
             output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = element;
         }
     }

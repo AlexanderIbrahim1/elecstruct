@@ -30,10 +30,10 @@ struct AngularMomenta1D
 
 struct Positions1D
 {
-    double position_a;
-    double position_b;
-    double position_c;
-    double position_relative;
+    double position_0;
+    double position_1;
+    double position_nuclear;
+    double position_product;
 };
 
 /*
@@ -58,23 +58,23 @@ inline auto nuclear_a_factor(
     double epsilon
 ) -> double
 {
-    const auto diff_a = positions.position_relative - positions.position_a;
-    const auto diff_b = positions.position_relative - positions.position_b;
-    const auto diff_c = positions.position_relative - positions.position_c;
-    const auto idx_c = idx_l - 2 * (idx_r + idx_i);
+    const auto diff_0 = positions.position_product - positions.position_0;
+    const auto diff_1 = positions.position_product - positions.position_1;
+    const auto diff_n = positions.position_product - positions.position_nuclear;
+    const auto idx_n = idx_l - 2 * (idx_r + idx_i);
 
     const auto sign = elec::math::neg_1_power(idx_l + idx_i);
-    const auto expansion = elec::expansion_coefficient(idx_l, angmoms.angmom_0, angmoms.angmom_1, diff_a, diff_b);
+    const auto expansion = elec::expansion_coefficient(idx_l, angmoms.angmom_0, angmoms.angmom_1, diff_0, diff_1);
     const auto epsilon_exponent = std::pow(epsilon, idx_r + idx_i);
-    const auto diff_c_exponent = std::pow(diff_c, idx_c);
+    const auto diff_n_exponent = std::pow(diff_n, idx_n);
     const auto fact_l = elec::math::factorial(idx_l);
 
     const auto fact_r = elec::math::factorial(idx_r);
     const auto fact_i = elec::math::factorial(idx_i);
-    const auto fact_diff_c = elec::math::factorial(idx_c);
+    const auto fact_diff_n = elec::math::factorial(idx_n);
 
-    const auto numerator = static_cast<double>(sign * fact_l) * expansion * epsilon_exponent * diff_c_exponent;
-    const auto denominator = static_cast<double>(fact_r * fact_i * fact_diff_c);
+    const auto numerator = static_cast<double>(sign * fact_l) * expansion * epsilon_exponent * diff_n_exponent;
+    const auto denominator = static_cast<double>(fact_r * fact_i * fact_diff_n);
 
     return numerator / denominator;
 }
@@ -131,13 +131,9 @@ inline auto nuclear_electron_integral(
                 const auto a_factor_z = nui::nuclear_a_factor(idx_n, idx_t, idx_k, angmoms_z, positions_z, epsilon);
 
                 const auto idx_boys = idx_l + idx_m + idx_n - 2 * (idx_r + idx_s + idx_t) - (idx_i + idx_j + idx_k);
-                const auto boys_factor = boys_function_via_series_expansion(boys_arg, idx_boys);
+                // const auto boys_factor = boys_function_via_series_expansion(boys_arg, idx_boys);  [NOTE: UNSTABLE???]
+                const auto boys_factor = boys_mix_small_large(boys_arg, idx_boys, N_MAX_TERMS_BOYS_SMALL);
 
-                // std::cout << "a_factor_x = " << a_factor_x << '\n';
-                // std::cout << "a_factor_y = " << a_factor_y << '\n';
-                // std::cout << "a_factor_z = " << a_factor_z << '\n';
-                // std::cout << "boys_factor = " << boys_factor << '\n';
-                
                 const auto contribution = a_factor_x * a_factor_y * a_factor_z * boys_factor;
                 integral += contribution;
             }
@@ -145,15 +141,7 @@ inline auto nuclear_electron_integral(
     }
     // clang-format on
 
-    // std::cout << "norm0 = " << norm0 << '\n';
-    // std::cout << "norm1 = " << norm1 << '\n';
-    // std::cout << "nuclear_charge = " << nuclear_charge << '\n';
-    // std::cout << "integral = " << integral << '\n';
-    // std::cout << "g_value = " << g_value << '\n';
-
-    return - 2.0 * M_PI * norm0 * norm1 * nuclear_charge * integral / g_value;
-
-    // Vn *= - Zn * Na * Nb * c * 8 * np.pi * epsilon
+    return - (2.0 * M_PI / g_value) * coeff_product * nuclear_charge * norm0 * norm1 * integral;
 }
 
 }  // namespace elec
