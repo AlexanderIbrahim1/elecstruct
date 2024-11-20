@@ -89,7 +89,7 @@ inline auto overlap_integral(
     const GaussianContractionInfo& info1
 ) -> double
 {
-    [[maybe_unused]] const auto [new_position, new_info] = elec::math::gaussian_product(position0, position1, info0, info1);
+    const auto [pos_product, coeff_product] = elec::math::gaussian_product(position0, position1, info0.exponent_coeff, info1.exponent_coeff);
 
     const auto norm0 = elec::math::gaussian_norm(angmom0, info0.exponent_coeff);
     const auto norm1 = elec::math::gaussian_norm(angmom1, info1.exponent_coeff);
@@ -100,24 +100,24 @@ inline auto overlap_integral(
     const auto unorm_overlap_x = unnormalized_overlap_integral_1d(
         {angmom0.x, info0.exponent_coeff, position0.x},
         {angmom1.x, info1.exponent_coeff, position1.x},
-        new_position.x
+        pos_product.x
     );
 
     const auto unorm_overlap_y = unnormalized_overlap_integral_1d(
         {angmom0.y, info0.exponent_coeff, position0.y},
         {angmom1.y, info1.exponent_coeff, position1.y},
-        new_position.y
+        pos_product.y
     );
 
     const auto unorm_overlap_z = unnormalized_overlap_integral_1d(
         {angmom0.z, info0.exponent_coeff, position0.z},
         {angmom1.z, info1.exponent_coeff, position1.z},
-        new_position.z
+        pos_product.z
     );
     // clang-format on
 
     // return new_info.contraction_coeff * total_norm * unorm_overlap_x * unorm_overlap_y * unorm_overlap_z;
-    return new_info.contraction_coeff * unorm_overlap_x * unorm_overlap_y * unorm_overlap_z * total_norm;
+    return coeff_product * unorm_overlap_x * unorm_overlap_y * unorm_overlap_z * total_norm;
 }
 
 }  // namespace elec

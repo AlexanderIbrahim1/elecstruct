@@ -231,13 +231,13 @@ inline auto kinetic_integral(
     const GaussianContractionInfo& info1
 ) -> double
 {
-    const auto [new_centre, new_info] = elec::math::gaussian_product(position0, position1, info0, info1);
+    const auto [pos_product, coeff_product] = elec::math::gaussian_product(position0, position1, info0.exponent_coeff, info1.exponent_coeff);
 
     const auto angmom0_integ_x = DirectedAngularMomentumNumbers {angmom0};
     const auto angmom1_integ_x = DirectedAngularMomentumNumbers {angmom1};
     const auto original0_integ_x = DirectedCartesian3D {position0};
     const auto original1_integ_x = DirectedCartesian3D {position1};
-    const auto product_integ_x = DirectedCartesian3D {new_centre};
+    const auto product_integ_x = DirectedCartesian3D {pos_product};
 
     const auto kinetic_x = unnormalized_kinetic_integral_1d(
         angmom0_integ_x,
@@ -247,7 +247,7 @@ inline auto kinetic_integral(
         product_integ_x,
         info0.exponent_coeff,
         info1.exponent_coeff,
-        new_info.contraction_coeff
+        coeff_product
     );
 
     const auto kinetic_y = unnormalized_kinetic_integral_1d(
@@ -258,7 +258,7 @@ inline auto kinetic_integral(
         left_cyclic_shift(product_integ_x),
         info0.exponent_coeff,
         info1.exponent_coeff,
-        new_info.contraction_coeff
+        coeff_product
     );
 
     const auto kinetic_z = unnormalized_kinetic_integral_1d(
@@ -269,7 +269,7 @@ inline auto kinetic_integral(
         right_cyclic_shift(product_integ_x),
         info0.exponent_coeff,
         info1.exponent_coeff,
-        new_info.contraction_coeff
+        coeff_product
     );
 
     const auto norm0 = elec::math::gaussian_norm(angmom0, info0.exponent_coeff);

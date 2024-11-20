@@ -101,7 +101,9 @@ inline auto nuclear_electron_integral(
 {
     namespace nui = impl_elec::nuclear_electron_integrals;
 
-    const auto [pos_product, info_product] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, info0, info1);
+    [[maybe_unused]]
+    const auto [pos_product, coeff_product] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, info0.exponent_coeff, info1.exponent_coeff);
+
     const auto norm0 = elec::math::gaussian_norm(angmom_0, info0.exponent_coeff);
     const auto norm1 = elec::math::gaussian_norm(angmom_1, info1.exponent_coeff);
 

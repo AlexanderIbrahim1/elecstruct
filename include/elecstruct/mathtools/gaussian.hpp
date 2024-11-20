@@ -24,13 +24,13 @@ namespace impl_elec
 inline auto gaussian_product_coefficient(
     const coord::Cartesian3D& centre0,
     const coord::Cartesian3D& centre1,
-    const elec::GaussianContractionInfo& info0,
-    const elec::GaussianContractionInfo& info1
+    double exponent0,
+    double exponent1
 ) -> double
 {
     const auto diff = centre1 - centre0;
     const auto norm_sq = coord::dot_product(diff, diff);
-    const auto expon_scaling = -(info0.exponent_coeff * info1.exponent_coeff) / (info0.exponent_coeff + info1.exponent_coeff);
+    const auto expon_scaling = - (exponent0 * exponent1) / (exponent0 + exponent1);
 
     return std::exp(expon_scaling * norm_sq);
 }
@@ -46,17 +46,14 @@ inline auto gaussian_product_coefficient(
 inline auto gaussian_product(
     const coord::Cartesian3D& centre0,
     const coord::Cartesian3D& centre1,
-    const GaussianContractionInfo& info0,
-    const GaussianContractionInfo& info1
-) -> std::tuple<coord::Cartesian3D, GaussianContractionInfo>
+    double exponent0,
+    double exponent1
+) -> std::tuple<coord::Cartesian3D, double>
 {
-    const auto new_centre = (centre0 * info0.exponent_coeff + centre1 * info1.exponent_coeff) / (info0.exponent_coeff + info1.exponent_coeff);
-    const auto new_coefficient = impl_elec::gaussian_product_coefficient(centre0, centre1, info0, info1);
-    const auto new_exponent = info0.exponent_coeff + info1.exponent_coeff;
+    const auto new_centre = (centre0 * exponent0 + centre1 * exponent1) / (exponent0 + exponent1);
+    const auto new_coefficient = impl_elec::gaussian_product_coefficient(centre0, centre1, exponent0, exponent1);
 
-    return {
-        new_centre, GaussianContractionInfo {new_coefficient, new_exponent}
-    };
+    return {new_centre, new_coefficient};
 }
 
 inline auto gaussian_norm(const elec::AngularMomentumNumbers& angular_momenta, double gauss_exponent) -> double

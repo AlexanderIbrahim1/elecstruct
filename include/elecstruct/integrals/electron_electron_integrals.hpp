@@ -151,8 +151,8 @@ inline auto electron_electron_integral(
 {
     namespace eli = impl_elec::electron_electron_integrals;
 
-    const auto [pos_product_01, info_product_01] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, info0, info1);
-    const auto [pos_product_23, info_product_23] = elec::math::gaussian_product(pos_gauss2, pos_gauss3, info2, info3);
+    const auto [pos_product_01, coeff_product_01] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, info0.exponent_coeff, info1.exponent_coeff);
+    const auto [pos_product_23, coeff_product_23] = elec::math::gaussian_product(pos_gauss2, pos_gauss3, info2.exponent_coeff, info3.exponent_coeff);
 
     const auto norm0 = elec::math::gaussian_norm(angmom_0, info0.exponent_coeff);
     const auto norm1 = elec::math::gaussian_norm(angmom_1, info1.exponent_coeff);
@@ -197,7 +197,7 @@ inline auto electron_electron_integral(
     // clang-format on
 
     const auto norm_tot = norm0 * norm1 * norm2 * norm3;
-    const auto coeff_tot = info_product_01.contraction_coeff * info_product_23.contraction_coeff;
+    const auto coeff_tot = coeff_product_01 * coeff_product_23;
     const auto expon_tot = std::pow(M_PI, 5.0/2.0) / std::pow(g_value_01 + g_value_23, 3.0/2.0);
 
     return 2.0 * integral * coeff_tot * norm_tot * expon_tot;

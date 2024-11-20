@@ -62,6 +62,7 @@ constexpr auto zeta_orbital2_exponents_sto3g = mapbox::eternal::map<AtomLabel, d
 });
 
 // clang-format off
+// coeff0, coeff1, coeff2, expon0, expon1, expon2
 constexpr auto gaussian_constants_sto3g = mapbox::eternal::map<AtomicOrbitalLabel, GaussianConstantsSTO3G> ({
     {AtomicOrbitalLabel::S1, { 0.4446345422e+00,  0.5353281423e+00,  0.1543289673e+00,  0.109818e+00,  0.405771e+00,  0.222766e+01}},
     {AtomicOrbitalLabel::S2, { 0.7001154689e+00,  0.3995128261e+00, -0.9996722919e-01,  0.751386e-01,  0.231031e+00,  0.994203e+00}},
