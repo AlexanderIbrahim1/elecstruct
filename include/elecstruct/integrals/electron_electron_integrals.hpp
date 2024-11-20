@@ -7,7 +7,7 @@
 #include "elecstruct/integrals/boys.hpp"
 #include "elecstruct/integrals/electron_electron_index_iterator.hpp"
 #include "elecstruct/integrals/expansion_coefficient.hpp"
-#include "elecstruct/integrals/integrals.hpp"
+#include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/mathtools/factorial.hpp"
 #include "elecstruct/mathtools/misc.hpp"
 #include "elecstruct/orbitals.hpp"
@@ -151,13 +151,13 @@ inline auto electron_electron_integral(
 {
     namespace eli = impl_elec::electron_electron_integrals;
 
-    const auto [pos_product_01, info_product_01] = gaussian_product(pos_gauss0, pos_gauss1, info0, info1);
-    const auto [pos_product_23, info_product_23] = gaussian_product(pos_gauss2, pos_gauss3, info2, info3);
+    const auto [pos_product_01, info_product_01] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, info0, info1);
+    const auto [pos_product_23, info_product_23] = elec::math::gaussian_product(pos_gauss2, pos_gauss3, info2, info3);
 
-    const auto norm0 = gaussian_norm(angmom_0, info0.exponent);
-    const auto norm1 = gaussian_norm(angmom_1, info1.exponent);
-    const auto norm2 = gaussian_norm(angmom_2, info2.exponent);
-    const auto norm3 = gaussian_norm(angmom_3, info3.exponent);
+    const auto norm0 = elec::math::gaussian_norm(angmom_0, info0.exponent);
+    const auto norm1 = elec::math::gaussian_norm(angmom_1, info1.exponent);
+    const auto norm2 = elec::math::gaussian_norm(angmom_2, info2.exponent);
+    const auto norm3 = elec::math::gaussian_norm(angmom_3, info3.exponent);
 
     const auto g_value_01 = info0.exponent + info1.exponent;
     const auto g_value_23 = info2.exponent + info3.exponent;

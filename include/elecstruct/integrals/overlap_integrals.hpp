@@ -5,7 +5,7 @@
 
 #include "elecstruct/basis/gaussian_info.hpp"
 #include "elecstruct/cartesian3d.hpp"
-#include "elecstruct/integrals/integrals.hpp"
+#include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/mathtools/factorial.hpp"
 #include "elecstruct/mathtools/n_choose_k.hpp"
 #include "elecstruct/orbitals.hpp"
@@ -89,10 +89,10 @@ inline auto overlap_integral(
     const GaussianInfo& info1
 ) -> double
 {
-    [[maybe_unused]] const auto [new_position, new_info] = gaussian_product(position0, position1, info0, info1);
+    [[maybe_unused]] const auto [new_position, new_info] = elec::math::gaussian_product(position0, position1, info0, info1);
 
-    const auto norm0 = gaussian_norm(angmom0, info0.exponent);
-    const auto norm1 = gaussian_norm(angmom1, info1.exponent);
+    const auto norm0 = elec::math::gaussian_norm(angmom0, info0.exponent);
+    const auto norm1 = elec::math::gaussian_norm(angmom1, info1.exponent);
     const auto overlap_norm = overlap_integral_3d_norm(info0.exponent, info1.exponent);
     const auto total_norm = norm0 * norm1 * overlap_norm;
 

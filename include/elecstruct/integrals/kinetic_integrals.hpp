@@ -5,7 +5,7 @@
 
 #include "elecstruct/basis/gaussian_info.hpp"
 #include "elecstruct/cartesian3d.hpp"
-#include "elecstruct/integrals/integrals.hpp"
+#include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/integrals/overlap_integrals.hpp"
 #include "elecstruct/orbitals.hpp"
 
@@ -231,7 +231,7 @@ inline auto kinetic_integral(
     const GaussianInfo& info1
 ) -> double
 {
-    const auto [new_centre, new_info] = gaussian_product(position0, position1, info0, info1);
+    const auto [new_centre, new_info] = elec::math::gaussian_product(position0, position1, info0, info1);
 
     const auto angmom0_integ_x = DirectedAngularMomentumNumbers {angmom0};
     const auto angmom1_integ_x = DirectedAngularMomentumNumbers {angmom1};
@@ -272,8 +272,8 @@ inline auto kinetic_integral(
         new_info.coefficient
     );
 
-    const auto norm0 = gaussian_norm(angmom0, info0.exponent);
-    const auto norm1 = gaussian_norm(angmom1, info1.exponent);
+    const auto norm0 = elec::math::gaussian_norm(angmom0, info0.exponent);
+    const auto norm1 = elec::math::gaussian_norm(angmom1, info1.exponent);
 
     return norm0 * norm1 * (kinetic_x + kinetic_y + kinetic_z);
 }

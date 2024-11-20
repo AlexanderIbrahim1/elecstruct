@@ -10,7 +10,7 @@
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/integrals/expansion_coefficient.hpp"
 #include "elecstruct/integrals/boys.hpp"
-#include "elecstruct/integrals/integrals.hpp"
+#include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/integrals/nuclear_electron_index_iterator.hpp"
 #include "elecstruct/mathtools/factorial.hpp"
 #include "elecstruct/mathtools/misc.hpp"
@@ -101,9 +101,9 @@ inline auto nuclear_electron_integral(
 {
     namespace nui = impl_elec::nuclear_electron_integrals;
 
-    const auto [pos_product, info_product] = gaussian_product(pos_gauss0, pos_gauss1, info0, info1);
-    const auto norm0 = gaussian_norm(angmom_0, info0.exponent);
-    const auto norm1 = gaussian_norm(angmom_1, info1.exponent);
+    const auto [pos_product, info_product] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, info0, info1);
+    const auto norm0 = elec::math::gaussian_norm(angmom_0, info0.exponent);
+    const auto norm1 = elec::math::gaussian_norm(angmom_1, info1.exponent);
 
     const auto g_value = info0.exponent + info1.exponent;
     const auto epsilon = 0.25 / g_value;

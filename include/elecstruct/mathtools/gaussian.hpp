@@ -10,7 +10,7 @@
 #include "elecstruct/mathtools/factorial.hpp"
 #include "elecstruct/orbitals.hpp"
 
-namespace elec
+namespace elec::math
 {
 
 namespace impl_elec
@@ -79,4 +79,4 @@ inline auto gaussian_norm(const elec::AngularMomentumNumbers& angular_momenta, d
     return gauss1d_component * angmom_numerator / angmom_denominator;
 }
 
-}  // namespace elec
+}  // namespace elec::math
