@@ -40,7 +40,9 @@ inline auto boys_large(double x, std::int64_t order) -> double
 
 // NOTE: too large a number, and it won't fit in a 64-bit signed integer
 constexpr auto N_TERMS_BOYS_SERIES_EXPANSION = std::int64_t {10};
+
 constexpr auto N_MAX_TERMS_BOYS_SMALL = std::int64_t {11};
+constexpr auto BOYS_SMALL_CUTOFF = double {1.0e-1};
 
 /*
     NOTE: there are many much faster ways of calculating the Boys function, and its evaluation is
@@ -73,9 +75,14 @@ inline auto boys_mix_small_large(double x, std::int64_t order, std::int64_t n_sm
     }
 
     const auto small = elec::impl_elec::boys::boys_small(x, order, n_small_terms);
-    const auto large = elec::impl_elec::boys::boys_large(x, order);
 
-    return std::min(small, large);
+    if (x < BOYS_SMALL_CUTOFF) {
+        return small;
+    } else {
+        const auto large = elec::impl_elec::boys::boys_large(x, order);
+
+        return std::min(small, large);
+    }
 }
 
 }  // namespace elec

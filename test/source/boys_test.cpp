@@ -30,6 +30,7 @@ TEST_CASE("Boys function comparison with Python code")
         const auto order = std::int64_t {0};
 
         const auto pair = GENERATE(
+            TestPair {0.0, 1.0},
             TestPair {0.01, 0.9966766429033636},
             TestPair {1.00, 0.7468241338237177},
             TestPair {2.00, 0.5981459383100741},
@@ -46,6 +47,7 @@ TEST_CASE("Boys function comparison with Python code")
         const auto order = std::int64_t {1};
 
         const auto pair = GENERATE(
+            TestPair {0.0, 1.0 / 3.0},
             TestPair {0.01, 0.3313404577097725},
             TestPair {1.00, 0.1894723467504448},
             TestPair {2.00, 0.1157039563971642},
