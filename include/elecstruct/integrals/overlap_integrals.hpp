@@ -85,33 +85,33 @@ inline auto overlap_integral(
     const AngularMomentumNumbers& angmom1,
     const coord::Cartesian3D& position0,
     const coord::Cartesian3D& position1,
-    const GaussianContractionInfo& info0,
-    const GaussianContractionInfo& info1
+    double exponent0,
+    double exponent1
 ) -> double
 {
-    const auto [pos_product, coeff_product] = elec::math::gaussian_product(position0, position1, info0.exponent_coeff, info1.exponent_coeff);
+    const auto [pos_product, coeff_product] = elec::math::gaussian_product(position0, position1, exponent0, exponent1);
 
-    const auto norm0 = elec::math::gaussian_norm(angmom0, info0.exponent_coeff);
-    const auto norm1 = elec::math::gaussian_norm(angmom1, info1.exponent_coeff);
-    const auto overlap_norm = overlap_integral_3d_norm(info0.exponent_coeff, info1.exponent_coeff);
+    const auto norm0 = elec::math::gaussian_norm(angmom0, exponent0);
+    const auto norm1 = elec::math::gaussian_norm(angmom1, exponent1);
+    const auto overlap_norm = overlap_integral_3d_norm(exponent0, exponent1);
     const auto total_norm = norm0 * norm1 * overlap_norm;
 
     // clang-format off
     const auto unorm_overlap_x = unnormalized_overlap_integral_1d(
-        {angmom0.x, info0.exponent_coeff, position0.x},
-        {angmom1.x, info1.exponent_coeff, position1.x},
+        {angmom0.x, exponent0, position0.x},
+        {angmom1.x, exponent1, position1.x},
         pos_product.x
     );
 
     const auto unorm_overlap_y = unnormalized_overlap_integral_1d(
-        {angmom0.y, info0.exponent_coeff, position0.y},
-        {angmom1.y, info1.exponent_coeff, position1.y},
+        {angmom0.y, exponent0, position0.y},
+        {angmom1.y, exponent1, position1.y},
         pos_product.y
     );
 
     const auto unorm_overlap_z = unnormalized_overlap_integral_1d(
-        {angmom0.z, info0.exponent_coeff, position0.z},
-        {angmom1.z, info1.exponent_coeff, position1.z},
+        {angmom0.z, exponent0, position0.z},
+        {angmom1.z, exponent1, position1.z},
         pos_product.z
     );
     // clang-format on

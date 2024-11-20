@@ -143,24 +143,24 @@ inline auto electron_electron_integral(
     const coord::Cartesian3D& pos_gauss1,
     const coord::Cartesian3D& pos_gauss2,
     const coord::Cartesian3D& pos_gauss3,
-    const GaussianContractionInfo& info0,
-    const GaussianContractionInfo& info1,
-    const GaussianContractionInfo& info2,
-    const GaussianContractionInfo& info3
+    double exponent0,
+    double exponent1,
+    double exponent2,
+    double exponent3
 ) -> double
 {
     namespace eli = impl_elec::electron_electron_integrals;
 
-    const auto [pos_product_01, coeff_product_01] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, info0.exponent_coeff, info1.exponent_coeff);
-    const auto [pos_product_23, coeff_product_23] = elec::math::gaussian_product(pos_gauss2, pos_gauss3, info2.exponent_coeff, info3.exponent_coeff);
+    const auto [pos_product_01, coeff_product_01] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, exponent0, exponent1);
+    const auto [pos_product_23, coeff_product_23] = elec::math::gaussian_product(pos_gauss2, pos_gauss3, exponent2, exponent3);
 
-    const auto norm0 = elec::math::gaussian_norm(angmom_0, info0.exponent_coeff);
-    const auto norm1 = elec::math::gaussian_norm(angmom_1, info1.exponent_coeff);
-    const auto norm2 = elec::math::gaussian_norm(angmom_2, info2.exponent_coeff);
-    const auto norm3 = elec::math::gaussian_norm(angmom_3, info3.exponent_coeff);
+    const auto norm0 = elec::math::gaussian_norm(angmom_0, exponent0);
+    const auto norm1 = elec::math::gaussian_norm(angmom_1, exponent1);
+    const auto norm2 = elec::math::gaussian_norm(angmom_2, exponent2);
+    const auto norm3 = elec::math::gaussian_norm(angmom_3, exponent3);
 
-    const auto g_value_01 = info0.exponent_coeff + info1.exponent_coeff;
-    const auto g_value_23 = info2.exponent_coeff + info3.exponent_coeff;
+    const auto g_value_01 = exponent0 + exponent1;
+    const auto g_value_23 = exponent2 + exponent3;
     const auto delta = 0.25 * (1.0 / g_value_01 + 1.0 / g_value_23);
     const auto expon_info = eli::GaussianExponentInfo {g_value_01, g_value_23, delta};
 

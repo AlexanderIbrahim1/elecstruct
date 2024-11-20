@@ -94,20 +94,20 @@ inline auto nuclear_electron_integral(
     const coord::Cartesian3D& pos_gauss0,
     const coord::Cartesian3D& pos_gauss1,
     const coord::Cartesian3D& pos_nuclear,
-    const GaussianContractionInfo& info0,
-    const GaussianContractionInfo& info1,
+    double exponent0,
+    double exponent1,
     double nuclear_charge
 ) -> double
 {
     namespace nui = impl_elec::nuclear_electron_integrals;
 
     [[maybe_unused]]
-    const auto [pos_product, coeff_product] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, info0.exponent_coeff, info1.exponent_coeff);
+    const auto [pos_product, coeff_product] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, exponent0, exponent1);
 
-    const auto norm0 = elec::math::gaussian_norm(angmom_0, info0.exponent_coeff);
-    const auto norm1 = elec::math::gaussian_norm(angmom_1, info1.exponent_coeff);
+    const auto norm0 = elec::math::gaussian_norm(angmom_0, exponent0);
+    const auto norm1 = elec::math::gaussian_norm(angmom_1, exponent1);
 
-    const auto g_value = info0.exponent_coeff + info1.exponent_coeff;
+    const auto g_value = exponent0 + exponent1;
     const auto epsilon = 0.25 / g_value;
     const auto boys_arg = g_value * coord::norm_squared(pos_product - pos_nuclear);
 
