@@ -20,3 +20,6 @@ Boost Software License 1.0.
 
 ## Resources
 1. https://adambaskerville.github.io/posts/HartreeFockGuide/#the-complete-hf-program
+
+2. The water example:
+  https://chemistry.montana.edu/callis/courses/chmy564/460water.pdf
