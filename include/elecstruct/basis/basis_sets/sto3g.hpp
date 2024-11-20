@@ -75,7 +75,7 @@ struct AtomicOrbitalInfoSTO3G
     AtomicOrbitalLabel orbital_label;
     coord::Cartesian3D position;
     AngularMomentumNumbers angular_momentum;
-    std::array<GaussianInfo, 3> gaussians;
+    std::array<GaussianContractionInfo, 3> gaussians;
 };
 
 inline auto create_atomic_orbitals_sto3g(const std::vector<AtomInfo>& atom_infos) -> std::vector<AtomicOrbitalInfoSTO3G>
@@ -103,9 +103,9 @@ inline auto create_atomic_orbitals_sto3g(const std::vector<AtomInfo>& atom_infos
             }();
 
             const auto constants = gaussian_constants_sto3g.at(orbital);
-            const auto gauss0 = GaussianInfo {constants.coeff0, constants.expon0 * zeta * zeta};
-            const auto gauss1 = GaussianInfo {constants.coeff1, constants.expon1 * zeta * zeta};
-            const auto gauss2 = GaussianInfo {constants.coeff2, constants.expon2 * zeta * zeta};
+            const auto gauss0 = GaussianContractionInfo {constants.coeff0, constants.expon0 * zeta * zeta};
+            const auto gauss1 = GaussianContractionInfo {constants.coeff1, constants.expon1 * zeta * zeta};
+            const auto gauss2 = GaussianContractionInfo {constants.coeff2, constants.expon2 * zeta * zeta};
 
             for (const auto& momentum : angular_momenta) {
                 output.push_back({

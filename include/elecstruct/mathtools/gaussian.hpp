@@ -24,13 +24,13 @@ namespace impl_elec
 inline auto gaussian_product_coefficient(
     const coord::Cartesian3D& centre0,
     const coord::Cartesian3D& centre1,
-    const elec::GaussianInfo& info0,
-    const elec::GaussianInfo& info1
+    const elec::GaussianContractionInfo& info0,
+    const elec::GaussianContractionInfo& info1
 ) -> double
 {
     const auto diff = centre1 - centre0;
     const auto norm_sq = coord::dot_product(diff, diff);
-    const auto expon_scaling = -(info0.exponent * info1.exponent) / (info0.exponent + info1.exponent);
+    const auto expon_scaling = -(info0.exponent_coeff * info1.exponent_coeff) / (info0.exponent_coeff + info1.exponent_coeff);
 
     return std::exp(expon_scaling * norm_sq);
 }
@@ -46,16 +46,16 @@ inline auto gaussian_product_coefficient(
 inline auto gaussian_product(
     const coord::Cartesian3D& centre0,
     const coord::Cartesian3D& centre1,
-    const GaussianInfo& info0,
-    const GaussianInfo& info1
-) -> std::tuple<coord::Cartesian3D, GaussianInfo>
+    const GaussianContractionInfo& info0,
+    const GaussianContractionInfo& info1
+) -> std::tuple<coord::Cartesian3D, GaussianContractionInfo>
 {
-    const auto new_centre = (centre0 * info0.exponent + centre1 * info1.exponent) / (info0.exponent + info1.exponent);
+    const auto new_centre = (centre0 * info0.exponent_coeff + centre1 * info1.exponent_coeff) / (info0.exponent_coeff + info1.exponent_coeff);
     const auto new_coefficient = impl_elec::gaussian_product_coefficient(centre0, centre1, info0, info1);
-    const auto new_exponent = info0.exponent + info1.exponent;
+    const auto new_exponent = info0.exponent_coeff + info1.exponent_coeff;
 
     return {
-        new_centre, GaussianInfo {new_coefficient, new_exponent}
+        new_centre, GaussianContractionInfo {new_coefficient, new_exponent}
     };
 }
 

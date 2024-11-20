@@ -9,10 +9,10 @@ namespace elec
 
     The GaussianExpansionPairInfo struct holds this information.
 */
-struct GaussianInfo
+struct GaussianContractionInfo
 {
-    double coefficient;
-    double exponent;
+    double contraction_coeff;
+    double exponent_coeff;
 };
 
 }  // namespace elec

@@ -143,10 +143,10 @@ inline auto electron_electron_integral(
     const coord::Cartesian3D& pos_gauss1,
     const coord::Cartesian3D& pos_gauss2,
     const coord::Cartesian3D& pos_gauss3,
-    const GaussianInfo& info0,
-    const GaussianInfo& info1,
-    const GaussianInfo& info2,
-    const GaussianInfo& info3
+    const GaussianContractionInfo& info0,
+    const GaussianContractionInfo& info1,
+    const GaussianContractionInfo& info2,
+    const GaussianContractionInfo& info3
 ) -> double
 {
     namespace eli = impl_elec::electron_electron_integrals;
@@ -154,13 +154,13 @@ inline auto electron_electron_integral(
     const auto [pos_product_01, info_product_01] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, info0, info1);
     const auto [pos_product_23, info_product_23] = elec::math::gaussian_product(pos_gauss2, pos_gauss3, info2, info3);
 
-    const auto norm0 = elec::math::gaussian_norm(angmom_0, info0.exponent);
-    const auto norm1 = elec::math::gaussian_norm(angmom_1, info1.exponent);
-    const auto norm2 = elec::math::gaussian_norm(angmom_2, info2.exponent);
-    const auto norm3 = elec::math::gaussian_norm(angmom_3, info3.exponent);
+    const auto norm0 = elec::math::gaussian_norm(angmom_0, info0.exponent_coeff);
+    const auto norm1 = elec::math::gaussian_norm(angmom_1, info1.exponent_coeff);
+    const auto norm2 = elec::math::gaussian_norm(angmom_2, info2.exponent_coeff);
+    const auto norm3 = elec::math::gaussian_norm(angmom_3, info3.exponent_coeff);
 
-    const auto g_value_01 = info0.exponent + info1.exponent;
-    const auto g_value_23 = info2.exponent + info3.exponent;
+    const auto g_value_01 = info0.exponent_coeff + info1.exponent_coeff;
+    const auto g_value_23 = info2.exponent_coeff + info3.exponent_coeff;
     const auto delta = 0.25 * (1.0 / g_value_01 + 1.0 / g_value_23);
     const auto expon_info = eli::GaussianExponentInfo {g_value_01, g_value_23, delta};
 
@@ -197,7 +197,7 @@ inline auto electron_electron_integral(
     // clang-format on
 
     const auto norm_tot = norm0 * norm1 * norm2 * norm3;
-    const auto coeff_tot = info_product_01.coefficient * info_product_23.coefficient;
+    const auto coeff_tot = info_product_01.contraction_coeff * info_product_23.contraction_coeff;
     const auto expon_tot = std::pow(M_PI, 5.0/2.0) / std::pow(g_value_01 + g_value_23, 3.0/2.0);
 
     return 2.0 * integral * coeff_tot * norm_tot * expon_tot;

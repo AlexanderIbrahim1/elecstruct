@@ -19,7 +19,7 @@
 
 // --- TODO ----------
 // 1. change the type of the gaussian coefficients to complex, because technically we take
-//   the product between the complex conjugate of `info0.coefficient1` and `info1.coefficient`
+//   the product between the complex conjugate of `info0.contraction_coeff1` and `info1.contraction_coeff`
 //
 // 2. these matrices are Hermitian, so we can save calculating half of the entries!
 //
@@ -62,7 +62,7 @@ inline auto two_electron_integral_grid(
     for (const auto& info1 : orbital1.gaussians)
     for (const auto& info2 : orbital2.gaussians)
     for (const auto& info3 : orbital3.gaussians) {
-        const auto coeff = info0.coefficient * info1.coefficient * info2.coefficient * info3.coefficient;
+        const auto coeff = info0.contraction_coeff * info1.contraction_coeff * info2.contraction_coeff * info3.contraction_coeff;
         const auto integral = elec::electron_electron_integral(
             angmom_0, angmom_1, angmom_2, angmom_3,
             pos_gauss0, pos_gauss1, pos_gauss2, pos_gauss3,
@@ -96,7 +96,7 @@ inline auto overlap_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
 
             for (const auto info0 : basis0.gaussians) {
                 for (const auto info1 : basis1.gaussians) {
-                    const auto coeff = info0.coefficient * info1.coefficient;
+                    const auto coeff = info0.contraction_coeff * info1.contraction_coeff;
                     const auto overlap = overlap_integral(angmom_0, angmom_1, pos0, pos1, info0, info1);
 
                     output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = coeff * overlap;
@@ -141,7 +141,7 @@ inline auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
 
             for (const auto info0 : basis0.gaussians) {
                 for (const auto info1 : basis1.gaussians) {
-                    const auto coeff = info0.coefficient * info1.coefficient;
+                    const auto coeff = info0.contraction_coeff * info1.contraction_coeff;
                     const auto overlap = kinetic_integral(angmom_0, angmom_1, pos0, pos1, info0, info1);
 
                     output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = coeff * overlap;
@@ -171,7 +171,7 @@ inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& b
 
             for (const auto info0 : basis0.gaussians) {
                 for (const auto info1 : basis1.gaussians) {
-                    const auto coeff = info0.coefficient * info1.coefficient;
+                    const auto coeff = info0.contraction_coeff * info1.contraction_coeff;
                     const auto overlap = nuclear_electron_integral(angmom_0, angmom_1, pos0, pos1, atom.position, info0, info1, charge);
 
                     output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = coeff * overlap;
