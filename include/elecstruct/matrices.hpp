@@ -94,14 +94,16 @@ inline auto overlap_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
             const auto pos1 = basis1.position;
             const auto angmom_1 = basis1.angular_momentum;
 
+            auto element = double {0.0};
             for (const auto info0 : basis0.gaussians) {
                 for (const auto info1 : basis1.gaussians) {
                     const auto coeff = info0.contraction_coeff * info1.contraction_coeff;
                     const auto overlap = overlap_integral(angmom_0, angmom_1, pos0, pos1, info0.exponent_coeff, info1.exponent_coeff);
 
-                    output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = coeff * overlap;
+                    element += coeff * overlap;
                 }
             }
+            output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = element;
         }
     }
 
@@ -139,14 +141,15 @@ inline auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
             const auto pos1 = basis1.position;
             const auto angmom_1 = basis1.angular_momentum;
 
+            auto element = double {0.0};
             for (const auto info0 : basis0.gaussians) {
                 for (const auto info1 : basis1.gaussians) {
                     const auto coeff = info0.contraction_coeff * info1.contraction_coeff;
                     const auto overlap = kinetic_integral(angmom_0, angmom_1, pos0, pos1, info0.exponent_coeff, info1.exponent_coeff);
-
-                    output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = coeff * overlap;
+                    element += coeff * overlap;
                 }
             }
+            output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = element;
         }
     }
 
@@ -170,6 +173,7 @@ inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& b
             const auto pos1 = basis1.position;
             const auto angmom_1 = basis1.angular_momentum;
 
+            auto element = double {0.0};
             for (const auto info0 : basis0.gaussians) {
                 for (const auto info1 : basis1.gaussians) {
                     const auto coeff = info0.contraction_coeff * info1.contraction_coeff;
@@ -180,9 +184,10 @@ inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& b
                         charge
                     );
 
-                    output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = coeff * overlap;
+                    element += coeff * overlap;
                 }
             }
+            output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = element;
         }
     }
     // clang-format on

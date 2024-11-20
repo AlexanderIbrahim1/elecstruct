@@ -116,7 +116,6 @@ inline auto overlap_integral(
     );
     // clang-format on
 
-    // return new_info.contraction_coeff * total_norm * unorm_overlap_x * unorm_overlap_y * unorm_overlap_z;
     return coeff_product * unorm_overlap_x * unorm_overlap_y * unorm_overlap_z * total_norm;
 }
 

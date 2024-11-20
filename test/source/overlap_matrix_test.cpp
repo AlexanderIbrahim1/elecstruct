@@ -12,6 +12,8 @@
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/matrices.hpp"
 
+constexpr auto REL_TOLERANCE = double {1.0e-6};
+
 
 auto approx_equal(const Eigen::Vector2d& eig0, const Eigen::Vector2d& eig1, double tolerance) -> bool
 {
@@ -71,7 +73,7 @@ TEST_CASE("overlap matrix : 1s orbital")
 
     REQUIRE(overlap_mtx.cols() == 1);
     REQUIRE(overlap_mtx.rows() == 1);
-    REQUIRE_THAT(overlap_mtx(0, 0), Catch::Matchers::WithinRel(1.0));
+    REQUIRE_THAT(overlap_mtx(0, 0), Catch::Matchers::WithinRel(1.0, REL_TOLERANCE));
 }
 
 

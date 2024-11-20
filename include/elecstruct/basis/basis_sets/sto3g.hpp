@@ -95,7 +95,7 @@ inline auto create_atomic_orbitals_sto3g(const std::vector<AtomInfo>& atom_infos
 
             const auto zeta = [&]()
             {
-                if (orbital == AOL::S1 || orbital == AOL::S2) {
+                if (orbital == AOL::S1) {
                     return zeta_orbital1_exponents_sto3g.at(atom_label);
                 }
                 else {
