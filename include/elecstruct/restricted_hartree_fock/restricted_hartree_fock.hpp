@@ -77,9 +77,23 @@ inline void perform_restricted_hartree_fock(
     const auto overlap_mtx = overlap_matrix(basis);
     ierhf::maybe_print(is_verbose, overlap_mtx, "overlap_mtx");
 
-    ierhf::maybe_print(is_verbose, "Calculating 'core_hamiltonian_mtx'");
-    const auto core_hamiltonian_mtx = core_hamiltonian_matrix(basis, atoms);
-    ierhf::maybe_print(is_verbose, core_hamiltonian_mtx, "core_hamiltonian_mtx");
+    ierhf::maybe_print(is_verbose, "Calculating 'kinetic_mtx'");
+    auto kinetic_mtx = kinetic_matrix(basis);
+    ierhf::maybe_print(is_verbose, kinetic_mtx, "kinetic_mtx");
+
+    ierhf::maybe_print(is_verbose, "Calculating 'nuclear_electron_mtx'");
+    auto nuclear_mtx = Eigen::MatrixXd::Zero(kinetic_mtx.cols(), kinetic_mtx.cols()).eval();
+
+    for (const auto& atom : atoms) {
+        if (is_verbose == Verbose::TRUE) {
+            const auto atom_name = elec::atom_name_from_label(atom.label);
+            std::cout << "Calculating 'nuclear_electron_mtx' term for atom '" << atom_name << "'\n";
+        }
+        const auto atom_nuclear_electron_mtx = nuclear_electron_matrix(basis, atom);
+        ierhf::maybe_print(is_verbose, atom_nuclear_electron_mtx, "atom_nuclear_electron_mtx");
+
+        nuclear_mtx += atom_nuclear_electron_mtx;
+    }
 
     std::exit(EXIT_FAILURE);
 
@@ -93,22 +107,22 @@ inline void perform_restricted_hartree_fock(
 
     auto prev_density_mtx = zero_matrix(basis.size());
 
-    for (std::size_t i_iter {0}; i_iter < n_max_iter; ++i_iter) {
-        std::cout << "Performing iteration " << i_iter << '\n';
-        const auto fock_mtx = fock_matrix(prev_density_mtx, basis, two_electron_integrals, core_hamiltonian_mtx);
-        const auto curr_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
+    // for (std::size_t i_iter {0}; i_iter < n_max_iter; ++i_iter) {
+    //     std::cout << "Performing iteration " << i_iter << '\n';
+    //     const auto fock_mtx = fock_matrix(prev_density_mtx, basis, two_electron_integrals, core_hamiltonian_mtx);
+    //     const auto curr_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
 
-        const auto tot_energy = total_energy(curr_density_mtx, fock_mtx, core_hamiltonian_mtx, atoms);
-        std::cout << "Total energy = " << tot_energy << '\n';
+    //     const auto tot_energy = total_energy(curr_density_mtx, fock_mtx, core_hamiltonian_mtx, atoms);
+    //     std::cout << "Total energy = " << tot_energy << '\n';
 
-        const auto difference = density_matrix_difference(prev_density_mtx, curr_density_mtx);
-        std::cout << "Density matrix difference = " << std::fixed << std::setprecision(12) << difference;
+    //     const auto difference = density_matrix_difference(prev_density_mtx, curr_density_mtx);
+    //     std::cout << "Density matrix difference = " << std::fixed << std::setprecision(12) << difference;
 
-        if (difference < density_mtx_convergence) {
-            std::cout << "Converged!\n";
-            break;
-        }
-    }
+    //     if (difference < density_mtx_convergence) {
+    //         std::cout << "Converged!\n";
+    //         break;
+    //     }
+    // }
 
     std::cout << "Failed to converge!\n";
 }

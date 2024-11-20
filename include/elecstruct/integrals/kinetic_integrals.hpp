@@ -204,11 +204,6 @@ inline auto unnormalized_kinetic_integral_1d(
 {
     namespace uki = impl_elec::unorm_kinetic_integral;
 
-    // if any of these cases are true, then either `term_other0 == 0` or `term_other1 == 0`, and the entire result is 0
-    if (angmom_a.other0 == 0 || angmom_a.other1 == 0 || angmom_b.other0 == 0 || angmom_b.other1 == 0) {
-        return 0.0;
-    }
-
     // clang-format off
     const auto kinetic_coefficient = centre_coefficient * overlap_integral_3d_norm(exponent_a, exponent_b);
     const auto term_other0 = uki::term_direction_other0(angmom_a, angmom_b, position_a, position_b, position_centre, exponent_a, exponent_b);

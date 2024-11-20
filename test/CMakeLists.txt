@@ -96,6 +96,7 @@ add_test_target(TARGET gaussian_test SOURCES "source/gaussian_test.cpp")
 add_test_target(TARGET mathtools_test SOURCES "source/mathtools_test.cpp")
 add_test_target(TARGET nuclear_electron_index_iterator_test SOURCES "source/nuclear_electron_index_iterator_test.cpp")
 add_test_target(TARGET electron_electron_index_iterator_test SOURCES "source/electron_electron_index_iterator_test.cpp")
+add_test_target(TARGET kinetic_integrals_test SOURCES "source/kinetic_integrals_test.cpp")
 add_test_target(ENABLE_EIGEN TARGET overlap_matrix_test SOURCES "source/overlap_matrix_test.cpp")
 
 # ---- End-of-file commands ----

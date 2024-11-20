@@ -133,10 +133,10 @@ inline auto nuclear_electron_integral(
                 const auto idx_boys = idx_l + idx_m + idx_n - 2 * (idx_r + idx_s + idx_t) - (idx_i + idx_j + idx_k);
                 const auto boys_factor = boys_function_via_series_expansion(boys_arg, idx_boys);
 
-                std::cout << "a_factor_x = " << a_factor_x << '\n';
-                std::cout << "a_factor_y = " << a_factor_y << '\n';
-                std::cout << "a_factor_z = " << a_factor_z << '\n';
-                std::cout << "boys_factor = " << boys_factor << '\n';
+                // std::cout << "a_factor_x = " << a_factor_x << '\n';
+                // std::cout << "a_factor_y = " << a_factor_y << '\n';
+                // std::cout << "a_factor_z = " << a_factor_z << '\n';
+                // std::cout << "boys_factor = " << boys_factor << '\n';
                 
                 const auto contribution = a_factor_x * a_factor_y * a_factor_z * boys_factor;
                 integral += contribution;
@@ -145,11 +145,11 @@ inline auto nuclear_electron_integral(
     }
     // clang-format on
 
-    std::cout << "norm0 = " << norm0 << '\n';
-    std::cout << "norm1 = " << norm1 << '\n';
-    std::cout << "nuclear_charge = " << nuclear_charge << '\n';
-    std::cout << "integral = " << integral << '\n';
-    std::cout << "g_value = " << g_value << '\n';
+    // std::cout << "norm0 = " << norm0 << '\n';
+    // std::cout << "norm1 = " << norm1 << '\n';
+    // std::cout << "nuclear_charge = " << nuclear_charge << '\n';
+    // std::cout << "integral = " << integral << '\n';
+    // std::cout << "g_value = " << g_value << '\n';
 
     return - 2.0 * M_PI * norm0 * norm1 * nuclear_charge * integral / g_value;
 
