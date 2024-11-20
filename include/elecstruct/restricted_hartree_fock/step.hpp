@@ -47,7 +47,7 @@ inline auto sorted_indices(const Eigen::VectorXd& elements) -> std::vector<Eigen
         auto indices_ = std::vector<Eigen::Index> {};
         indices_.reserve(size);
         for (std::size_t i {0}; i < size; ++i) {
-            indices_[i] = static_cast<Eigen::Index>(i);
+            indices_.push_back(static_cast<Eigen::Index>(i));
         }
 
         return indices_;
