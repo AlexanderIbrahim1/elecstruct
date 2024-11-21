@@ -107,19 +107,32 @@ inline void perform_restricted_hartree_fock(
     const auto two_electron_integrals = two_electron_integral_grid(basis);
     ierhf::maybe_print(is_verbose, two_electron_integrals, "two_electron_integrals");
 
-    auto prev_density_mtx = zero_matrix(basis.size());
+    // --- ITERATION 0 ---
+    std::cout << "Performing iteration 0\n";
 
-    for (std::size_t i_iter {0}; i_iter < n_max_iter; ++i_iter) {
+    // the initial guess is given to the Fock matrix
+    std::cout << "Calculating the initial Fock matrix\n";
+    auto fock_mtx = core_hamiltonian_mtx.eval();
+
+    std::cout << "Calculating the new density matrix\n";
+    auto prev_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
+
+    std::cout << "Calculating the total energy\n";
+    auto tot_energy = total_energy(prev_density_mtx, fock_mtx, core_hamiltonian_mtx, atoms);
+    std::cout << "Total energy = " << tot_energy << '\n';
+
+    // --- REMAINING ITERATIONS ---
+    for (std::size_t i_iter {1}; i_iter < n_max_iter; ++i_iter) {
         std::cout << "Performing iteration " << i_iter << '\n';
 
         std::cout << "Calculating the Fock matrix\n";
-        const auto fock_mtx = fock_matrix(prev_density_mtx, basis, two_electron_integrals, core_hamiltonian_mtx);
+        fock_mtx = fock_matrix(prev_density_mtx, basis, two_electron_integrals, core_hamiltonian_mtx);
 
         std::cout << "Calculating the new density matrix\n";
         const auto curr_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
 
         std::cout << "Calculating the total energy\n";
-        const auto tot_energy = total_energy(curr_density_mtx, fock_mtx, core_hamiltonian_mtx, atoms);
+        tot_energy = total_energy(curr_density_mtx, fock_mtx, core_hamiltonian_mtx, atoms);
         std::cout << "Total energy = " << tot_energy << '\n';
 
         std::cout << "Calculating the density matrix difference\n";
@@ -130,6 +143,8 @@ inline void perform_restricted_hartree_fock(
             std::cout << "Converged!\n";
             break;
         }
+
+        prev_density_mtx = curr_density_mtx.eval();
     }
 
     std::cout << "Failed to converge!\n";
