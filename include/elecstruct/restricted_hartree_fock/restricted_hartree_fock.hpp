@@ -113,9 +113,24 @@ inline void perform_restricted_hartree_fock(
     // the initial guess is given to the Fock matrix
     std::cout << "Calculating the initial Fock matrix\n";
     auto fock_mtx = core_hamiltonian_mtx.eval();
+    // const auto huckel_constant = double {1.75};  // TODO: move somewhere else!
+    // auto fock_mtx = huckel_guess(overlap_mtx, core_hamiltonian_mtx, huckel_constant);
 
     std::cout << "Calculating the new density matrix\n";
-    auto prev_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
+    // auto prev_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
+
+    // specific to this water example, taken from the PDF (since I can't seem to get it right)
+    auto prev_density_mtx = Eigen::MatrixXd {7, 7};
+    prev_density_mtx <<  2.108, -0.456,  0.000,  0.000, -0.104, -0.022, -0.022,
+                        -0.456,  2.010,  0.000,  0.000,  0.618, -0.059, -0.059,
+                         0.000,  0.000,  2.000,  0.000,  0.000,  0.000,  0.000,
+                         0.000,  0.000,  0.000,  0.737,  0.000,  0.539, -0.539,
+                        -0.104,  0.618,  0.000,  0.000,  1.215, -0.482, -0.482,
+                        -0.022, -0.059,  0.000,  0.539, -0.482,  0.606, -0.183,
+                        -0.022, -0.059,  0.000, -0.539, -0.482, -0.183,  0.606;
+
+    std::cout << "PREV DENSITY MTX\n";
+    std::cout << prev_density_mtx << '\n';
 
     std::cout << "Calculating the total energy\n";
     auto tot_energy = total_energy(prev_density_mtx, fock_mtx, core_hamiltonian_mtx, atoms);
@@ -127,6 +142,9 @@ inline void perform_restricted_hartree_fock(
 
         std::cout << "Calculating the Fock matrix\n";
         fock_mtx = fock_matrix(prev_density_mtx, basis, two_electron_integrals, core_hamiltonian_mtx);
+        std::cout << fock_mtx << '\n';
+    
+        std::exit(EXIT_FAILURE);
 
         std::cout << "Calculating the new density matrix\n";
         const auto curr_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);

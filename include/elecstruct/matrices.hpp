@@ -267,7 +267,7 @@ inline auto density_matrix_restricted_hartree_fock(const Eigen::MatrixXd& coeffi
             for (Eigen::Index j {0}; j < half; ++j) {
                 density_element += coefficient_mtx(i0, j) * coefficient_mtx(i1, j);
             }
-            output(i0, i1) = 2.0 * density_element;
+            output(i1, i0) = 2.0 * density_element;
         }
     }
 

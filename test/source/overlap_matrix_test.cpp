@@ -12,6 +12,7 @@
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/matrices.hpp"
 
+constexpr auto ABS_TOLERANCE = double {1.0e-6};
 constexpr auto REL_TOLERANCE = double {1.0e-6};
 
 
@@ -104,4 +105,30 @@ TEST_CASE("transformation matrix")
     };
 
     REQUIRE(are_columns_equal(expected_columns, actual_columns, tolerance));
+}
+
+
+TEST_CASE("transformation matrix applied to overlap matrix gives identity")
+{
+    auto overlap_mtx = Eigen::MatrixXd {3, 3};
+    overlap_mtx << 1.0, 0.2, 0.3,
+                   0.2, 1.0, 0.1,
+                   0.3, 0.1, 1.0;
+
+    const auto transform_mtx = elec::transformation_matrix(overlap_mtx);
+
+    const auto result = transform_mtx.transpose() * overlap_mtx * transform_mtx;
+
+    // check the diagonals
+    REQUIRE_THAT(result(0, 0), Catch::Matchers::WithinAbs(1.0, ABS_TOLERANCE));
+    REQUIRE_THAT(result(1, 1), Catch::Matchers::WithinAbs(1.0, ABS_TOLERANCE));
+    REQUIRE_THAT(result(2, 2), Catch::Matchers::WithinAbs(1.0, ABS_TOLERANCE));
+
+    // check the off-diagonals
+    REQUIRE_THAT(result(1, 0), Catch::Matchers::WithinAbs(0.0, ABS_TOLERANCE));
+    REQUIRE_THAT(result(2, 0), Catch::Matchers::WithinAbs(0.0, ABS_TOLERANCE));
+    REQUIRE_THAT(result(0, 1), Catch::Matchers::WithinAbs(0.0, ABS_TOLERANCE));
+    REQUIRE_THAT(result(2, 1), Catch::Matchers::WithinAbs(0.0, ABS_TOLERANCE));
+    REQUIRE_THAT(result(0, 2), Catch::Matchers::WithinAbs(0.0, ABS_TOLERANCE));
+    REQUIRE_THAT(result(1, 2), Catch::Matchers::WithinAbs(0.0, ABS_TOLERANCE));
 }

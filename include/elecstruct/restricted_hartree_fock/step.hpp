@@ -92,7 +92,7 @@ inline auto new_density_matrix(
 {
     namespace ies = impl_elec::step;
 
-    const auto fock_mtx_trans = basis_transformation_mtx.transpose() * (fock_mtx * basis_transformation_mtx);
+    const auto fock_mtx_trans = basis_transformation_mtx.transpose() * fock_mtx * basis_transformation_mtx;
 
     const auto eigensolver = Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> {fock_mtx_trans};
     if (eigensolver.info() != Eigen::Success) {
@@ -103,8 +103,24 @@ inline auto new_density_matrix(
     const auto eigenvalues = eigensolver.eigenvalues();
     const auto sorted_indices = ies::sorted_indices(eigenvalues);
 
+    // std::cout << "EIGENVALUES\n";
+    // std::cout << eigenvalues << '\n';
+
+    // std::cout << "SORTED INDICES\n";
+    // for (auto idx : sorted_indices) {
+    //     std::cout << idx << ", ";
+    // }
+    // std::cout << '\n';
+
     const auto coefficient_mtx_trans = ies::matrix_with_sorted_columns(eigensolver.eigenvectors(), sorted_indices);
+
+    std::cout << "COEFFICIENT MTX TRANS\n";
+    std::cout << coefficient_mtx_trans << '\n';
+
     const auto coefficient_mtx = basis_transformation_mtx * coefficient_mtx_trans;
+
+    std::cout << "COEFFICIENT MTX\n";
+    std::cout << coefficient_mtx << '\n';
 
     const auto new_density_mtx = density_matrix_restricted_hartree_fock(coefficient_mtx, n_electrons);
 
@@ -127,7 +143,7 @@ inline auto density_matrix_difference(
         }
     }
 
-    return std::sqrt(difference / 4.0);
+    return 0.5 * std::sqrt(difference);
 }
 
 
