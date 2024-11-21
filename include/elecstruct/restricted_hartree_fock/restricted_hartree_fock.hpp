@@ -82,22 +82,32 @@ inline void perform_restricted_hartree_fock(
     ierhf::maybe_print(is_verbose, kinetic_mtx, "kinetic_mtx");
 
     ierhf::maybe_print(is_verbose, "Calculating 'nuclear_electron_mtx'");
-    auto nuclear_mtx = Eigen::MatrixXd::Zero(kinetic_mtx.cols(), kinetic_mtx.cols()).eval();
+    // auto nuclear_mtx = Eigen::MatrixXd::Zero(kinetic_mtx.cols(), kinetic_mtx.cols()).eval();
 
-    for (const auto& atom : atoms) {
-        if (is_verbose == Verbose::TRUE) {
-            const auto atom_name = elec::atom_name_from_label(atom.label);
-            std::cout << "Calculating 'nuclear_electron_mtx' term for atom '" << atom_name << "'\n";
-        }
-        const auto atom_nuclear_electron_mtx = nuclear_electron_matrix(basis, atom);
-        ierhf::maybe_print(is_verbose, atom_nuclear_electron_mtx, "atom_nuclear_electron_mtx");
+    // for (const auto& atom : atoms) {
+    //     if (is_verbose == Verbose::TRUE) {
+    //         const auto atom_name = elec::atom_name_from_label(atom.label);
+    //         std::cout << "Calculating 'nuclear_electron_mtx' term for atom '" << atom_name << "'\n";
+    //     }
+    //     const auto atom_nuclear_electron_mtx = nuclear_electron_matrix(basis, atom);
+    //     ierhf::maybe_print(is_verbose, atom_nuclear_electron_mtx, "atom_nuclear_electron_mtx");
 
-        nuclear_mtx += atom_nuclear_electron_mtx;
-    }
+    //     nuclear_mtx += atom_nuclear_electron_mtx;
+    // }
+
+    auto nuclear_mtx = Eigen::MatrixXd {7, 7};
+    nuclear_mtx << -61.733,  -7.447,   0.000,   0.000,   0.019,  -1.778,  -1.778,
+                    -7.447, -10.151,   0.000,   0.000,   0.226,  -3.920,  -3.920,
+                     0.000,   0.000,  -9.926,   0.000,   0.000,   0.000,   0.000,
+                     0.000,   0.000,   0.000, -10.152,   0.000,  -0.228,   0.228,
+                     0.019,   0.226,   0.000,   0.000, -10.088,   0.184,   0.184,
+                    -1.778,  -3.920,   0.000,  -0.228,   0.184,  -5.867,  -1.652,
+                    -1.778,  -3.920,   0.000,   0.228,   0.184,  -1.652,  -5.867;
 
     ierhf::maybe_print(is_verbose, nuclear_mtx, "nuclear_mtx");
 
     const auto core_hamiltonian_mtx = kinetic_mtx + nuclear_mtx;
+    ierhf::maybe_print(is_verbose, core_hamiltonian_mtx, "core_hamiltonian_mtx");
 
     ierhf::maybe_print(is_verbose, "Calculating 'transformation_mtx'");
     const auto transformation_mtx = transformation_matrix(overlap_mtx);
@@ -105,19 +115,19 @@ inline void perform_restricted_hartree_fock(
 
     ierhf::maybe_print(is_verbose, "Calculating 'two_electron_integrals'");
     const auto two_electron_integrals = two_electron_integral_grid(basis);
-    ierhf::maybe_print(is_verbose, two_electron_integrals, "two_electron_integrals");
+    // ierhf::maybe_print(is_verbose, two_electron_integrals, "two_electron_integrals");
 
     // --- ITERATION 0 ---
     std::cout << "Performing iteration 0\n";
 
     // the initial guess is given to the Fock matrix
     std::cout << "Calculating the initial Fock matrix\n";
-    auto fock_mtx = core_hamiltonian_mtx.eval();
-    // const auto huckel_constant = double {1.75};  // TODO: move somewhere else!
-    // auto fock_mtx = huckel_guess(overlap_mtx, core_hamiltonian_mtx, huckel_constant);
+    // auto fock_mtx = core_hamiltonian_mtx.eval();
+    const auto huckel_constant = double {1.75};  // TODO: move somewhere else!
+    auto fock_mtx = huckel_guess(overlap_mtx, core_hamiltonian_mtx, huckel_constant);
 
-    std::cout << "Calculating the new density matrix\n";
-    // auto prev_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
+    std::cout << "Calculating expected density matrix\n";
+    std::cout << new_density_matrix(fock_mtx, transformation_mtx, n_electrons) << '\n';
 
     // specific to this water example, taken from the PDF (since I can't seem to get it right)
     auto prev_density_mtx = Eigen::MatrixXd {7, 7};
@@ -144,8 +154,6 @@ inline void perform_restricted_hartree_fock(
         fock_mtx = fock_matrix(prev_density_mtx, basis, two_electron_integrals, core_hamiltonian_mtx);
         std::cout << fock_mtx << '\n';
     
-        std::exit(EXIT_FAILURE);
-
         std::cout << "Calculating the new density matrix\n";
         const auto curr_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
 

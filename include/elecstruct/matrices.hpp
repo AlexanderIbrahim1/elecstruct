@@ -187,7 +187,6 @@ inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& b
                     element += coeff * overlap;
                 }
             }
-            std::cout << "NE(i0, i1) = (" << i0 << ", " << i1 << ") = " << element << '\n';
 
             output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = element;
         }
@@ -209,15 +208,8 @@ inline auto core_hamiltonian_matrix(
 {
     auto output = kinetic_matrix(basis);
 
-    std::cout << "kinetic_mtx\n";
-    std::cout << output << "\n\n";
-
     for (const auto& atom : atoms) {
         const auto nuclear_mtx = nuclear_electron_matrix(basis, atom);
-
-        std::cout << "nuclear_mtx\n";
-        std::cout << nuclear_mtx << "\n\n";
-
         output += nuclear_mtx;
     }
 
@@ -267,7 +259,7 @@ inline auto density_matrix_restricted_hartree_fock(const Eigen::MatrixXd& coeffi
             for (Eigen::Index j {0}; j < half; ++j) {
                 density_element += coefficient_mtx(i0, j) * coefficient_mtx(i1, j);
             }
-            output(i1, i0) = 2.0 * density_element;
+            output(i0, i1) = 2.0 * density_element;
         }
     }
 

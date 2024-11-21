@@ -1,5 +1,9 @@
+// TODO: remove later
+#include <iostream>
+
 #include <cmath>
 #include <cstdint>
+#include <tuple>
 #include <vector>
 
 #include <catch2/catch_test_macros.hpp>
@@ -57,6 +61,72 @@ auto are_columns_equal(
     }
 
     return true;
+}
+
+auto are_matrices_approx_equal(
+    const Eigen::MatrixXd& mat0,
+    const Eigen::MatrixXd& mat1,
+    double elem_tol
+) -> std::tuple<Eigen::Index, Eigen::Index, bool>
+{
+    if (mat0.cols() != mat1.cols()) {
+        return {-1, -1, false};
+    }
+
+    if (mat0.rows() != mat1.rows()) {
+        return {-1, -1, false};
+    }
+
+    const auto n_cols = mat0.cols();
+    const auto n_rows = mat0.rows();
+
+    std::cout << "mat0\n";
+    std::cout << mat0 << '\n';
+    std::cout << '\n';
+    std::cout << "mat1\n";
+    std::cout << mat1 << '\n';
+
+    for (Eigen::Index i0 {0}; i0 < n_cols; ++i0) {
+        for (Eigen::Index i1 {0}; i1 < n_rows; ++i1) {
+            if (std::fabs(mat0(i0, i1) - mat1(i0, i1)) > elem_tol) {
+                return {i0, i1, false};
+            }
+        }
+    }
+
+    return {-1, -1, true};
+}
+
+
+auto is_column_equal(
+    const Eigen::VectorXd& vec0,
+    const Eigen::VectorXd& vec1,
+    double tolerance
+) -> bool
+{
+    if (vec0.size() != vec1.size()) {
+        return false;
+    }
+
+    const auto size = vec0.size();
+
+    for (Eigen::Index i {0}; i < size; ++i) {
+        if (std::fabs(vec0(i) - vec1(i)) > tolerance) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+auto is_column_equal_within_sign(
+    const Eigen::VectorXd& vec0,
+    const Eigen::VectorXd& vec1,
+    double tolerance
+) -> bool
+{
+    return is_column_equal(vec0, vec1, tolerance) || is_column_equal(vec0, -vec1, tolerance);
 }
 
 
@@ -131,4 +201,40 @@ TEST_CASE("transformation matrix applied to overlap matrix gives identity")
     REQUIRE_THAT(result(2, 1), Catch::Matchers::WithinAbs(0.0, ABS_TOLERANCE));
     REQUIRE_THAT(result(0, 2), Catch::Matchers::WithinAbs(0.0, ABS_TOLERANCE));
     REQUIRE_THAT(result(1, 2), Catch::Matchers::WithinAbs(0.0, ABS_TOLERANCE));
+}
+
+TEST_CASE("example overlap matrix to transformation matrix")
+{
+    const auto tolerance = 1.0e-3;
+
+    /*
+        example taken for water from online
+        SOURCE: https://www.han-sur-lesse-winterschool.nl/downloads/2021/slides_filot.pdf
+    */
+    
+    auto overlap_mtx = Eigen::MatrixXd {7, 7};
+
+    overlap_mtx << 1.0000,  0.2367,  0.0000,  0.0000,  0.0000,  0.1584,  0.1584,
+                   0.2367,  1.0000,  0.0000,  0.0000,  0.0000,  0.8098,  0.8098,
+                   0.0000,  0.0000,  1.0000,  0.0000,  0.0000,  0.3714, -0.3714,
+                   0.0000,  0.0000,  0.0000,  1.0000,  0.0000,  0.0000,  0.0000,
+                   0.0000,  0.0000,  0.0000,  0.0000,  1.0000, -0.2322, -0.2322,
+                   0.1584,  0.8098,  0.3714,  0.0000, -0.2322,  1.0000,  0.6158,
+                   0.1584,  0.8098, -0.3714,  0.0000, -0.2322,  0.6158,  1.0000;
+
+    auto expected_transform_mtx = Eigen::MatrixXd {7, 7};
+    expected_transform_mtx << -0.1769, -0.0000,  0.8737, -0.0000, -0.5128, -0.0000,  0.1205,
+                               2.7839,  0.0000, -0.2202, -0.0000, -0.1818, -0.0000,  0.3609,
+                               0.0000, -1.7232,  0.0000,  0.0000, -0.0000,  0.7607,  0.0000,
+                              -0.0000,  0.0000, -0.0000, -1.0000,  0.0000,  0.0000,  0.0000,
+                              -0.7851, -0.0000, -0.5239, -0.0000, -0.8095, -0.0000, -0.0983,
+                              -1.5636,  2.1266, -0.1140,  0.0000,  0.0704,  0.3082,  0.3391,
+                              -1.5636, -2.1266, -0.1140, -0.0000,  0.0704, -0.3082,  0.3391;
+    
+    const auto actual_transform_mtx = elec::transformation_matrix(overlap_mtx);
+
+    for (Eigen::Index i {0}; i < 7; ++i) {
+        REQUIRE(is_column_equal_within_sign(expected_transform_mtx.col(i), actual_transform_mtx.col(i), tolerance));
+    }
+
 }
