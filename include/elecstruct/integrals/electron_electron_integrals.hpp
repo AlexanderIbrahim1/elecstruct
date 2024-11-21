@@ -99,15 +99,25 @@ inline auto electron_electron_b_factor(
     const auto expon_position = std::pow(diff_prod, idx_k - 2 * indices.idx_i);
 
     // denominator
-    const auto pow_2_coeff = std::pow(2.0, -(indices.idx_l_01 + indices.idx_l_23 + indices.idx_i));
-    const auto delta_factor = std::pow(2.0 * info.delta, idx_k - indices.idx_i);
     const auto i_factorial = static_cast<double>(elec::math::factorial(indices.idx_i));
     const auto k2i_factorial = static_cast<double>(elec::math::factorial(idx_k - 2 * indices.idx_i));
+    const auto pow_2_coeff = std::pow(2.0, -(indices.idx_l_01 + indices.idx_l_23 + indices.idx_i));
+    const auto delta_factor = std::pow(2.0 * info.delta, idx_k - indices.idx_i);
 
     const auto numerator = theta01 * theta23 * k_factorial * expon_position;
     const auto denominator = pow_2_coeff * delta_factor * i_factorial * k2i_factorial;
 
     return sign * numerator / denominator;
+
+    // matching the reference code more closely; unit test still fails, with same result
+    // const auto delta_2_term = std::pow(2.0 * info.delta, 2 * indices.idx_r_01 + 2 * indices.idx_r_23);
+    // const auto delta_i_term = std::pow(info.delta, indices.idx_i);
+    // const auto delta_4_term = std::pow(4.0 * info.delta, indices.idx_l_01 + indices.idx_l_23);
+
+    // const auto numerator = sign * theta01 * theta23 * delta_2_term * k_factorial * delta_i_term * expon_position;
+    // const auto denominator = delta_4_term * i_factorial * k2i_factorial;
+
+    // return numerator / denominator;
 }
 
 inline auto boys_index(
@@ -187,7 +197,7 @@ inline auto electron_electron_integral(
 
                 const auto idx_boys = eli::boys_index(indices_x, indices_y, indices_z);
                 const auto boys_arg = 0.25 * coord::norm_squared(pos_product_01 - pos_product_23) / delta;
-                const auto boys_factor = boys_function_via_series_expansion(boys_arg, idx_boys);
+                const auto boys_factor = boys_mix_small_large(boys_arg, idx_boys, N_MAX_TERMS_BOYS_SMALL);
                 
                 const auto contribution = b_factor_x * b_factor_y * b_factor_z * boys_factor;
                 integral += contribution;
@@ -198,9 +208,10 @@ inline auto electron_electron_integral(
 
     const auto norm_tot = norm0 * norm1 * norm2 * norm3;
     const auto coeff_tot = coeff_product_01 * coeff_product_23;
-    const auto expon_tot = std::pow(M_PI, 5.0/2.0) / std::pow(g_value_01 + g_value_23, 3.0/2.0);
+    // const auto expon_tot = 2.0 * std::pow(M_PI, 5.0/2.0) / std::pow(g_value_01 + g_value_23, 3.0/2.0);
+    const auto expon_tot = 2.0 * M_PI * M_PI / (g_value_01 * g_value_23) * std::sqrt(M_PI / (g_value_01 + g_value_23));
 
-    return 2.0 * integral * coeff_tot * norm_tot * expon_tot;
+    return integral * coeff_tot * norm_tot * expon_tot;
 }
 
 }  // namespace elec
