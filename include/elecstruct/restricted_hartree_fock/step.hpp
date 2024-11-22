@@ -94,6 +94,9 @@ inline auto new_density_matrix(
 
     const auto fock_mtx_trans = basis_transformation_mtx.transpose() * fock_mtx * basis_transformation_mtx;
 
+    std::cout << "FOCK_MTX_TRANS\n";
+    std::cout << fock_mtx_trans << "\n\n";
+
     const auto eigensolver = Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> {fock_mtx_trans};
     if (eigensolver.info() != Eigen::Success) {
         throw std::runtime_error {"Failed to perform eigenvalue decomposition of Fock matrix."};
@@ -115,12 +118,12 @@ inline auto new_density_matrix(
     const auto coefficient_mtx_trans = ies::matrix_with_sorted_columns(eigensolver.eigenvectors(), sorted_indices);
 
     std::cout << "COEFFICIENT MTX TRANS\n";
-    std::cout << coefficient_mtx_trans << '\n';
+    std::cout << coefficient_mtx_trans << "\n\n";
 
     const auto coefficient_mtx = basis_transformation_mtx * coefficient_mtx_trans;
 
     std::cout << "COEFFICIENT MTX\n";
-    std::cout << coefficient_mtx << '\n';
+    std::cout << coefficient_mtx << "\n\n";
 
     const auto new_density_mtx = density_matrix_restricted_hartree_fock(coefficient_mtx, n_electrons);
 

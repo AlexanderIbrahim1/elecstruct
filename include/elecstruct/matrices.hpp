@@ -123,7 +123,21 @@ inline auto transformation_matrix(const Eigen::MatrixXd& s_overlap) -> Eigen::Ma
     const auto inv_sqrt_eigenvalues = eigenvalues.array().pow(-0.5).matrix();
     const auto diagonal_inv_sqrt = inv_sqrt_eigenvalues.asDiagonal();
 
-    return eigenvectors * diagonal_inv_sqrt;
+    auto transformation_mtx = (eigenvectors * diagonal_inv_sqrt).eval();
+
+    // flip the signs of each column such that the top element is positive
+    // - this shouldn't change the answer
+    // - it will help keep things consistent between the C++ and Python versions
+    const auto size = s_overlap.cols();
+    for (Eigen::Index i {0}; i < size; ++i) {
+        if (transformation_mtx(0, i) < 0.0) {
+            for (Eigen::Index j {0}; j < size; ++j) {
+                transformation_mtx(j, i) = -transformation_mtx(j, i);
+            }
+        }
+    }
+
+    return transformation_mtx;
 }
 
 inline auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> Eigen::MatrixXd

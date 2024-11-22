@@ -18,24 +18,24 @@
 */
 auto h2o_positions() -> std::tuple<coord::Cartesian3D, coord::Cartesian3D, coord::Cartesian3D>
 {
-    // const auto angle_rad = (104.52 / 360.0) * M_PI;
-    // const auto size = 1.809;
+    const auto angle_rad = (104.52 / 360.0) * M_PI;
+    const auto size = 1.809;
 
-    // const auto pos_h_0 = coord::Cartesian3D {  size * std::sin(angle_rad), 0.0, 0.0};
-    // const auto pos_h_1 = coord::Cartesian3D {- size * std::sin(angle_rad), 0.0, 0.0};
-    // const auto pos_o   = coord::Cartesian3D {0.0, size * std::cos(angle_rad), 0.0};
+    const auto pos_h_0 = coord::Cartesian3D {  size * std::sin(angle_rad), 0.0, 0.0};
+    const auto pos_h_1 = coord::Cartesian3D {- size * std::sin(angle_rad), 0.0, 0.0};
+    const auto pos_o   = coord::Cartesian3D {0.0, size * std::cos(angle_rad), 0.0};
 
     // 0.751155 -> 1.4194772274
     // 0.465285 -> 0.8792612201
     // 0.116321 -> 0.2198148326
 
-    const auto y_h = 1.4194772274;
-    const auto z_h = 0.8792612201;
-    const auto z_o = 0.2198148326;
+    // const auto y_h = 1.4194772274;
+    // const auto z_h = 0.8792612201;
+    // const auto z_o = 0.2198148326;
 
-    const auto pos_h_0 = coord::Cartesian3D {0.0, y_h, -z_h};
-    const auto pos_o   = coord::Cartesian3D {0.0, 0.0, z_o};
-    const auto pos_h_1 = coord::Cartesian3D {0.0, -y_h, -z_h};
+    // const auto pos_h_0 = coord::Cartesian3D {0.0, y_h, -z_h};
+    // const auto pos_o   = coord::Cartesian3D {0.0, 0.0, z_o};
+    // const auto pos_h_1 = coord::Cartesian3D {0.0, -y_h, -z_h};
 
     return {pos_h_0, pos_h_1, pos_o};
 }
