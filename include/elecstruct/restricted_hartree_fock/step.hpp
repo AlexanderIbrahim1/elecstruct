@@ -70,7 +70,11 @@ inline auto fock_matrix(
     const Eigen::MatrixXd& core_hamiltonian_mtx
 ) -> Eigen::MatrixXd
 {
+    std::cout << "CALCULATING ELECTRON_ELECTRON_MTX\n";
     const auto electron_electron_mtx = electron_electron_matrix(basis, old_density_mtx, two_electron_integrals);
+    std::cout << "ELECTRON_ELECTRON_MTX\n";
+    std::cout << electron_electron_mtx << "\n\n";
+
     const auto fock_mtx = core_hamiltonian_mtx + electron_electron_mtx;
 
     return fock_mtx;
@@ -92,7 +96,11 @@ inline auto new_density_matrix(
 {
     namespace ies = impl_elec::step;
 
-    const auto fock_mtx_trans = basis_transformation_mtx.transpose() * fock_mtx * basis_transformation_mtx;
+    const auto fock_intermediate = (fock_mtx * basis_transformation_mtx).eval();
+    std::cout << "FOCK INTERMEDIATE MTX\n";
+    std::cout << fock_intermediate << "\n\n";
+
+    const auto fock_mtx_trans = (basis_transformation_mtx.transpose() * fock_intermediate).eval();
 
     std::cout << "FOCK_MTX_TRANS\n";
     std::cout << fock_mtx_trans << "\n\n";
@@ -105,6 +113,9 @@ inline auto new_density_matrix(
     // get the sorted eigenvalues and eigenvectors
     const auto eigenvalues = eigensolver.eigenvalues();
     const auto sorted_indices = ies::sorted_indices(eigenvalues);
+
+    std::cout << "EIGENVALUES\n";
+    std::cout << eigenvalues << "\n\n";
 
     // std::cout << "EIGENVALUES\n";
     // std::cout << eigenvalues << '\n';
@@ -209,6 +220,9 @@ inline auto total_energy(
 {
     const auto elec_energy = electron_energy(density_mtx, fock_mtx, core_hamiltonain_mtx);
     const auto nucl_energy = nuclear_energy(atoms);
+
+    std::cout << "ELEC ENERGY = " << elec_energy << '\n';
+    std::cout << "NUCL ENERGY = " << nucl_energy << '\n';
 
     return elec_energy + nucl_energy;
 }
