@@ -70,11 +70,7 @@ inline auto fock_matrix(
     const Eigen::MatrixXd& core_hamiltonian_mtx
 ) -> Eigen::MatrixXd
 {
-    std::cout << "CALCULATING ELECTRON_ELECTRON_MTX\n";
     const auto electron_electron_mtx = electron_electron_matrix(basis, old_density_mtx, two_electron_integrals);
-    std::cout << "ELECTRON_ELECTRON_MTX\n";
-    std::cout << electron_electron_mtx << "\n\n";
-
     const auto fock_mtx = core_hamiltonian_mtx + electron_electron_mtx;
 
     return fock_mtx;

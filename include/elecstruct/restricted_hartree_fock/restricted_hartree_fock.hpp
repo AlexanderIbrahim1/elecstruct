@@ -116,47 +116,43 @@ inline void perform_restricted_hartree_fock(
     ierhf::maybe_print(is_verbose, two_electron_integrals, "two_electron_integrals");
 
     // --- ITERATION 0 ---
-    std::cout << "Performing iteration 0\n";
+    std::cout << "\nPerforming iteration 0\n";
 
-    // the initial guess is given to the Fock matrix
     std::cout << "Calculating the initial Fock matrix\n";
     // auto fock_mtx = core_hamiltonian_mtx.eval();
-    const auto huckel_constant = double {1.75};  // TODO: move somewhere else!
-    auto fock_mtx = huckel_guess(overlap_mtx, core_hamiltonian_mtx, huckel_constant);
+    // const auto huckel_constant = double {1.75};
+    // auto fock_mtx = huckel_guess(overlap_mtx, core_hamiltonian_mtx, huckel_constant);
+    auto fock_mtx = zero_matrix(basis.size());
 
-    auto tot_energy = double {0.0};
-    auto prev_density_mtx = Eigen::MatrixXd::Zero(overlap_mtx.cols(), overlap_mtx.rows()).eval();
+    std::cout << "Calculating initial density matrix\n";
+    auto prev_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
+
+    auto tot_energy = total_energy(prev_density_mtx, fock_mtx, core_hamiltonian_mtx, atoms);
+    std::cout << "Total energy = " << tot_energy << '\n';
 
     // --- REMAINING ITERATIONS ---
     for (std::size_t i_iter {1}; i_iter < n_max_iter; ++i_iter) {
-        std::cout << "Performing iteration " << i_iter << '\n';
+        std::cout << "\nPerforming iteration " << i_iter << '\n';
 
         std::cout << "Calculating the Fock matrix\n";
         fock_mtx = fock_matrix(prev_density_mtx, basis, two_electron_integrals, core_hamiltonian_mtx);
-        std::cout << "FOCK MTX\n";
-        std::cout << fock_mtx << "\n\n";
 
-        std::cout << "Calculating the new density matrix\n";
-        const auto curr_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
-        std::cout << "NEW DENSITY MTX\n";
-        std::cout << curr_density_mtx << '\n';
+        std::cout << "Calculating the density matrix\n";
+        const auto density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);
 
-        std::cout << "Calculating the total energy\n";
-        tot_energy = total_energy(prev_density_mtx, fock_mtx, core_hamiltonian_mtx, atoms);
+        tot_energy = total_energy(density_mtx, fock_mtx, core_hamiltonian_mtx, atoms);
         std::cout << "Total energy = " << tot_energy << '\n';
 
         std::cout << "Calculating the density matrix difference\n";
-        const auto difference = density_matrix_difference(prev_density_mtx, curr_density_mtx);
+        const auto difference = density_matrix_difference(prev_density_mtx, density_mtx);
         std::cout << "Density matrix difference = " << std::fixed << std::setprecision(12) << difference << '\n';
 
         if (difference < density_mtx_convergence) {
             std::cout << "Converged!\n";
-            break;
+            return;
         }
 
-        prev_density_mtx = curr_density_mtx.eval();
-        std::cout << "DENSITY MTX AFTER CHANGE\n";
-        std::cout << prev_density_mtx << "\n\n";
+        prev_density_mtx = density_mtx.eval();
     }
 
     std::cout << "Failed to converge!\n";

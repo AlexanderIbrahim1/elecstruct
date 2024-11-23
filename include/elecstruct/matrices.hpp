@@ -1,8 +1,5 @@
 #pragma once
 
-// TODO: remove
-#include <iostream>
-
 #include <stdexcept>
 #include <vector>
 
