@@ -101,24 +101,15 @@ inline auto electron_electron_b_factor(
     // denominator
     const auto i_factorial = static_cast<double>(elec::math::factorial(indices.idx_i));
     const auto k2i_factorial = static_cast<double>(elec::math::factorial(idx_k - 2 * indices.idx_i));
-    const auto pow_2_coeff = std::pow(2.0, -(indices.idx_l_01 + indices.idx_l_23 + indices.idx_i));
-    const auto delta_factor = std::pow(2.0 * info.delta, idx_k - indices.idx_i);
+    const auto delta_factor = std::pow(info.delta, idx_k - indices.idx_i);
+    const auto pow2_factor = std::pow(2.0, idx_k + indices.idx_l_01 + indices.idx_l_23);
 
-    const auto numerator = theta01 * theta23 * k_factorial * expon_position;
-    const auto denominator = pow_2_coeff * delta_factor * i_factorial * k2i_factorial;
+    const auto numerator = sign * theta01 * theta23 * k_factorial * expon_position;
+    const auto denominator = pow2_factor * delta_factor * i_factorial * k2i_factorial;
 
-    return sign * numerator / denominator;
-
-    // matching the reference code more closely; unit test still fails, with same result
-    // const auto delta_2_term = std::pow(2.0 * info.delta, 2 * indices.idx_r_01 + 2 * indices.idx_r_23);
-    // const auto delta_i_term = std::pow(info.delta, indices.idx_i);
-    // const auto delta_4_term = std::pow(4.0 * info.delta, indices.idx_l_01 + indices.idx_l_23);
-
-    // const auto numerator = sign * theta01 * theta23 * delta_2_term * k_factorial * delta_i_term * expon_position;
-    // const auto denominator = delta_4_term * i_factorial * k2i_factorial;
-
-    // return numerator / denominator;
+    return numerator / denominator;
 }
+
 
 inline auto boys_index(
     const elec::ElectronElectronIntegralIndices& indices_x,
@@ -181,9 +172,7 @@ inline auto electron_electron_integral(
     const auto positions_x = eli::Positions1D {pos_gauss0.x, pos_gauss1.x, pos_gauss2.x, pos_gauss3.x, pos_product_01.x, pos_product_23.x};
     const auto positions_y = eli::Positions1D {pos_gauss0.y, pos_gauss1.y, pos_gauss2.y, pos_gauss3.y, pos_product_01.y, pos_product_23.y};
     const auto positions_z = eli::Positions1D {pos_gauss0.z, pos_gauss1.z, pos_gauss2.z, pos_gauss3.z, pos_product_01.z, pos_product_23.z};
-    // clang-format on
 
-    // clang-format off
     auto integral = double {0.0};
 
     for (const auto indices_x : ElectronElectronIndexGenerator {angmoms_x}) {
@@ -208,7 +197,6 @@ inline auto electron_electron_integral(
 
     const auto norm_tot = norm0 * norm1 * norm2 * norm3;
     const auto coeff_tot = coeff_product_01 * coeff_product_23;
-    // const auto expon_tot = 2.0 * std::pow(M_PI, 5.0/2.0) / std::pow(g_value_01 + g_value_23, 3.0/2.0);
     const auto expon_tot = 2.0 * M_PI * M_PI / (g_value_01 * g_value_23) * std::sqrt(M_PI / (g_value_01 + g_value_23));
 
     return integral * coeff_tot * norm_tot * expon_tot;

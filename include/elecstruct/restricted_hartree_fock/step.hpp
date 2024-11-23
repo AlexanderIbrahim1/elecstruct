@@ -96,14 +96,7 @@ inline auto new_density_matrix(
 {
     namespace ies = impl_elec::step;
 
-    const auto fock_intermediate = (fock_mtx * basis_transformation_mtx).eval();
-    std::cout << "FOCK INTERMEDIATE MTX\n";
-    std::cout << fock_intermediate << "\n\n";
-
-    const auto fock_mtx_trans = (basis_transformation_mtx.transpose() * fock_intermediate).eval();
-
-    std::cout << "FOCK_MTX_TRANS\n";
-    std::cout << fock_mtx_trans << "\n\n";
+    const auto fock_mtx_trans = basis_transformation_mtx.transpose() * fock_mtx * basis_transformation_mtx;
 
     const auto eigensolver = Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> {fock_mtx_trans};
     if (eigensolver.info() != Eigen::Success) {
@@ -114,27 +107,8 @@ inline auto new_density_matrix(
     const auto eigenvalues = eigensolver.eigenvalues();
     const auto sorted_indices = ies::sorted_indices(eigenvalues);
 
-    std::cout << "EIGENVALUES\n";
-    std::cout << eigenvalues << "\n\n";
-
-    // std::cout << "EIGENVALUES\n";
-    // std::cout << eigenvalues << '\n';
-
-    // std::cout << "SORTED INDICES\n";
-    // for (auto idx : sorted_indices) {
-    //     std::cout << idx << ", ";
-    // }
-    // std::cout << '\n';
-
     const auto coefficient_mtx_trans = ies::matrix_with_sorted_columns(eigensolver.eigenvectors(), sorted_indices);
-
-    std::cout << "COEFFICIENT MTX TRANS\n";
-    std::cout << coefficient_mtx_trans << "\n\n";
-
     const auto coefficient_mtx = basis_transformation_mtx * coefficient_mtx_trans;
-
-    std::cout << "COEFFICIENT MTX\n";
-    std::cout << coefficient_mtx << "\n\n";
 
     const auto new_density_mtx = density_matrix_restricted_hartree_fock(coefficient_mtx, n_electrons);
 
@@ -220,9 +194,6 @@ inline auto total_energy(
 {
     const auto elec_energy = electron_energy(density_mtx, fock_mtx, core_hamiltonain_mtx);
     const auto nucl_energy = nuclear_energy(atoms);
-
-    std::cout << "ELEC ENERGY = " << elec_energy << '\n';
-    std::cout << "NUCL ENERGY = " << nucl_energy << '\n';
 
     return elec_energy + nucl_energy;
 }
