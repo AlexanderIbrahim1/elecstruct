@@ -309,4 +309,18 @@ inline auto electron_electron_matrix(
     return output;
 }
 
+inline auto fock_matrix(
+    const Eigen::MatrixXd& old_density_mtx,
+    const std::vector<AtomicOrbitalInfoSTO3G>& basis,
+    const grid::Grid4D& two_electron_integrals,
+    const Eigen::MatrixXd& core_hamiltonian_mtx
+) -> Eigen::MatrixXd
+{
+    const auto electron_electron_mtx = electron_electron_matrix(basis, old_density_mtx, two_electron_integrals);
+    const auto fock_mtx = core_hamiltonian_mtx + electron_electron_mtx;
+
+    return fock_mtx;
+}
+
+
 }  // namespace elec
