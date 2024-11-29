@@ -113,16 +113,16 @@ inline void perform_restricted_hartree_fock(
     // ------------------------------------------------------------------------
     ierhf::maybe_print(is_verbose, "Calculating 'two_electron_integrals'");
     const auto two_electron_integrals = two_electron_integral_grid(basis);
-    ierhf::maybe_print(is_verbose, two_electron_integrals, "two_electron_integrals");
+    // ierhf::maybe_print(is_verbose, two_electron_integrals, "two_electron_integrals");
 
     // --- ITERATION 0 ---
     std::cout << "\nPerforming iteration 0\n";
 
     std::cout << "Calculating the initial Fock matrix\n";
     // auto fock_mtx = core_hamiltonian_mtx.eval();
-    // const auto huckel_constant = double {1.75};
-    // auto fock_mtx = huckel_guess(overlap_mtx, core_hamiltonian_mtx, huckel_constant);
-    auto fock_mtx = zero_matrix(basis.size());
+    const auto huckel_constant = double {1.75};
+    auto fock_mtx = huckel_guess(overlap_mtx, core_hamiltonian_mtx, huckel_constant);
+    // auto fock_mtx = zero_matrix(basis.size());
 
     std::cout << "Calculating initial density matrix\n";
     auto prev_density_mtx = new_density_matrix(fock_mtx, transformation_mtx, n_electrons);

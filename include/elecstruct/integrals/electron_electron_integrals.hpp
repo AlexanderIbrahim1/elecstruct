@@ -4,7 +4,7 @@
 
 #include "elecstruct/basis/gaussian_info.hpp"
 #include "elecstruct/cartesian3d.hpp"
-#include "elecstruct/integrals/boys.hpp"
+#include "elecstruct/integrals/boys_fast.hpp"
 #include "elecstruct/integrals/electron_electron_index_iterator.hpp"
 #include "elecstruct/integrals/expansion_coefficient.hpp"
 #include "elecstruct/mathtools/gaussian.hpp"
@@ -186,7 +186,7 @@ inline auto electron_electron_integral(
 
                 const auto idx_boys = eli::boys_index(indices_x, indices_y, indices_z);
                 const auto boys_arg = 0.25 * coord::norm_squared(pos_product_01 - pos_product_23) / delta;
-                const auto boys_factor = boys_mix_small_large(boys_arg, idx_boys, N_MAX_TERMS_BOYS_SMALL);
+                const auto boys_factor = boys_fast(boys_arg, static_cast<std::size_t>(idx_boys));
                 
                 const auto contribution = b_factor_x * b_factor_y * b_factor_z * boys_factor;
                 integral += contribution;

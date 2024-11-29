@@ -20,84 +20,6 @@ constexpr auto ABS_TOLERANCE = double {1.0e-6};
 constexpr auto REL_TOLERANCE = double {1.0e-6};
 
 
-auto approx_equal(const Eigen::Vector2d& eig0, const Eigen::Vector2d& eig1, double tolerance) -> bool
-{
-    const auto diff0 = eig0(0) - eig1(0);
-    const auto diff1 = eig0(1) - eig1(1);
-
-    return std::sqrt(diff0 * diff0 + diff1 * diff1) < tolerance;
-}
-
-
-auto are_columns_equal(
-    const std::vector<Eigen::Vector2d>& vec0,
-    const std::vector<Eigen::Vector2d>& vec1,
-    double tolerance
-) -> bool
-{
-    // putting elements into a set, or performing a sort before comparing, gets a bit finicky
-    // with the floating-point numbers; so I perform an O(n^2) check instead
-    if (vec0.size() != vec1.size()) {
-        return false;
-    }
-
-    const auto size = vec0.size();
-
-    auto matches = std::vector<std::uint8_t> (size, 0);
-
-    for (std::size_t i0 {0}; i0 < size; ++i0) {
-        bool flag_found = false;
-        for (std::size_t i1 {0}; i1 < size; ++i1) {
-            if (approx_equal(vec0[i0], vec1[i1], tolerance) && matches[i1] != 1) {
-                matches[i1] = 1;
-                flag_found = true;
-                break;
-            }
-        }
-
-        if (!flag_found) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-auto are_matrices_approx_equal(
-    const Eigen::MatrixXd& mat0,
-    const Eigen::MatrixXd& mat1,
-    double elem_tol
-) -> std::tuple<Eigen::Index, Eigen::Index, bool>
-{
-    if (mat0.cols() != mat1.cols()) {
-        return {-1, -1, false};
-    }
-
-    if (mat0.rows() != mat1.rows()) {
-        return {-1, -1, false};
-    }
-
-    const auto n_cols = mat0.cols();
-    const auto n_rows = mat0.rows();
-
-    std::cout << "mat0\n";
-    std::cout << mat0 << '\n';
-    std::cout << '\n';
-    std::cout << "mat1\n";
-    std::cout << mat1 << '\n';
-
-    for (Eigen::Index i0 {0}; i0 < n_cols; ++i0) {
-        for (Eigen::Index i1 {0}; i1 < n_rows; ++i1) {
-            if (std::fabs(mat0(i0, i1) - mat1(i0, i1)) > elem_tol) {
-                return {i0, i1, false};
-            }
-        }
-    }
-
-    return {-1, -1, true};
-}
-
-
 auto is_column_equal(
     const Eigen::VectorXd& vec0,
     const Eigen::VectorXd& vec1,
@@ -127,6 +49,28 @@ auto is_column_equal_within_sign(
 ) -> bool
 {
     return is_column_equal(vec0, vec1, tolerance) || is_column_equal(vec0, -vec1, tolerance);
+}
+
+
+auto are_columns_equal_within_sign(
+    const std::vector<Eigen::Vector2d>& vec0,
+    const std::vector<Eigen::Vector2d>& vec1,
+    double tolerance
+) -> bool
+{
+    // putting elements into a set, or performing a sort before comparing, gets a bit finicky
+    // with the floating-point numbers; so I perform an O(n^2) check instead
+    if (vec0.size() != vec1.size()) {
+        return false;
+    }
+
+    for (std::size_t i {0}; i < vec0.size(); ++i) {
+        if (!is_column_equal_within_sign(vec0[i], vec1[i], tolerance)) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 
@@ -174,7 +118,12 @@ TEST_CASE("transformation matrix")
         {actual_output(0, 1), actual_output(1, 1)}
     };
 
-    REQUIRE(are_columns_equal(expected_columns, actual_columns, tolerance));
+    // std::cout << expected_columns[0] << '\n';
+    // std::cout << expected_columns[1] << '\n';
+    // std::cout << actual_columns[0] << '\n';
+    // std::cout << actual_columns[1] << '\n';
+
+    REQUIRE(are_columns_equal_within_sign(expected_columns, actual_columns, tolerance));
 }
 
 
