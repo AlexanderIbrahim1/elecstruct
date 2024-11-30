@@ -101,6 +101,7 @@ add_test_target(ENABLE_EIGEN TARGET overlap_matrix_test SOURCES "source/overlap_
 add_test_target(TARGET boys_test SOURCES "source/boys_test.cpp")
 add_test_target(ENABLE_EIGEN TARGET rhf_step_test SOURCES "source/rhf_step_test.cpp")
 add_test_target(ENABLE_EIGEN TARGET electron_electron_integral_test SOURCES "source/electron_electron_integral_test.cpp")
+add_test_target(TARGET two_electron_integral_grid_test SOURCES "source/two_electron_integral_grid_test.cpp")
 
 # ---- End-of-file commands ----
 
