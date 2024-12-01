@@ -15,22 +15,6 @@
 #include "elecstruct/integrals/electron_electron_integrals.hpp"
 
 
-// --- TODO ----------
-// 1. change the type of the gaussian coefficients to complex, because technically we take
-//   the product between the complex conjugate of `info0.contraction_coeff1` and `info1.contraction_coeff`
-//
-// 2. these matrices are Hermitian, so we can save calculating half of the entries!
-//
-// 3. many of these matrices have nearly identical bodies
-//  - it looks like a bit of `if constexpr` can cut down the repetition by a lot
-// 
-// 4. maybe turn `nuclear_electron_integral()` into a class with a callable member function?
-// - the interface is very similar to the overlap and kinetic integrals, except for the nuclear position and charge
-// - but those two variables stay the same when calculating a nuclear-electron integral for a given atom
-//
-// - if we fix those variables, then we can get three different matrices created with the same interface
-//   - and we can pass it as a template argument and reduce a ton of code duplication 
-
 namespace elec
 {
 
@@ -83,11 +67,19 @@ inline auto overlap_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
 
     auto output = Eigen::MatrixXd {size, size};
 
-    for (std::size_t i0 {0}; i0 < size; ++i0) {
+    // fill the diagonal, which is guaranteed to be 1.0 for each atomic orbital
+    for (Eigen::Index i {0}; i < static_cast<Eigen::Index>(size); ++i) {
+        output(i, i) = 1.0;
+    }
+
+    // calculate the off-diagonal elements, keeping in mind that
+    //   - the overlap matrix is Hermitian
+    //   - we are working with real coefficients, which means the matrix is symmetric
+    for (std::size_t i0 {0}; i0 < size - 1; ++i0) {
         const auto& basis0 = basis[i0];
         const auto pos0 = basis0.position;
         const auto angmom_0 = basis0.angular_momentum;
-        for (std::size_t i1 {0}; i1 < size; ++i1) {
+        for (std::size_t i1 {i0 + 1}; i1 < size; ++i1) {
             const auto& basis1 = basis[i1];
             const auto pos1 = basis1.position;
             const auto angmom_1 = basis1.angular_momentum;
@@ -101,12 +93,17 @@ inline auto overlap_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
                     element += coeff * overlap;
                 }
             }
-            output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = element;
+
+            const auto i0_eig = static_cast<Eigen::Index>(i0);
+            const auto i1_eig = static_cast<Eigen::Index>(i1);
+            output(i0_eig, i1_eig) = element;
+            output(i1_eig, i0_eig) = element;
         }
     }
 
     return output;
 }
+
 
 inline auto transformation_matrix(const Eigen::MatrixXd& s_overlap) -> Eigen::MatrixXd
 {
@@ -138,6 +135,7 @@ inline auto transformation_matrix(const Eigen::MatrixXd& s_overlap) -> Eigen::Ma
     return transformation_mtx;
 }
 
+
 inline auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> Eigen::MatrixXd
 {
     const auto size = basis.size();
@@ -148,7 +146,7 @@ inline auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
         const auto& basis0 = basis[i0];
         const auto pos0 = basis0.position;
         const auto angmom_0 = basis0.angular_momentum;
-        for (std::size_t i1 {0}; i1 < size; ++i1) {
+        for (std::size_t i1 {i0}; i1 < size; ++i1) {
             const auto& basis1 = basis[i1];
             const auto pos1 = basis1.position;
             const auto angmom_1 = basis1.angular_momentum;
@@ -161,12 +159,17 @@ inline auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
                     element += coeff * overlap;
                 }
             }
-            output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = element;
+
+            const auto i0_eig = static_cast<Eigen::Index>(i0);
+            const auto i1_eig = static_cast<Eigen::Index>(i1);
+            output(i0_eig, i1_eig) = element;
+            output(i1_eig, i0_eig) = element;
         }
     }
 
     return output;
 }
+
 
 inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis, const AtomInfo& atom) -> Eigen::MatrixXd
 {
@@ -180,7 +183,7 @@ inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& b
         const auto& basis0 = basis[i0];
         const auto pos0 = basis0.position;
         const auto angmom_0 = basis0.angular_momentum;
-        for (std::size_t i1 {0}; i1 < size; ++i1) {
+        for (std::size_t i1 {i0}; i1 < size; ++i1) {
             const auto& basis1 = basis[i1];
             const auto pos1 = basis1.position;
             const auto angmom_1 = basis1.angular_momentum;
@@ -200,7 +203,10 @@ inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& b
                 }
             }
 
-            output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = element;
+            const auto i0_eig = static_cast<Eigen::Index>(i0);
+            const auto i1_eig = static_cast<Eigen::Index>(i1);
+            output(i0_eig, i1_eig) = element;
+            output(i1_eig, i0_eig) = element;
         }
     }
     // clang-format on
@@ -269,12 +275,15 @@ inline auto density_matrix_restricted_hartree_fock(const Eigen::MatrixXd& coeffi
     auto output = Eigen::MatrixXd {size, size};
 
     for (Eigen::Index i0 {0}; i0 < size; ++i0) {
-        for (Eigen::Index i1 {0}; i1 < size; ++i1) {
+        for (Eigen::Index i1 {i0}; i1 < size; ++i1) {
             auto density_element = double {0.0};
             for (Eigen::Index j {0}; j < half; ++j) {
                 density_element += coefficient_mtx(i0, j) * coefficient_mtx(i1, j);
             }
-            output(i0, i1) = 2.0 * density_element;
+
+            const auto result = 2.0 * density_element;
+            output(i0, i1) = result;
+            output(i1, i0) = result;
         }
     }
 
@@ -306,7 +315,11 @@ inline auto electron_electron_matrix(
                     element += density_part * electron_part;
                 }
             }
-            output(static_cast<Eigen::Index>(i0), static_cast<Eigen::Index>(i1)) = element;
+
+            const auto i0_eig = static_cast<Eigen::Index>(i0);
+            const auto i1_eig = static_cast<Eigen::Index>(i1);
+            output(i0_eig, i1_eig) = element;
+            output(i1_eig, i0_eig) = element;
         }
     }
 

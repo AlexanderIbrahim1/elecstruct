@@ -1,8 +1,5 @@
 #pragma once
 
-// TODO: remove later
-#include <iostream>
-
 #include <cmath>
 
 #include "elecstruct/basis/gaussian_info.hpp"
