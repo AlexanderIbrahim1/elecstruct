@@ -40,17 +40,15 @@ inline void maybe_print(Verbose is_verbose, std::string_view text)
     }
 }
 
-inline void maybe_print(Verbose is_verbose, const grid::Grid4D& grid, std::string_view name)
+inline void maybe_print(Verbose is_verbose, const TwoElectronIntegralGrid& grid, std::size_t n_basis_functions, std::string_view name)
 {
     if (is_verbose == Verbose::TRUE) {
-        const auto [size0, size1, size2, size3] = grid.sizes();
-
         std::cout << name << '\n';
 
-        for (std::size_t i0 {0}; i0 < size0; ++i0)
-        for (std::size_t i1 {0}; i1 < size1; ++i1)
-        for (std::size_t i2 {0}; i2 < size2; ++i2)
-        for (std::size_t i3 {0}; i3 < size3; ++i3) {
+        for (std::size_t i0 {0}; i0 < n_basis_functions; ++i0)
+        for (std::size_t i1 {0}; i1 < n_basis_functions; ++i1)
+        for (std::size_t i2 {0}; i2 < n_basis_functions; ++i2)
+        for (std::size_t i3 {0}; i3 < n_basis_functions; ++i3) {
             std::cout << "(" << i0 << ", " << i1 << ", " << i2 << ", " << i3 << ") = ";
             std::cout << grid.get(i0, i1, i2, i3) << '\n';
         }
@@ -113,7 +111,7 @@ inline void perform_restricted_hartree_fock(
     // ------------------------------------------------------------------------
     ierhf::maybe_print(is_verbose, "Calculating 'two_electron_integrals'");
     const auto two_electron_integrals = two_electron_integral_grid(basis);
-    // ierhf::maybe_print(is_verbose, two_electron_integrals, "two_electron_integrals");
+    ierhf::maybe_print(is_verbose, two_electron_integrals, basis.size(), "two_electron_integrals");
 
     // --- ITERATION 0 ---
     std::cout << "\nPerforming iteration 0\n";

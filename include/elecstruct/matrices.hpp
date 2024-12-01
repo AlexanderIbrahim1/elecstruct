@@ -7,6 +7,7 @@
 
 #include "elecstruct/atoms/atoms.hpp"
 #include "elecstruct/grids/grid4d.hpp"
+#include "elecstruct/grids/two_electron_integral_grid.hpp"
 #include "elecstruct/basis/basis_sets/sto3g.hpp"
 #include "elecstruct/integrals/overlap_integrals.hpp"
 #include "elecstruct/integrals/kinetic_integrals.hpp"
@@ -232,18 +233,21 @@ inline auto core_hamiltonian_matrix(
     NOTE: I'm pretty sure exchanging i0 <-> i1, and i2 <-> i3, only change the result by a complex
     conjugate; once I get the code running, I should take advantage of that symmetry
 */
-inline auto two_electron_integral_grid(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> grid::Grid4D
+inline auto two_electron_integral_grid(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> TwoElectronIntegralGrid
 {
     namespace emat = impl_elec::matrices;
 
     const auto size = basis.size();
-    auto integral_grid = grid::Grid4D {size, size, size, size};
+    auto integral_grid = TwoElectronIntegralGrid {};
 
     for (std::size_t i0 {0}; i0 < size; ++i0)
     for (std::size_t i1 {0}; i1 < size; ++i1)
     for (std::size_t i2 {0}; i2 < size; ++i2)
     for (std::size_t i3 {0}; i3 < size; ++i3) {
-        integral_grid.set(i0, i1, i2, i3, emat::two_electron_integral_grid(basis[i0], basis[i1], basis[i2], basis[i3]));
+        if (!integral_grid.exists(i0, i1, i2, i3)) {
+            const auto integral = emat::two_electron_integral_grid(basis[i0], basis[i1], basis[i2], basis[i3]);
+            integral_grid.set(i0, i1, i2, i3, integral);
+        }
     }
 
     return integral_grid;
@@ -280,7 +284,7 @@ inline auto density_matrix_restricted_hartree_fock(const Eigen::MatrixXd& coeffi
 inline auto electron_electron_matrix(
     const std::vector<AtomicOrbitalInfoSTO3G>& basis,
     const Eigen::MatrixXd& density_matrix,
-    const grid::Grid4D& two_electron_integrals
+    const TwoElectronIntegralGrid& two_electron_integrals
 ) -> Eigen::MatrixXd
 {
     const auto size = basis.size();
@@ -312,7 +316,7 @@ inline auto electron_electron_matrix(
 inline auto fock_matrix(
     const Eigen::MatrixXd& old_density_mtx,
     const std::vector<AtomicOrbitalInfoSTO3G>& basis,
-    const grid::Grid4D& two_electron_integrals,
+    const TwoElectronIntegralGrid& two_electron_integrals,
     const Eigen::MatrixXd& core_hamiltonian_mtx
 ) -> Eigen::MatrixXd
 {

@@ -53,7 +53,7 @@ inline auto yoshimine_sort(std::size_t a, std::size_t b, std::size_t c, std::siz
 class TwoElectronIntegralGrid
 {
 public:
-    auto exists(std::size_t i0, std::size_t i1, std::size_t i2, std::size_t i3) noexcept -> bool
+    auto exists(std::size_t i0, std::size_t i1, std::size_t i2, std::size_t i3) const noexcept -> bool
     {
         const auto i_yoshimine = impl_two_electron::yoshimine_sort(i0, i1, i2, i3);
 
@@ -66,7 +66,7 @@ public:
         integrals_[i_yoshimine] = value;
     }
 
-    auto get(std::size_t i0, std::size_t i1, std::size_t i2, std::size_t i3) noexcept -> double
+    auto get(std::size_t i0, std::size_t i1, std::size_t i2, std::size_t i3) const noexcept -> double
     {
         const auto i_yoshimine = impl_two_electron::yoshimine_sort(i0, i1, i2, i3);
 
