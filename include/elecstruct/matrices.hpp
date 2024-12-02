@@ -5,7 +5,7 @@
 
 #include <Eigen/Dense>
 
-#include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/atoms.hpp"
 #include "elecstruct/grids/grid4d.hpp"
 #include "elecstruct/grids/two_electron_integral_grid.hpp"
 #include "elecstruct/basis/basis_sets/sto3g.hpp"
@@ -174,7 +174,7 @@ inline auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
 inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis, const AtomInfo& atom) -> Eigen::MatrixXd
 {
     const auto size = basis.size();
-    const auto charge = atom_charge_map.at(atom.label);
+    const auto charge = nuclear_charge(atom.label);
 
     auto output = Eigen::MatrixXd {size, size};
 

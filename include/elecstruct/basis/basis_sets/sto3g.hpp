@@ -6,7 +6,7 @@
 
 #include <extern/mapbox/eternal.hpp>
 
-#include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/atoms.hpp"
 #include "elecstruct/basis/gaussian_info.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/orbitals.hpp"

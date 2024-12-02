@@ -8,7 +8,7 @@
 
 #include "extern/tomlplusplus/toml.hpp"
 
-#include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/atoms.hpp"
 
 /*
 This source file contains the InputFileParser class, which parses a toml file to get

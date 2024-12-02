@@ -10,7 +10,7 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <Eigen/Dense>
 
-#include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/atoms.hpp"
 #include "elecstruct/basis/gaussian_info.hpp"
 #include "elecstruct/basis/basis_sets/sto3g.hpp"
 #include "elecstruct/cartesian3d.hpp"

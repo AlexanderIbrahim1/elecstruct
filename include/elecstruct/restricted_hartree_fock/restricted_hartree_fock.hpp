@@ -5,7 +5,7 @@
 #include <string_view>
 #include <vector>
 
-#include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/atoms.hpp"
 #include "elecstruct/basis/basis_sets/sto3g.hpp"
 #include "elecstruct/grids/grid4d.hpp"
 #include "elecstruct/matrices.hpp"

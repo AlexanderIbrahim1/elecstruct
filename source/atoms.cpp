@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <string>
 
-#include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/atoms.hpp"
 
 namespace
 {
@@ -38,10 +38,27 @@ constexpr AtomMapEntry atom_names_and_labels[] = {
     {"F",  AL::F }
 };
 
+constexpr auto atom_charge_map = mapbox::eternal::map<AL, double>({
+    {AL::H,  1.0},
+    {AL::He, 2.0},
+    {AL::Li, 3.0},
+    {AL::Be, 4.0},
+    {AL::B,  5.0},
+    {AL::C,  6.0},
+    {AL::N,  7.0},
+    {AL::O,  8.0},
+    {AL::F,  9.0}
+});
+
 }  // anonymous namespace
 
 namespace elec
 {
+
+auto nuclear_charge(AtomLabel label) -> double
+{
+    return atom_charge_map.at(label);
+}
 
 auto atom_label_from_name(const std::string& name) -> AtomLabel
 {

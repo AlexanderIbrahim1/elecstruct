@@ -13,7 +13,7 @@ the input for the electronic structure calculation.
 
 #include "extern/tomlplusplus/toml.hpp"
 
-#include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/atoms.hpp"
 #include "elecstruct/input_file_parser.hpp"
 
 namespace elec

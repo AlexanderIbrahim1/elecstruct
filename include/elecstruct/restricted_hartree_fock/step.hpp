@@ -6,7 +6,7 @@
 
 #include <Eigen/Dense>
 
-#include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/atoms.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/basis/basis_sets/sto3g.hpp"
 #include "elecstruct/grids/grid4d.hpp"
@@ -157,8 +157,8 @@ inline auto nuclear_energy(
         for (std::size_t i1 {i0 + 1}; i1 < size; ++i1) {
             const auto pos0 = atoms[i0].position;
             const auto pos1 = atoms[i1].position;
-            const auto charge0 = atom_charge_map.at(atoms[i0].label);
-            const auto charge1 = atom_charge_map.at(atoms[i1].label);
+            const auto charge0 = nuclear_charge(atoms[i0].label);
+            const auto charge1 = nuclear_charge(atoms[i1].label);
 
             energy += charge0 * charge1 / coord::distance(pos0, pos1);
         }

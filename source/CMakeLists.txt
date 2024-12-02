@@ -7,7 +7,7 @@ add_library(
     elecstruct.cpp
     geometry.cpp
     input_file_parser.cpp
-    atoms/atoms_mapper.cpp
+    atoms.cpp
 )
 add_library(
     elecstruct::elecstruct
