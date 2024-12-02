@@ -12,6 +12,7 @@ add_library(
     integrals/electron_electron_index_iterator.cpp
     integrals/nuclear_electron_index_iterator.cpp
     integrals/f_coefficient.cpp
+    integrals/overlap_integrals.cpp
 )
 add_library(
     elecstruct::elecstruct
