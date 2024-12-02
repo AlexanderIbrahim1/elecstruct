@@ -7,7 +7,6 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #include "elecstruct/integrals/boys.hpp"
-#include "elecstruct/integrals/boys_fast.hpp"
 
 constexpr auto boys_fast_input = std::array<double, 13> {
     1.00000000e-06,
@@ -40,59 +39,6 @@ constexpr auto boys_fast_results_from_python = std::array<std::array<double, 13>
     std::array<double, 13> {0.043478220869583736, 0.043438279382337956, 0.039657830850815826, 0.02746619416076432, 0.0038210165142077107, 0.0005507655945519265, 8.316807355301131e-05, 1.3348380642645025e-05, 2.3178022329559916e-06, 4.438634874578625e-07, 9.534451357820993e-08, 2.3201044956133727e-08, 6.396235256481813e-09}, 
     std::array<double, 13> {0.03999996296298041, 0.03996298019896739, 0.03646345766402256, 0.025191805984945977, 0.003449986613245463, 0.00048699980958495106, 7.149883758319598e-05, 1.1048106051770742e-05, 1.8239188147915492e-06, 3.273296713017316e-07, 6.497452098515095e-08, 1.445697024762411e-08, 3.6263064319160784e-09}
 };
-
-TEST_CASE("Boys function comparison with Python code")
-{
-    /*
-        NOTE: all the expected outputs were created by a Python function
-        where the comparison against the true Boys function was easier
-        to verify
-    */
-
-    constexpr auto REL_TOLERANCE = double {1.0e-8};
-
-    const auto n_terms_small = std::int64_t {11};
-
-    struct TestPair
-    {
-        double input;
-        double expected;
-    };
-
-    SECTION("order = 0")
-    {
-        const auto order = std::int64_t {0};
-
-        const auto pair = GENERATE(
-            TestPair {0.0, 1.0},
-            TestPair {0.01, 0.9966766429033636},
-            TestPair {1.00, 0.7468241338237177},
-            TestPair {2.00, 0.5981459383100741},
-            TestPair {5.00, 0.3963327297606011},
-            TestPair {10.00, 0.2802495608198964}
-        );
-
-        const auto actual = elec::boys_mix_small_large(pair.input, order, n_terms_small);
-        REQUIRE_THAT(actual, Catch::Matchers::WithinRel(pair.expected, REL_TOLERANCE));
-    }
-
-    SECTION("order = 1")
-    {
-        const auto order = std::int64_t {1};
-
-        const auto pair = GENERATE(
-            TestPair {0.0, 1.0 / 3.0},
-            TestPair {0.01, 0.3313404577097725},
-            TestPair {1.00, 0.1894723467504448},
-            TestPair {2.00, 0.1157039563971642},
-            TestPair {5.00, 0.0396332729760601},
-            TestPair {10.00, 0.0140124780409948}
-        );
-
-        const auto actual = elec::boys_mix_small_large(pair.input, order, n_terms_small);
-        REQUIRE_THAT(actual, Catch::Matchers::WithinRel(pair.expected, REL_TOLERANCE));
-    }
-}
 
 TEST_CASE("Boys function fast implmenetaiton")
 {

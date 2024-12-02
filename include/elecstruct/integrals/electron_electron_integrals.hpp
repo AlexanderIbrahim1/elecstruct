@@ -4,7 +4,7 @@
 
 #include "elecstruct/basis/gaussian_info.hpp"
 #include "elecstruct/cartesian3d.hpp"
-#include "elecstruct/integrals/boys_fast.hpp"
+#include "elecstruct/integrals/boys.hpp"
 #include "elecstruct/integrals/electron_electron_index_iterator.hpp"
 #include "elecstruct/integrals/expansion_coefficient.hpp"
 #include "elecstruct/mathtools/gaussian.hpp"
