@@ -11,6 +11,7 @@ add_library(
     integrals/boys.cpp
     integrals/electron_electron_index_iterator.cpp
     integrals/nuclear_electron_index_iterator.cpp
+    integrals/f_coefficient.cpp
 )
 add_library(
     elecstruct::elecstruct

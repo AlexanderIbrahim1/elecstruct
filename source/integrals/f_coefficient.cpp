@@ -1,20 +1,15 @@
-#pragma once
-
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <tuple>
 
+#include "elecstruct/integrals/f_coefficient.hpp"
 #include "elecstruct/mathtools/n_choose_k.hpp"
 
-
-namespace elec
+namespace
 {
 
-namespace impl_elec::expansion_coefficient
-{
-
-inline auto range_limits_(
+auto range_limits(
     std::int64_t angmom_j,
     std::int64_t angmom_l,
     std::int64_t angmom_m
@@ -33,20 +28,13 @@ inline auto range_limits_(
     return {minimum, maximum};
 }
 
-}  // namespace elec::impl_elec::expansion_coefficient
+}  // anonymous namespace
 
 
-/*
-    The expansion coefficient for the calculation of Gaussian-Type Functions, given in:
+namespace elec
+{
 
-    title: Handbook of Computational Quantum Chemistry
-    author: David B. Cook
-    year: 2005
-    published: Dover Publications
-
-    at the bottom on page 219.
-*/
-inline auto expansion_coefficient(
+auto f_coefficient(
     std::int64_t angmom_j,
     std::int64_t angmom_l,
     std::int64_t angmom_m,
@@ -54,11 +42,9 @@ inline auto expansion_coefficient(
     double separation1
 ) -> double
 {
-    namespace ieec = impl_elec::expansion_coefficient;
-
     auto result = double {0.0};
 
-    const auto [minimum, maximum] = ieec::range_limits_(angmom_j, angmom_l, angmom_m);
+    const auto [minimum, maximum] = range_limits(angmom_j, angmom_l, angmom_m);
     for (std::int64_t angmom_k {minimum}; angmom_k < maximum; ++angmom_k) {
         const auto binom0 = elec::math::N_CHOOSE_K_GRID.at(angmom_l, angmom_k);
         const auto coeff0 = std::pow(separation0, angmom_l - angmom_k);

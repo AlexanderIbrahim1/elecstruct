@@ -5,7 +5,7 @@
 
 #include "elecstruct/basis/gaussian_info.hpp"
 #include "elecstruct/cartesian3d.hpp"
-#include "elecstruct/integrals/expansion_coefficient.hpp"
+#include "elecstruct/integrals/f_coefficient.hpp"
 #include "elecstruct/integrals/boys.hpp"
 #include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/integrals/nuclear_electron_index_iterator.hpp"
@@ -61,7 +61,7 @@ inline auto nuclear_a_factor(
     const auto idx_n = idx_l - 2 * (idx_r + idx_i);
 
     const auto sign = elec::math::neg_1_power(idx_l + idx_i);
-    const auto expansion = elec::expansion_coefficient(idx_l, angmoms.angmom_0, angmoms.angmom_1, diff_0, diff_1);
+    const auto expansion = elec::f_coefficient(idx_l, angmoms.angmom_0, angmoms.angmom_1, diff_0, diff_1);
     const auto epsilon_exponent = std::pow(epsilon, idx_r + idx_i);
     const auto diff_n_exponent = std::pow(diff_n, idx_n);
     const auto fact_l = elec::math::factorial(idx_l);

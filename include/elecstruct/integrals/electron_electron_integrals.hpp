@@ -6,7 +6,7 @@
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/integrals/boys.hpp"
 #include "elecstruct/integrals/electron_electron_index_iterator.hpp"
-#include "elecstruct/integrals/expansion_coefficient.hpp"
+#include "elecstruct/integrals/f_coefficient.hpp"
 #include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/mathtools/factorial.hpp"
 #include "elecstruct/mathtools/misc.hpp"
@@ -84,7 +84,7 @@ inline auto electron_electron_theta_factor(
     double gauss_exponent
 ) -> double
 {
-    const auto f_factor = elec::expansion_coefficient(idx_ltot, idx_l0, idx_l1, separation0, separation1);
+    const auto f_factor = elec::f_coefficient(idx_ltot, idx_l0, idx_l1, separation0, separation1);
     const auto ltot_fact = static_cast<double>(elec::math::factorial(idx_ltot));
     const auto r_fact = static_cast<double>(elec::math::factorial(idx_r));
     const auto ltot_r_fact = static_cast<double>(elec::math::factorial(idx_ltot - 2 * idx_r));
