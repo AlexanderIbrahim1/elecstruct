@@ -117,13 +117,13 @@ inline auto nuclear_electron_integral_contraction(
     auto integral = double {0.0};
 
     // clang-format off
-    for (const auto [idx_l, idx_r, idx_i] : NuclearElectronIndices(angmom_0.x, angmom_1.x)) {
+    for (const auto [idx_l, idx_r, idx_i] : NuclearElectronIndexGenerator(angmom_0.x, angmom_1.x)) {
         const auto a_factor_x = nui::nuclear_a_factor(idx_l, idx_r, idx_i, angmoms_x, positions_x, epsilon);
 
-        for (const auto [idx_m, idx_s, idx_j] : NuclearElectronIndices(angmom_0.y, angmom_1.y)) {
+        for (const auto [idx_m, idx_s, idx_j] : NuclearElectronIndexGenerator(angmom_0.y, angmom_1.y)) {
             const auto a_factor_y = nui::nuclear_a_factor(idx_m, idx_s, idx_j, angmoms_y, positions_y, epsilon);
 
-            for (const auto [idx_n, idx_t, idx_k] : NuclearElectronIndices(angmom_0.z, angmom_1.z)) {
+            for (const auto [idx_n, idx_t, idx_k] : NuclearElectronIndexGenerator(angmom_0.z, angmom_1.z)) {
                 const auto a_factor_z = nui::nuclear_a_factor(idx_n, idx_t, idx_k, angmoms_z, positions_z, epsilon);
 
                 const auto idx_boys = idx_l + idx_m + idx_n - 2 * (idx_r + idx_s + idx_t) - (idx_i + idx_j + idx_k);

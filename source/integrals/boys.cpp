@@ -3,6 +3,8 @@
 #include <complex>
 #include <stdexcept>
 
+#include "elecstruct/integrals/boys.hpp"
+
 /*
     A reproduction of the iemplementation of the fast Boys algorithm provided in
 

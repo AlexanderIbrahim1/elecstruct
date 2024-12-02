@@ -9,6 +9,7 @@ add_library(
     input_file_parser.cpp
     atoms.cpp
     integrals/boys.cpp
+    integrals/electron_electron_index_iterator.cpp
 )
 add_library(
     elecstruct::elecstruct

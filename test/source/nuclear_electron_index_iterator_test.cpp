@@ -35,7 +35,7 @@ auto indices_via_custom_iterator(std::int64_t angmom_0, std::int64_t angmom_1) -
 {
     auto output = std::vector<Indices> {};
 
-    for (const auto [idx_l, idx_r, idx_i] : elec::NuclearElectronIndices(angmom_0, angmom_1)) {
+    for (const auto [idx_l, idx_r, idx_i] : elec::NuclearElectronIndexGenerator(angmom_0, angmom_1)) {
         output.push_back({idx_l, idx_r, idx_i});
     }
 

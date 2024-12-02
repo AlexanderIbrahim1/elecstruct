@@ -9,7 +9,7 @@
     complications, might even be a little bit slower, and these loops don't appear in
     enough places in the code for this encapulation to be worth it.
 
-    However, I part of the purpose of writing this code is to improve my general C++
+    However, part of the purpose of writing this code is to improve my general C++
     skills, and so I decided to implement the nested loops in the body of the integral
     for the nuclear-electron attraction using custom iterators. This reduces the amount
     of nesting in the body of the function from 9 to 3.
@@ -83,18 +83,7 @@ public:
         idx_i_max_ = calculate_idx_i_max_(idx_l_, idx_r_);
     }
 
-    friend constexpr auto operator==(const NuclearElectronIndexIterator& left, const NuclearElectronIndexIterator& right) noexcept -> bool
-    {
-        // clang-format off
-        return \
-            left.idx_l_max_ == right.idx_l_max_ && \
-            left.idx_r_max_ == right.idx_r_max_ && \
-            left.idx_i_max_ == right.idx_i_max_ && \
-            left.idx_l_ == right.idx_l_ && \
-            left.idx_r_ == right.idx_r_ && \
-            left.idx_i_ == right.idx_i_;
-        // clang-format on
-    }
+    constexpr bool operator==(const NuclearElectronIndexIterator&) const noexcept = default;
 
     friend constexpr auto operator!=(const NuclearElectronIndexIterator& left, const NuclearElectronIndexIterator& right) noexcept -> bool
     {
@@ -122,10 +111,10 @@ private:
 };
 
 
-class NuclearElectronIndices
+class NuclearElectronIndexGenerator
 {
 public:
-    constexpr explicit NuclearElectronIndices(std::int64_t angmom_0, std::int64_t angmom_1)
+    constexpr explicit NuclearElectronIndexGenerator(std::int64_t angmom_0, std::int64_t angmom_1)
         : idx_l_max_ {angmom_0 + angmom_1 + 1}
     {}
 
