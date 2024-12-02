@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <string>
 
+#include "extern/mapbox/eternal.hpp"
+
 #include "elecstruct/atoms.hpp"
 
 namespace

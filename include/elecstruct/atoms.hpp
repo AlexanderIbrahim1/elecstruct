@@ -3,8 +3,6 @@
 #include <string>
 #include <vector>
 
-#include <extern/mapbox/eternal.hpp>
-
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/orbitals.hpp"
 

@@ -127,7 +127,7 @@ inline auto nuclear_electron_integral(
                 const auto a_factor_z = nui::nuclear_a_factor(idx_n, idx_t, idx_k, angmoms_z, positions_z, epsilon);
 
                 const auto idx_boys = idx_l + idx_m + idx_n - 2 * (idx_r + idx_s + idx_t) - (idx_i + idx_j + idx_k);
-                const auto boys_factor = boys_fast(boys_arg, static_cast<std::size_t>(idx_boys));
+                const auto boys_factor = boys_beylkin_sharma(boys_arg, static_cast<std::size_t>(idx_boys));
 
                 const auto contribution = a_factor_x * a_factor_y * a_factor_z * boys_factor;
                 integral += contribution;

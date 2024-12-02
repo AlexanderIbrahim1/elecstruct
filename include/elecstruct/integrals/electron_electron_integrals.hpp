@@ -236,7 +236,7 @@ inline auto electron_electron_integral(
 
                 const auto idx_boys = eli::boys_index(indices_x, indices_y, indices_z);
                 const auto boys_arg = 0.25 * coord::norm_squared(pos_product_01 - pos_product_23) / delta;
-                const auto boys_factor = boys_fast(boys_arg, static_cast<std::size_t>(idx_boys));
+                const auto boys_factor = boys_beylkin_sharma(boys_arg, static_cast<std::size_t>(idx_boys));
                 
                 const auto contribution = b_factor_x * b_factor_y * b_factor_z * boys_factor;
                 integral += contribution;

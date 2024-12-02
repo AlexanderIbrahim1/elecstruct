@@ -49,7 +49,7 @@ TEST_CASE("Boys function fast implmenetaiton")
     const auto i_input = static_cast<std::size_t>(GENERATE(range(0, 13)));
 
     const auto x = boys_fast_input[i_input];
-    const auto actual = elec::boys_fast(x, order);
+    const auto actual = elec::boys_beylkin_sharma(x, order);
     const auto expected = boys_fast_results_from_python[order][i_input];
 
     REQUIRE_THAT(actual, Catch::Matchers::WithinAbs(expected, ABS_TOL));

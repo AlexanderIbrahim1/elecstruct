@@ -8,6 +8,7 @@ add_library(
     geometry.cpp
     input_file_parser.cpp
     atoms.cpp
+    integrals/boys.cpp
 )
 add_library(
     elecstruct::elecstruct
