@@ -4,10 +4,10 @@ cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
 add_library(
     elecstruct_elecstruct
+    atoms.cpp
     elecstruct.cpp
     geometry.cpp
     input_file_parser.cpp
-    atoms.cpp
     integrals/boys.cpp
     integrals/electron_electron_index_iterator.cpp
     integrals/electron_electron_integrals.cpp
@@ -16,6 +16,7 @@ add_library(
     integrals/f_coefficient.cpp
     integrals/overlap_integrals.cpp
     integrals/kinetic_integrals.cpp
+    orbitals.cpp
 )
 add_library(
     elecstruct::elecstruct
