@@ -1,7 +1,7 @@
 #include <array>
 #include <cstdint>
 
-#include "elecstruct/basis/gaussian_info.hpp"
+#include "elecstruct/basis/basis.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/mathtools/factorial.hpp"

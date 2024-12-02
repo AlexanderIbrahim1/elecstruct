@@ -9,7 +9,7 @@
 #include "elecstruct/atoms.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/geometry.hpp"
-#include "elecstruct/basis/basis_sets/sto3g.hpp"
+#include "elecstruct/basis/basis.hpp"
 #include "elecstruct/grids/grid4d.hpp"
 #include "elecstruct/matrices.hpp"
 

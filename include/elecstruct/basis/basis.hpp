@@ -1,8 +1,4 @@
 #pragma once
 
-#include "extern/mapbox/eternal.hpp"
-
-#include "elecstruct/orbitals.hpp"
-
-namespace elec
-{}  // namespace elec
+#include "elecstruct/basis/basis_sets/sto3g.hpp"
+#include "elecstruct/basis/gaussian_contraction_info.hpp"

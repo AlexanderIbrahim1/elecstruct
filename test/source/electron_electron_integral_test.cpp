@@ -4,7 +4,7 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #include "elecstruct/atoms.hpp"
-#include "elecstruct/basis/basis_sets/sto3g.hpp"
+#include "elecstruct/basis/basis.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/matrices.hpp"
 #include "elecstruct/orbitals.hpp"

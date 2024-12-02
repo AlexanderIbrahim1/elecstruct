@@ -5,7 +5,7 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
-#include "elecstruct/basis/gaussian_info.hpp"
+#include "elecstruct/basis/basis.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/geometry.hpp"
 #include "elecstruct/mathtools/gaussian.hpp"

@@ -11,8 +11,7 @@
 #include <Eigen/Dense>
 
 #include "elecstruct/atoms.hpp"
-#include "elecstruct/basis/gaussian_info.hpp"
-#include "elecstruct/basis/basis_sets/sto3g.hpp"
+#include "elecstruct/basis/basis.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/matrices.hpp"
 

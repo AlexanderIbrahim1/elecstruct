@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "elecstruct/atoms.hpp"
-#include "elecstruct/basis/basis_sets/sto3g.hpp"
+#include "elecstruct/basis/basis.hpp"
 #include "elecstruct/grids/grid4d.hpp"
 #include "elecstruct/matrices.hpp"
 #include "elecstruct/restricted_hartree_fock/initial_density_matrix.hpp"

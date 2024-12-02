@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 add_library(
     elecstruct_elecstruct
     atoms.cpp
+    basis/basis_sets/sto3g.cpp
     elecstruct.cpp
     geometry.cpp
     input_file_parser.cpp
