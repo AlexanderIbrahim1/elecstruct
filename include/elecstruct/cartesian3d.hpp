@@ -16,7 +16,6 @@ template <typename T>
 concept Numeric = std::integral<T> || std::floating_point<T>;
 
 constexpr static auto CARTESIAN3D_OSTREAM_PRECISION = int {14};
-constexpr static auto ALMOST_EQUALS_DISTANCE_SQ_TOLERANCE = double {1.0e-6};
 
 struct Cartesian3D
 {
@@ -134,20 +133,6 @@ auto operator/(Cartesian3D point, Number other) -> Cartesian3D
 {
     point /= other;
     return point;
-}
-
-inline auto almost_equals(
-    const Cartesian3D& point0,
-    const Cartesian3D& point1,
-    double distance_sq_tolerance = ALMOST_EQUALS_DISTANCE_SQ_TOLERANCE
-) -> bool
-{
-    const auto dx = point1.x - point0.x;
-    const auto dy = point1.y - point0.y;
-    const auto dz = point1.z - point0.z;
-    const auto distance_sq = dx * dx + dy * dy + dz * dz;
-
-    return distance_sq < distance_sq_tolerance;
 }
 
 }  // namespace coord

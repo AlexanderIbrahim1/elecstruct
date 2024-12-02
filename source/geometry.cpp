@@ -1,5 +1,5 @@
-#include "elecstruct/geometry.hpp"
 #include "elecstruct/cartesian3d.hpp"
+#include "elecstruct/geometry.hpp"
 
 namespace coord
 {
@@ -66,4 +66,12 @@ auto bond_angle(const Cartesian3D& point0, const Cartesian3D& point1, const Cart
 
     return dot_product(unit10, unit12);
 }
+
+auto almost_equals(const Cartesian3D& point0, const Cartesian3D& point1, double abs_tol) -> bool
+{
+    const auto abs_tol_sq = abs_tol * abs_tol;
+
+    return distance_squared(point0, point1) < abs_tol_sq;
+}
+
 }  // namespace coord

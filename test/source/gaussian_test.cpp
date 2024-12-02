@@ -7,6 +7,7 @@
 
 #include "elecstruct/basis/gaussian_info.hpp"
 #include "elecstruct/cartesian3d.hpp"
+#include "elecstruct/geometry.hpp"
 #include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/integrals/overlap_integrals.hpp"
 #include "elecstruct/orbitals.hpp"
@@ -27,7 +28,7 @@ TEST_CASE("gaussian product")
 
         const auto [centre, coeff] = elec::math::gaussian_product(centre0, centre1, exponent0, exponent1);
 
-        REQUIRE(coord::almost_equals(centre, expected_centre));
+        REQUIRE(coord::almost_equals(centre, expected_centre, ABS_TOL));
         REQUIRE_THAT(coeff, Catch::Matchers::WithinAbs(expected_coefficient, ABS_TOL));
     }
 }

@@ -23,4 +23,6 @@ auto unit_vector(const Cartesian3D& point) -> Cartesian3D;
 
 auto bond_angle(const Cartesian3D& point0, const Cartesian3D& point1, const Cartesian3D& point2) -> double;
 
+auto almost_equals(const Cartesian3D& point0, const Cartesian3D& point1, double abs_tol) -> bool;
+
 }  // namespace coord

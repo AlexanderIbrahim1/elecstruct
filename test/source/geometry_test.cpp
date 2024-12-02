@@ -4,6 +4,8 @@
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/geometry.hpp"
 
+constexpr auto ABS_TOL = double {1.0e-8};
+
 TEST_CASE("Dot Product")
 {
     SECTION("Dot product of parallel vectors")
@@ -38,8 +40,7 @@ TEST_CASE("Cross Product")
         const auto point0 = coord::Cartesian3D {1.0, 2.0, 3.0};
         const auto point1 = coord::Cartesian3D {2.0, 4.0, 6.0};
         const auto result = coord::cross_product(point0, point1);
-        REQUIRE(coord::almost_equals(result, coord::Cartesian3D {0.0, 0.0, 0.0})
-        );  // Parallel vectors produce zero vector
+        REQUIRE(coord::almost_equals(result, coord::Cartesian3D {0.0, 0.0, 0.0}, ABS_TOL));
     }
 
     SECTION("Cross product of orthogonal vectors")
@@ -47,7 +48,7 @@ TEST_CASE("Cross Product")
         const auto point0 = coord::Cartesian3D {1.0, 0.0, 0.0};
         const auto point1 = coord::Cartesian3D {0.0, 1.0, 0.0};
         const auto result = coord::cross_product(point0, point1);
-        REQUIRE(coord::almost_equals(result, coord::Cartesian3D {0.0, 0.0, 1.0}));  // Result should be (0, 0, 1)
+        REQUIRE(coord::almost_equals(result, coord::Cartesian3D {0.0, 0.0, 1.0}, ABS_TOL));
     }
 
     SECTION("Cross product of arbitrary vectors")
@@ -55,6 +56,6 @@ TEST_CASE("Cross Product")
         const auto point0 = coord::Cartesian3D {1.0, 2.0, 3.0};
         const auto point1 = coord::Cartesian3D {4.0, 5.0, 6.0};
         const auto result = coord::cross_product(point0, point1);
-        REQUIRE(coord::almost_equals(result, coord::Cartesian3D {-3.0, 6.0, -3.0}));  // Result should be (-3, 6, -3)
+        REQUIRE(coord::almost_equals(result, coord::Cartesian3D {-3.0, 6.0, -3.0}, ABS_TOL));
     }
 }
