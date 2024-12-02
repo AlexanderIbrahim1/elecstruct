@@ -175,7 +175,7 @@ inline auto boys_index(
 }  // namespace elec::impl_elec::electron_electron_integrals
 
 
-inline auto electron_electron_integral(
+inline auto electron_electron_integral_contraction(
     const AngularMomentumNumbers& angmom_0,
     const AngularMomentumNumbers& angmom_1,
     const AngularMomentumNumbers& angmom_2,

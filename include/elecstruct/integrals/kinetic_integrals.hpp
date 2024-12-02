@@ -217,7 +217,7 @@ inline auto unnormalized_kinetic_integral_1d(
     return kinetic_coefficient * term_other0 * term_other1 * (term_ma_mb + term_pa_mb + term_ma_pb + term_pa_pb);
 }
 
-inline auto kinetic_integral(
+inline auto kinetic_integral_contraction(
     const AngularMomentumNumbers& angmom0,
     const AngularMomentumNumbers& angmom1,
     const coord::Cartesian3D& position0,

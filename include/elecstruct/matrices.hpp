@@ -45,7 +45,7 @@ inline auto two_electron_integral_grid(
     for (const auto& info2 : orbital2.gaussians)
     for (const auto& info3 : orbital3.gaussians) {
         const auto coeff = info0.contraction_coeff * info1.contraction_coeff * info2.contraction_coeff * info3.contraction_coeff;
-        const auto integral = elec::electron_electron_integral(
+        const auto integral = elec::electron_electron_integral_contraction(
             angmom_0, angmom_1, angmom_2, angmom_3,
             pos_gauss0, pos_gauss1, pos_gauss2, pos_gauss3,
             info0.exponent_coeff, info1.exponent_coeff, info2.exponent_coeff, info3.exponent_coeff
@@ -88,7 +88,7 @@ inline auto overlap_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
             for (const auto info0 : basis0.gaussians) {
                 for (const auto info1 : basis1.gaussians) {
                     const auto coeff = info0.contraction_coeff * info1.contraction_coeff;
-                    const auto overlap = overlap_integral(angmom_0, angmom_1, pos0, pos1, info0.exponent_coeff, info1.exponent_coeff);
+                    const auto overlap = overlap_integral_contraction(angmom_0, angmom_1, pos0, pos1, info0.exponent_coeff, info1.exponent_coeff);
 
                     element += coeff * overlap;
                 }
@@ -155,7 +155,7 @@ inline auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> 
             for (const auto info0 : basis0.gaussians) {
                 for (const auto info1 : basis1.gaussians) {
                     const auto coeff = info0.contraction_coeff * info1.contraction_coeff;
-                    const auto overlap = kinetic_integral(angmom_0, angmom_1, pos0, pos1, info0.exponent_coeff, info1.exponent_coeff);
+                    const auto overlap = kinetic_integral_contraction(angmom_0, angmom_1, pos0, pos1, info0.exponent_coeff, info1.exponent_coeff);
                     element += coeff * overlap;
                 }
             }
@@ -192,7 +192,7 @@ inline auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& b
             for (const auto info0 : basis0.gaussians) {
                 for (const auto info1 : basis1.gaussians) {
                     const auto coeff = info0.contraction_coeff * info1.contraction_coeff;
-                    const auto overlap = nuclear_electron_integral(
+                    const auto overlap = nuclear_electron_integral_contraction(
                         angmom_0, angmom_1,
                         pos0, pos1, atom.position,
                         info0.exponent_coeff, info1.exponent_coeff,

@@ -80,7 +80,7 @@ inline auto overlap_integral_3d_norm(double exponent0, double exponent1) -> doub
     return std::sqrt(argument * argument * argument);
 }
 
-inline auto overlap_integral(
+inline auto overlap_integral_contraction(
     const AngularMomentumNumbers& angmom0,
     const AngularMomentumNumbers& angmom1,
     const coord::Cartesian3D& position0,
