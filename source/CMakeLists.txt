@@ -8,6 +8,7 @@ add_library(
     elecstruct.cpp
     geometry.cpp
     input_file_parser.cpp
+    matrices.cpp
     integrals/boys.cpp
     integrals/electron_electron_index_iterator.cpp
     integrals/electron_electron_integrals.cpp
@@ -63,6 +64,12 @@ target_include_directories(
     SYSTEM
     PUBLIC
     "$<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/source/export>"
+)
+
+target_include_directories(
+    elecstruct_elecstruct
+    ${warning_guard}
+    SYSTEM PRIVATE "${EIGEN_PATH}"
 )
 
 target_compile_features(elecstruct_elecstruct PUBLIC cxx_std_20)
