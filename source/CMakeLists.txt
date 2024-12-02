@@ -10,6 +10,7 @@ add_library(
     atoms.cpp
     integrals/boys.cpp
     integrals/electron_electron_index_iterator.cpp
+    integrals/nuclear_electron_index_iterator.cpp
 )
 add_library(
     elecstruct::elecstruct
