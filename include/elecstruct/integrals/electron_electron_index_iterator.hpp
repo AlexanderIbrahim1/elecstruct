@@ -2,7 +2,6 @@
 
 #include <iterator>
 #include <cstdint>
-#include <tuple>
 
 namespace elec
 {
