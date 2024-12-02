@@ -10,6 +10,7 @@ add_library(
     atoms.cpp
     integrals/boys.cpp
     integrals/electron_electron_index_iterator.cpp
+    integrals/electron_electron_integrals.cpp
     integrals/nuclear_electron_index_iterator.cpp
     integrals/nuclear_electron_integrals.cpp
     integrals/f_coefficient.cpp
