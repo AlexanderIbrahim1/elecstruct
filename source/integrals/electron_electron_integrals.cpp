@@ -11,6 +11,8 @@
 #include "elecstruct/mathtools/misc.hpp"
 #include "elecstruct/orbitals.hpp"
 
+#include "elecstruct/integrals/electron_electron_integrals.hpp"
+
 namespace
 {
 

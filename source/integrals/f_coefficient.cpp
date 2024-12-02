@@ -3,8 +3,9 @@
 #include <cstdint>
 #include <tuple>
 
-#include "elecstruct/integrals/f_coefficient.hpp"
 #include "elecstruct/mathtools/n_choose_k.hpp"
+
+#include "elecstruct/integrals/f_coefficient.hpp"
 
 namespace
 {
