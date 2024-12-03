@@ -2,6 +2,9 @@
 
 This is the elecstruct project.
 
+# TODO
+- improve README to make it easier for viewers to navigate the project
+
 # Building and installing
 
 See the [BUILDING](BUILDING.md) document.
