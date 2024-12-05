@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include "elecstruct/grids/compile_time_grid2d.hpp"
+#include "elecstruct/mathtools/compile_time_grid2d.hpp"
 
 namespace elec::math
 {
