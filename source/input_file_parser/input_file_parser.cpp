@@ -16,12 +16,15 @@ the input for the electronic structure calculation.
 #include "elecstruct/atoms.hpp"
 #include "elecstruct/input_file_parser/input_file_parser.hpp"
 
+#include "parse_atom_information.cpp"
+
 namespace elec
 {
 
 InputFileParser::InputFileParser(std::istream& toml_stream)
+    : table_ {parse_stream_to_table_(toml_stream)}
 {
-    parse_helper_(toml_stream);
+    parse_stream_to_table_(toml_stream);
 }
 
 auto InputFileParser::is_valid() const noexcept -> bool
@@ -34,76 +37,76 @@ auto InputFileParser::error_message() const noexcept -> std::string
     return error_message_;
 }
 
-void InputFileParser::parse_helper_(std::istream& toml_stream)
+auto InputFileParser::parse_stream_to_table_(std::istream& toml_stream) noexcept -> std::optional<toml::table>
 {
     try {
         const auto table = toml::parse(toml_stream);
-        parse_atoms_(table);
         parse_success_flag_ = true;
+
+        return std::optional<toml::table> {table};
     }
     catch (const toml::parse_error& err) {
         parse_success_flag_ = false;
         error_message_ = err.what();
+
+        return std::nullopt;
     }
     catch (const std::runtime_error& err) {
         parse_success_flag_ = false;
         error_message_ = err.what();
+
+        return std::nullopt;
     }
 }
 
-void InputFileParser::parse_atoms_(const toml::table& table)
+auto InputFileParser::parse(InputFileKey key) -> void
 {
-    using EmptyOrbitalVector = std::vector<AtomicOrbitalLabel>;
+    using IFK = InputFileKey;
 
-    const auto atom_info = table["positions"].as_array();
-
-    if (!atom_info) {
-        throw std::runtime_error("Failed to parse array of atom names and positions.\n");
+    if (!table_) {
+        throw std::runtime_error {"ERROR: cannot parse data from table, if table was not parsed from toml file."};
     }
 
-    if (atom_info->size() == 0) {
-        throw std::runtime_error("Found no atom names and positions to parse.\n");
+    const auto& table = table_.value();
+
+    switch (key)
+    {
+        case IFK::ATOM_INFORMATION: {
+            parsed_information_[key] = parse_atoms(table);
+            break;
+        }
+        case IFK::INITIAL_FOCK_GUESS: {
+            break;
+        }
+        case IFK::N_MAX_HARTREE_FOCK_ITERATIONS: {
+            break;
+        }
+        case IFK::TOL_CHANGE_DENSITY_MATRIX: {
+            break;
+        }
+        case IFK::TOL_CHANGE_HARTREE_FOCK_ENERGY: {
+            break;
+        }
+        default: {
+            // unreachable; maybe upgrade to C++23 to get the unreachable attribute
+        }
     }
+}
 
-    atom_information.reserve(atom_info->size());
+auto InputFileParser::parse_all() -> void
+{
+    using IFK = InputFileKey;
 
-    for (auto&& atom_info_node : *atom_info) {
-        const auto atom_and_positions = atom_info_node.as_array();
+    parse(IFK::ATOM_INFORMATION);
+    parse(IFK::INITIAL_FOCK_GUESS);
+    parse(IFK::N_MAX_HARTREE_FOCK_ITERATIONS);
+    parse(IFK::TOL_CHANGE_DENSITY_MATRIX);
+    parse(IFK::TOL_CHANGE_HARTREE_FOCK_ENERGY);
+}
 
-        if (!atom_and_positions) {
-            throw std::runtime_error("Failed to parse row in array of atom names and positions.\n");
-        }
-
-        if (atom_and_positions->size() != 4) {
-            throw std::runtime_error("Each row needs 4 elements; the atom ID, and the three Cartesian coordinates.");
-        }
-
-        const auto atom_name = atom_and_positions->at(0).value<std::string>();
-        if (!atom_name) {
-            throw std::runtime_error("Failed to parse the atom name.");
-        }
-
-        const auto atom_label = atom_label_from_name(atom_name->c_str());
-
-        const auto atom_x_position = atom_and_positions->at(1).value<double>();
-        if (!atom_x_position) {
-            throw std::runtime_error("Failed to parse the x-position of the atom.");
-        }
-
-        const auto atom_y_position = atom_and_positions->at(2).value<double>();
-        if (!atom_y_position) {
-            throw std::runtime_error("Failed to parse the y-position of the atom.");
-        }
-
-        const auto atom_z_position = atom_and_positions->at(3).value<double>();
-        if (!atom_z_position) {
-            throw std::runtime_error("Failed to parse the z-position of the atom.");
-        }
-
-        const auto position = coord::Cartesian3D {*atom_x_position, *atom_y_position, *atom_z_position};
-
-        atom_information.emplace_back(atom_label, position, EmptyOrbitalVector {});
-    }
+auto InputFileParser::parsed_information() const -> const ParsedInformation&
+{
+    return parsed_information_;
 }
 
 }  // namespace elec

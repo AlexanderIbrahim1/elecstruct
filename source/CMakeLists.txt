@@ -9,6 +9,7 @@ add_library(
     elecstruct.cpp
     geometry.cpp
     input_file_parser/input_file_parser.cpp
+    input_file_parser/parsed_information.cpp
     integrals/boys.cpp
     integrals/electron_electron_index_iterator.cpp
     integrals/electron_electron_integrals.cpp
