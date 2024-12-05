@@ -15,4 +15,10 @@ enum class InitialFockGuess
     CORE_HAMILTONIAN_MATRIX
 };
 
+enum class Verbose
+{
+    TRUE,
+    FALSE
+};
+
 }  // namespace elec

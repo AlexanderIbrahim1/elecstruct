@@ -74,4 +74,28 @@ auto ParsedInformation::tol_change_hartree_fock_energy() const -> double
     return std::any_cast<T>(info_.at(key));
 }
 
+auto ParsedInformation::n_electrons() const -> std::size_t
+{
+    using T = std::size_t;
+    const auto key = InputFileKey::N_ELECTRONS;
+
+    if (info_.find(key) == info_.end()) {
+        throw std::runtime_error {"ERROR: 'n_electrons' has not been parsed."};
+    }
+
+    return std::any_cast<T>(info_.at(key));
+}
+
+auto ParsedInformation::verbose() const -> Verbose
+{
+    using T = Verbose;
+    const auto key = InputFileKey::VERBOSE;
+
+    if (info_.find(key) == info_.end()) {
+        throw std::runtime_error {"ERROR: 'verbose' has not been parsed."};
+    }
+
+    return std::any_cast<T>(info_.at(key));
+}
+
 }  // anonymous namespace

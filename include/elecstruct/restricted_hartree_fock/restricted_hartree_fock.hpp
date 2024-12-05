@@ -5,16 +5,11 @@
 
 #include "elecstruct/atoms.hpp"
 #include "elecstruct/basis/basis.hpp"
+#include "elecstruct/input_file_parser/input_file_options.hpp"
 
 
 namespace elec
 {
-
-enum class Verbose
-{
-    TRUE,
-    FALSE
-};
 
 void perform_restricted_hartree_fock(
     const std::vector<AtomInfo>& atoms,

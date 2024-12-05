@@ -285,3 +285,80 @@ TEST_CASE("parse TOL_CHANGE_HARTREE_FOCK_ENERGY")
         REQUIRE_THROWS_AS(parser.parse(IFG::TOL_CHANGE_HARTREE_FOCK_ENERGY), std::runtime_error);
     }
 }
+
+TEST_CASE("parse N_ELECTRONS")
+{
+    using IFG = elec::InputFileKey;
+
+    SECTION("valid example")
+    {
+        const auto input = static_cast<std::size_t>(GENERATE(0, 5, 10));
+
+        auto input_stream = std::stringstream {};
+        input_stream << "n_electrons = " << input << '\n';
+
+        auto parser = elec::InputFileParser {input_stream};
+        parser.parse(IFG::N_ELECTRONS);
+
+        const auto& info = parser.parsed_information();
+        const auto n_electrons = info.n_electrons();
+
+        REQUIRE(n_electrons == input);
+    }
+
+    SECTION("not there")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        REQUIRE_THROWS_AS(parser.parse(IFG::N_ELECTRONS), std::runtime_error);
+    }
+
+    SECTION("negative argument")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "n_electrons = -10\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        REQUIRE_THROWS_AS(parser.parse(IFG::N_ELECTRONS), std::runtime_error);
+    }
+}
+
+TEST_CASE("parse VERBOSE")
+{
+    SECTION("valid input")
+    {
+        struct TestPair
+        {
+            std::string input;
+            elec::Verbose expected;
+        };
+
+        const auto pair = GENERATE(
+            TestPair {"true", elec::Verbose::TRUE},
+            TestPair {"false", elec::Verbose::FALSE}
+        );
+
+        auto input_stream = std::stringstream {};
+        input_stream << "verbose = " << "\"" << pair.input << "\"" << '\n';
+
+        auto parser = elec::InputFileParser {input_stream};
+        parser.parse(elec::InputFileKey::VERBOSE);
+
+        const auto& info = parser.parsed_information();
+        const auto actual = info.verbose();
+
+        REQUIRE(actual == pair.expected);
+    }
+
+    SECTION("invalid throws")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << R"(verbose = "invalid_type"\n)";
+
+        auto parser = elec::InputFileParser {input_stream};
+
+        REQUIRE_THROWS_AS(parser.parse(elec::InputFileKey::VERBOSE), std::runtime_error);
+    }
+}

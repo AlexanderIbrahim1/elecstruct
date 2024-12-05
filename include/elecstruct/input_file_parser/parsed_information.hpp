@@ -16,7 +16,9 @@ enum class InputFileKey
     INITIAL_FOCK_GUESS,
     MAX_HARTREE_FOCK_ITERATIONS,
     TOL_CHANGE_DENSITY_MATRIX,
-    TOL_CHANGE_HARTREE_FOCK_ENERGY
+    TOL_CHANGE_HARTREE_FOCK_ENERGY,
+    N_ELECTRONS,
+    VERBOSE
 };
 
 class ParsedInformation
@@ -28,6 +30,8 @@ public:
     auto max_hartree_fock_iterations() const -> std::size_t;
     auto tol_change_density_matrix() const -> double;
     auto tol_change_hartree_fock_energy() const -> double;
+    auto n_electrons() const -> std::size_t;
+    auto verbose() const -> Verbose;
 
 private:
     std::unordered_map<InputFileKey, std::any> info_ {};

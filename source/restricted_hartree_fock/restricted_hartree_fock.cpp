@@ -6,6 +6,7 @@
 
 #include "elecstruct/atoms.hpp"
 #include "elecstruct/basis/basis.hpp"
+#include "elecstruct/input_file_parser/input_file_options.hpp"
 #include "elecstruct/matrices.hpp"
 #include "elecstruct/restricted_hartree_fock/initial_density_matrix.hpp"
 #include "elecstruct/restricted_hartree_fock/step.hpp"

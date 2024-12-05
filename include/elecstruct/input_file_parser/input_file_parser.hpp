@@ -16,14 +16,6 @@
     the input for the electronic structure calculation.
 */
 
-/*
-TODO:
-    - add initial Fock matrix guess as option
-    - add maximum number of iterations as an option
-    - add density matrix difference tolerance as an option
-    - add energy difference tolerance as an option
-*/
-
 namespace elec
 {
 
