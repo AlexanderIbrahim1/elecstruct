@@ -4,7 +4,7 @@
 #include <Eigen/Dense>
 
 #include "elecstruct/atoms.hpp"
-#include "elecstruct/grids/two_electron_integral_grid.hpp"
+#include "elecstruct/integrals/two_electron_integral_grid.hpp"
 #include "elecstruct/basis/basis.hpp"
 #include "elecstruct/integrals/overlap_integrals.hpp"
 #include "elecstruct/integrals/kinetic_integrals.hpp"

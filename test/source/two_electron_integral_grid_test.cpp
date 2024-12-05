@@ -5,7 +5,7 @@
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 
-#include "elecstruct/grids/two_electron_integral_grid.hpp"
+#include "elecstruct/integrals/two_electron_integral_grid.hpp"
 
 
 using Indices = std::tuple<std::size_t, std::size_t, std::size_t, std::size_t>;
@@ -57,7 +57,7 @@ constexpr auto swap_indices(const std::vector<SwapInstruction>& swaps, const Ind
 
 auto yoshimine_helper(const Indices& indices) noexcept -> std::size_t
 {
-    const auto yoshi = elec::impl_two_electron::yoshimine_sort;
+    const auto yoshi = elec::yoshimine_sort;
 
     return yoshi(
         std::get<0>(indices),

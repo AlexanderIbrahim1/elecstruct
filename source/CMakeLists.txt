@@ -9,15 +9,16 @@ add_library(
     elecstruct.cpp
     geometry.cpp
     input_file_parser.cpp
-    matrices.cpp
     integrals/boys.cpp
     integrals/electron_electron_index_iterator.cpp
     integrals/electron_electron_integrals.cpp
+    integrals/f_coefficient.cpp
+    integrals/kinetic_integrals.cpp
     integrals/nuclear_electron_index_iterator.cpp
     integrals/nuclear_electron_integrals.cpp
-    integrals/f_coefficient.cpp
     integrals/overlap_integrals.cpp
-    integrals/kinetic_integrals.cpp
+    integrals/two_electron_integral_grid.cpp
+    matrices.cpp
     orbitals.cpp
 )
 add_library(
