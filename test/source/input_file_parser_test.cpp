@@ -140,11 +140,56 @@ TEST_CASE("parse INITIAL_FOCK_GUESS")
     SECTION("invalid throws")
     {
         auto input_stream = std::stringstream {};
-        input_stream << "initial_fock_guess = " << "\"" << "invalid_type" << "\"" << '\n';
         input_stream << R"(initial_fock_guess = "invalid_type"\n)";
 
         auto parser = elec::InputFileParser {input_stream};
 
         REQUIRE_THROWS_AS(parser.parse(elec::InputFileKey::INITIAL_FOCK_GUESS), std::runtime_error);
+    }
+}
+
+TEST_CASE("parse MAX_HARTREE_FOCK_ITERATIONS")
+{
+    using IFG = elec::InputFileKey;
+
+    SECTION("valid example")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "max_hartree_fock_iterations = 5\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        parser.parse(IFG::MAX_HARTREE_FOCK_ITERATIONS);
+
+        const auto& info = parser.parsed_information();
+        const auto max_iter = info.max_hartree_fock_iterations();
+
+        REQUIRE(max_iter == 5);
+    }
+
+    SECTION("not there")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        REQUIRE_THROWS_AS(parser.parse(IFG::MAX_HARTREE_FOCK_ITERATIONS), std::runtime_error);
+    }
+
+    SECTION("negative argument")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "max_hartree_fock_iterations = -10\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        REQUIRE_THROWS_AS(parser.parse(IFG::MAX_HARTREE_FOCK_ITERATIONS), std::runtime_error);
+    }
+
+    SECTION("zero argument")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "max_hartree_fock_iterations = 0\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        REQUIRE_THROWS_AS(parser.parse(IFG::MAX_HARTREE_FOCK_ITERATIONS), std::runtime_error);
     }
 }

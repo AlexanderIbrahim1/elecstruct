@@ -38,4 +38,16 @@ auto ParsedInformation::initial_fock_guess() const -> InitialFockGuess
     return std::any_cast<T>(info_.at(key));
 }
 
+auto ParsedInformation::max_hartree_fock_iterations() const -> std::size_t
+{
+    using T = std::size_t;
+    const auto key = InputFileKey::MAX_HARTREE_FOCK_ITERATIONS;
+
+    if (info_.find(key) == info_.end()) {
+        throw std::runtime_error {"ERROR: 'max_hartree_fock_iterations' has not been parsed."};
+    }
+
+    return std::any_cast<T>(info_.at(key));
+}
+
 }  // anonymous namespace

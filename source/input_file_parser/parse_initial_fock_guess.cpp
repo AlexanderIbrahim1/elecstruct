@@ -32,7 +32,7 @@ auto parse_initial_fock_guess(const toml::table& table) -> IFG
         auto err_msg = std::stringstream {};
         err_msg << "ERROR: Invalid choice of initial fock guess.\n";
         err_msg << "Allowed options: \n";
-        for (const auto item : map_string_to_initial_fock_guess) {
+        for (const auto& item : map_string_to_initial_fock_guess) {
             err_msg << "  - " << item.first.c_str() << '\n';
         }
         err_msg << '\n';

@@ -16,6 +16,7 @@ the input for the electronic structure calculation.
 
 #include "parse_atom_information.cpp"
 #include "parse_initial_fock_guess.cpp"
+#include "parse_max_hartree_fock_iterations.cpp"
 
 namespace elec
 {
@@ -78,7 +79,8 @@ auto InputFileParser::parse(InputFileKey key) -> void
             parsed_information_[key] = parse_initial_fock_guess(table);
             break;
         }
-        case IFK::N_MAX_HARTREE_FOCK_ITERATIONS: {
+        case IFK::MAX_HARTREE_FOCK_ITERATIONS: {
+            parsed_information_[key] = parse_max_hartree_fock_iterations(table);
             break;
         }
         case IFK::TOL_CHANGE_DENSITY_MATRIX: {
@@ -99,7 +101,7 @@ auto InputFileParser::parse_all() -> void
 
     parse(IFK::ATOM_INFORMATION);
     parse(IFK::INITIAL_FOCK_GUESS);
-    parse(IFK::N_MAX_HARTREE_FOCK_ITERATIONS);
+    parse(IFK::MAX_HARTREE_FOCK_ITERATIONS);
     parse(IFK::TOL_CHANGE_DENSITY_MATRIX);
     parse(IFK::TOL_CHANGE_HARTREE_FOCK_ENERGY);
 }
