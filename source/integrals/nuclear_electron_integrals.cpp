@@ -3,11 +3,11 @@
 
 #include "elecstruct/basis/basis.hpp"
 #include "elecstruct/cartesian3d.hpp"
+#include "elecstruct/geometry.hpp"
 #include "elecstruct/integrals/f_coefficient.hpp"
 #include "elecstruct/integrals/boys.hpp"
 #include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/integrals/nuclear_electron_index_iterator.hpp"
-#include "elecstruct/mathtools/factorial.hpp"
 #include "elecstruct/mathtools/misc.hpp"
 #include "elecstruct/orbitals.hpp"
 

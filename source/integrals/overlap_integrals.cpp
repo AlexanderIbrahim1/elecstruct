@@ -1,10 +1,11 @@
 #include <array>
+#include <cmath>
 #include <cstdint>
 
 #include "elecstruct/basis/basis.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/mathtools/gaussian.hpp"
-#include "elecstruct/mathtools/factorial.hpp"
+#include "elecstruct/mathtools/misc.hpp"
 #include "elecstruct/mathtools/n_choose_k.hpp"
 #include "elecstruct/orbitals.hpp"
 

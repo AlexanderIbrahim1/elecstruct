@@ -4,7 +4,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 
-#include "elecstruct/mathtools/factorial.hpp"
+#include "elecstruct/mathtools/misc.hpp"
 
 constexpr auto ABS_TOL = double {1.0e-8};
 

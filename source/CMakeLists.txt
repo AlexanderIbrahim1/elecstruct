@@ -18,6 +18,8 @@ add_library(
     integrals/nuclear_electron_integrals.cpp
     integrals/overlap_integrals.cpp
     integrals/two_electron_integral_grid.cpp
+    mathtools/gaussian.cpp
+    mathtools/misc.cpp
     matrices.cpp
     orbitals.cpp
 )
