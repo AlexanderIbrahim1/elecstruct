@@ -26,6 +26,7 @@ public:
     auto atom_information() const -> std::vector<AtomInfo>;
     auto initial_fock_guess() const -> InitialFockGuess;
     auto max_hartree_fock_iterations() const -> std::size_t;
+    auto tol_change_density_matrix() const -> double;
 
 private:
     std::unordered_map<InputFileKey, std::any> info_ {};

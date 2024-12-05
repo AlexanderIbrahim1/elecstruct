@@ -50,4 +50,16 @@ auto ParsedInformation::max_hartree_fock_iterations() const -> std::size_t
     return std::any_cast<T>(info_.at(key));
 }
 
+auto ParsedInformation::tol_change_density_matrix() const -> double
+{
+    using T = double;
+    const auto key = InputFileKey::TOL_CHANGE_DENSITY_MATRIX;
+
+    if (info_.find(key) == info_.end()) {
+        throw std::runtime_error {"ERROR: 'tol_change_density_matrix' has not been parsed."};
+    }
+
+    return std::any_cast<T>(info_.at(key));
+}
+
 }  // anonymous namespace

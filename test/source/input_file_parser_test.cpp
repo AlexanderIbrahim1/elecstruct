@@ -193,3 +193,49 @@ TEST_CASE("parse MAX_HARTREE_FOCK_ITERATIONS")
         REQUIRE_THROWS_AS(parser.parse(IFG::MAX_HARTREE_FOCK_ITERATIONS), std::runtime_error);
     }
 }
+
+TEST_CASE("parse TOL_CHANGE_DENSITY_MATRIX")
+{
+    using IFG = elec::InputFileKey;
+
+    SECTION("valid example")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "tol_change_density_matrix = 1.0e-5\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        parser.parse(IFG::TOL_CHANGE_DENSITY_MATRIX);
+
+        const auto& info = parser.parsed_information();
+        const auto tol_change = info.tol_change_density_matrix();
+
+        REQUIRE_THAT(tol_change, Catch::Matchers::WithinRel(1.0e-5));
+    }
+
+    SECTION("not there")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        REQUIRE_THROWS_AS(parser.parse(IFG::TOL_CHANGE_DENSITY_MATRIX), std::runtime_error);
+    }
+
+    SECTION("negative argument")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "tol_change_density_matrix = -4.5e-3\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        REQUIRE_THROWS_AS(parser.parse(IFG::TOL_CHANGE_DENSITY_MATRIX), std::runtime_error);
+    }
+
+    SECTION("zero argument")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "tol_change_density_matrix = 0.0\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        REQUIRE_THROWS_AS(parser.parse(IFG::TOL_CHANGE_DENSITY_MATRIX), std::runtime_error);
+    }
+}
