@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "elecstruct/atoms/atoms.hpp"
+#include "elecstruct/atoms.hpp"
 #include "elecstruct/elecstruct.hpp"
 #include "elecstruct/input_file_parser.hpp"
 
