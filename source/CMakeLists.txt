@@ -8,7 +8,7 @@ add_library(
     basis/basis_sets/sto3g.cpp
     elecstruct.cpp
     geometry.cpp
-    input_file_parser.cpp
+    input_file_parser/input_file_parser.cpp
     integrals/boys.cpp
     integrals/electron_electron_index_iterator.cpp
     integrals/electron_electron_integrals.cpp

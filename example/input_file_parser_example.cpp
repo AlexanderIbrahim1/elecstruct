@@ -7,7 +7,7 @@
 
 #include "elecstruct/atoms.hpp"
 #include "elecstruct/elecstruct.hpp"
-#include "elecstruct/input_file_parser.hpp"
+#include "elecstruct/input_file_parser/input_file_parser.hpp"
 
 auto main() -> int
 {
