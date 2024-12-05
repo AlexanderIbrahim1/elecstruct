@@ -3,8 +3,6 @@ This source file contains the InputFileParser class, which parses a toml file to
 the input for the electronic structure calculation.
 */
 
-#include <iostream>
-
 #include <filesystem>
 #include <iosfwd>
 #include <stdexcept>

@@ -49,7 +49,7 @@ auto parse_atoms(const toml::table& table) -> std::vector<elec::AtomInfo>
             throw std::runtime_error("Failed to parse the atom name.");
         }
 
-        const auto atom_label = elec::atom_label_from_name(atom_name->c_str());
+        const auto atom_label = elec::atom_label_from_name(*atom_name);
 
         const auto atom_x_position = atom_and_positions->at(1).value<double>();
         if (!atom_x_position) {

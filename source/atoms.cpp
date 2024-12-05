@@ -65,7 +65,7 @@ auto nuclear_charge(AtomLabel label) -> double
 auto atom_label_from_name(const std::string& name) -> AtomLabel
 {
     for (const auto& entry : atom_names_and_labels) {
-        if (std::strcmp(name.c_str(), entry.name)) {
+        if (std::strcmp(name.c_str(), entry.name) == 0) {
             return entry.label;
         }
     }
