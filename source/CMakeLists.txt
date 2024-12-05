@@ -6,7 +6,6 @@ add_library(
     elecstruct_elecstruct
     atoms.cpp
     basis/basis_sets/sto3g.cpp
-    elecstruct.cpp
     geometry.cpp
     input_file_parser/input_file_parser.cpp
     input_file_parser/parsed_information.cpp
