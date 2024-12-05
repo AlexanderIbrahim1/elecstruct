@@ -10,7 +10,6 @@
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/geometry.hpp"
 #include "elecstruct/basis/basis.hpp"
-#include "elecstruct/grids/grid4d.hpp"
 #include "elecstruct/matrices.hpp"
 
 
