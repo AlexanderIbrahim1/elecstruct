@@ -15,6 +15,7 @@ the input for the electronic structure calculation.
 #include "elecstruct/input_file_parser/input_file_parser.hpp"
 
 #include "parse_atom_information.cpp"
+#include "parse_initial_fock_guess.cpp"
 
 namespace elec
 {
@@ -74,6 +75,7 @@ auto InputFileParser::parse(InputFileKey key) -> void
             break;
         }
         case IFK::INITIAL_FOCK_GUESS: {
+            parsed_information_[key] = parse_initial_fock_guess(table);
             break;
         }
         case IFK::N_MAX_HARTREE_FOCK_ITERATIONS: {

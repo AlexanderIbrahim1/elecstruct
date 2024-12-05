@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "elecstruct/atoms.hpp"
-
+#include "elecstruct/input_file_parser/input_file_options.hpp"
 
 namespace elec
 {
@@ -24,6 +24,7 @@ class ParsedInformation
 public:
     auto operator[](InputFileKey key) -> std::any&;
     auto atom_information() const -> std::vector<AtomInfo>;
+    auto initial_fock_guess() const -> InitialFockGuess;
 
 private:
     std::unordered_map<InputFileKey, std::any> info_ {};

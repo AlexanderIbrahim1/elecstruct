@@ -106,3 +106,45 @@ TEST_CASE("parse ATOM_INFORMATION")
         REQUIRE(coord::almost_equals(atom_information[2].position, {7.7, 8.8, 9.9}, ABS_TOL));
     }
 }
+
+TEST_CASE("parse INITIAL_FOCK_GUESS")
+{
+    using IFG = elec::InitialFockGuess;
+
+    SECTION("valid input")
+    {
+        struct TestPair
+        {
+            std::string input;
+            IFG expected;
+        };
+
+        const auto pair = GENERATE(
+            TestPair {"zero", IFG::ZERO_MATRIX},
+            TestPair {"extended_huckel", IFG::EXTENDED_HUCKEL_MATRIX},
+            TestPair {"core_hamiltonian", IFG::CORE_HAMILTONIAN_MATRIX}
+        );
+
+        auto input_stream = std::stringstream {};
+        input_stream << "initial_fock_guess = " << "\"" << pair.input << "\"" << '\n';
+
+        auto parser = elec::InputFileParser {input_stream};
+        parser.parse(elec::InputFileKey::INITIAL_FOCK_GUESS);
+
+        const auto& info = parser.parsed_information();
+        const auto guess = info.initial_fock_guess();
+
+        REQUIRE(guess == pair.expected);
+    }
+
+    SECTION("invalid throws")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "initial_fock_guess = " << "\"" << "invalid_type" << "\"" << '\n';
+        input_stream << R"(initial_fock_guess = "invalid_type"\n)";
+
+        auto parser = elec::InputFileParser {input_stream};
+
+        REQUIRE_THROWS_AS(parser.parse(elec::InputFileKey::INITIAL_FOCK_GUESS), std::runtime_error);
+    }
+}
