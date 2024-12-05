@@ -6,6 +6,8 @@
 #include "elecstruct/mathtools/misc.hpp"
 #include "elecstruct/orbitals.hpp"
 
+#include "elecstruct/mathtools/gaussian.hpp"
+
 namespace
 {
 

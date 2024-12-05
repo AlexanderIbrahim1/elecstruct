@@ -20,6 +20,9 @@ add_library(
     integrals/two_electron_integral_grid.cpp
     mathtools/gaussian.cpp
     mathtools/misc.cpp
+    restricted_hartree_fock/initial_density_matrix.cpp
+    restricted_hartree_fock/restricted_hartree_fock.cpp
+    restricted_hartree_fock/step.cpp
     matrices.cpp
     orbitals.cpp
 )
