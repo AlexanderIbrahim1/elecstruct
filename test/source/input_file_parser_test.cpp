@@ -239,3 +239,49 @@ TEST_CASE("parse TOL_CHANGE_DENSITY_MATRIX")
         REQUIRE_THROWS_AS(parser.parse(IFG::TOL_CHANGE_DENSITY_MATRIX), std::runtime_error);
     }
 }
+
+TEST_CASE("parse TOL_CHANGE_HARTREE_FOCK_ENERGY")
+{
+    using IFG = elec::InputFileKey;
+
+    SECTION("valid example")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "tol_change_hartree_fock_energy = 1.0e-5\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        parser.parse(IFG::TOL_CHANGE_HARTREE_FOCK_ENERGY);
+
+        const auto& info = parser.parsed_information();
+        const auto tol_change = info.tol_change_hartree_fock_energy();
+
+        REQUIRE_THAT(tol_change, Catch::Matchers::WithinRel(1.0e-5));
+    }
+
+    SECTION("not there")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        REQUIRE_THROWS_AS(parser.parse(IFG::TOL_CHANGE_HARTREE_FOCK_ENERGY), std::runtime_error);
+    }
+
+    SECTION("negative argument")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "tol_change_hartree_fock_energy = -4.5e-3\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        REQUIRE_THROWS_AS(parser.parse(IFG::TOL_CHANGE_HARTREE_FOCK_ENERGY), std::runtime_error);
+    }
+
+    SECTION("zero argument")
+    {
+        auto input_stream = std::stringstream {};
+        input_stream << "tol_change_hartree_fock_energy = 0.0\n";
+
+        auto parser = elec::InputFileParser {input_stream};
+        REQUIRE_THROWS_AS(parser.parse(IFG::TOL_CHANGE_HARTREE_FOCK_ENERGY), std::runtime_error);
+    }
+}

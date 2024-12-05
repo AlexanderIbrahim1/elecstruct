@@ -27,6 +27,7 @@ public:
     auto initial_fock_guess() const -> InitialFockGuess;
     auto max_hartree_fock_iterations() const -> std::size_t;
     auto tol_change_density_matrix() const -> double;
+    auto tol_change_hartree_fock_energy() const -> double;
 
 private:
     std::unordered_map<InputFileKey, std::any> info_ {};

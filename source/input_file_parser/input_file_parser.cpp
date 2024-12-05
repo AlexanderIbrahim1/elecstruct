@@ -18,6 +18,7 @@ the input for the electronic structure calculation.
 #include "parse_initial_fock_guess.cpp"
 #include "parse_max_hartree_fock_iterations.cpp"
 #include "parse_tol_change_density_matrix.cpp"
+#include "parse_tol_change_hartree_fock_energy.cpp"
 
 namespace elec
 {
@@ -89,6 +90,7 @@ auto InputFileParser::parse(InputFileKey key) -> void
             break;
         }
         case IFK::TOL_CHANGE_HARTREE_FOCK_ENERGY: {
+            parsed_information_[key] = parse_tol_change_hartree_fock_energy(table);
             break;
         }
         default: {

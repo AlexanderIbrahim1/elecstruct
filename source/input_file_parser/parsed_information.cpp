@@ -62,4 +62,16 @@ auto ParsedInformation::tol_change_density_matrix() const -> double
     return std::any_cast<T>(info_.at(key));
 }
 
+auto ParsedInformation::tol_change_hartree_fock_energy() const -> double
+{
+    using T = double;
+    const auto key = InputFileKey::TOL_CHANGE_HARTREE_FOCK_ENERGY;
+
+    if (info_.find(key) == info_.end()) {
+        throw std::runtime_error {"ERROR: 'tol_change_hartree_fock_energy' has not been parsed."};
+    }
+
+    return std::any_cast<T>(info_.at(key));
+}
+
 }  // anonymous namespace
