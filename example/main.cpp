@@ -27,14 +27,6 @@ auto main(int argc, const char** argv) -> int
     auto atoms = info.atom_information();
     elec::fill_atomic_orbitals_sto3g(atoms);
 
-//     for (const auto& atom : atoms) {
-//         std::cout << "atom.label = " << static_cast<int>(atom.label) << '\n';
-//         std::cout << "atom.pos = " << atom.position << '\n';
-//         for (const auto& orbital : atom.orbitals) {
-//             std::cout << "orbital: " << static_cast<int>(orbital) << '\n';
-//         }
-//     }
-
     const auto basis = elec::create_atomic_orbitals_sto3g(atoms);
     const auto initial_fock = info.initial_fock_guess();
     const auto n_electrons = info.n_electrons();

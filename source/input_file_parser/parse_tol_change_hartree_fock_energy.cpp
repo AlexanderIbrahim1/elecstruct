@@ -3,6 +3,7 @@
 namespace
 {
 
+[[maybe_unused]]
 auto parse_tol_change_hartree_fock_energy(const toml::table& table) -> double
 {
     const auto tol_change_toml = table["tol_change_hartree_fock_energy"].as_floating_point();
