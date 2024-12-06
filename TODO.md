@@ -11,3 +11,9 @@ Some things to improve the code:
 - add more molecule examples aside from just water
 - create a special directory for the main executable
 - update the README to be more friendly to incoming users
+- replace the Yoshimine indexing with the indexing described in the Crawford group project
+  - this will let me store the two-electron integrals in a 1D array
+- implement MP2
+- implement CCSD
+- implement CCSD(T)
+- add other basis sets aside from just STO-3G
