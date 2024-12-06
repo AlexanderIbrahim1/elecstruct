@@ -14,12 +14,11 @@ auto h2o_positions() -> std::tuple<coord::Cartesian3D, coord::Cartesian3D, coord
     const auto z_o = 0.116321 / bohr_per_angstrom;
 
     const auto pos_h_0 = coord::Cartesian3D {0.0, y_h, -z_h};
-    const auto pos_o   = coord::Cartesian3D {0.0, 0.0, z_o};
+    const auto pos_o = coord::Cartesian3D {0.0, 0.0, z_o};
     const auto pos_h_1 = coord::Cartesian3D {0.0, -y_h, -z_h};
 
     return {pos_h_0, pos_h_1, pos_o};
 }
-
 
 auto main() -> int
 {
@@ -28,9 +27,9 @@ auto main() -> int
     using AOL = elec::AtomicOrbitalLabel;
 
     const auto atoms = std::vector<elec::AtomInfo> {
-        elec::AtomInfo {elec::AtomLabel::O, pos_o, {AOL::S1, AOL::S2, AOL::P2}},
-        elec::AtomInfo {elec::AtomLabel::H, pos_h_0, {AOL::S1}},
-        elec::AtomInfo {elec::AtomLabel::H, pos_h_1, {AOL::S1}}
+        elec::AtomInfo {elec::AtomLabel::O, pos_o,   {AOL::S1, AOL::S2, AOL::P2}},
+        elec::AtomInfo {elec::AtomLabel::H, pos_h_0, {AOL::S1}                  },
+        elec::AtomInfo {elec::AtomLabel::H, pos_h_1, {AOL::S1}                  }
     };
 
     const auto basis = elec::create_atomic_orbitals_sto3g(atoms);

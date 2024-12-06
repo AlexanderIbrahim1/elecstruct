@@ -17,9 +17,9 @@ the input for the electronic structure calculation.
 #include "parse_atom_information.cpp"
 #include "parse_initial_fock_guess.cpp"
 #include "parse_max_hartree_fock_iterations.cpp"
+#include "parse_n_electrons.cpp"
 #include "parse_tol_change_density_matrix.cpp"
 #include "parse_tol_change_hartree_fock_energy.cpp"
-#include "parse_n_electrons.cpp"
 #include "parse_verbose.cpp"
 
 namespace elec
@@ -73,37 +73,36 @@ auto InputFileParser::parse(InputFileKey key) -> void
 
     const auto& table = table_.value();
 
-    switch (key)
-    {
-        case IFK::ATOM_INFORMATION: {
+    switch (key) {
+        case IFK::ATOM_INFORMATION : {
             parsed_information_[key] = parse_atoms(table);
             break;
         }
-        case IFK::INITIAL_FOCK_GUESS: {
+        case IFK::INITIAL_FOCK_GUESS : {
             parsed_information_[key] = parse_initial_fock_guess(table);
             break;
         }
-        case IFK::MAX_HARTREE_FOCK_ITERATIONS: {
+        case IFK::MAX_HARTREE_FOCK_ITERATIONS : {
             parsed_information_[key] = parse_max_hartree_fock_iterations(table);
             break;
         }
-        case IFK::TOL_CHANGE_DENSITY_MATRIX: {
+        case IFK::TOL_CHANGE_DENSITY_MATRIX : {
             parsed_information_[key] = parse_tol_change_density_matrix(table);
             break;
         }
-        case IFK::TOL_CHANGE_HARTREE_FOCK_ENERGY: {
+        case IFK::TOL_CHANGE_HARTREE_FOCK_ENERGY : {
             parsed_information_[key] = parse_tol_change_hartree_fock_energy(table);
             break;
         }
-        case IFK::N_ELECTRONS: {
+        case IFK::N_ELECTRONS : {
             parsed_information_[key] = parse_n_electrons(table);
             break;
         }
-        case IFK::VERBOSE: {
+        case IFK::VERBOSE : {
             parsed_information_[key] = parse_verbose(table);
             break;
         }
-        default: {
+        default : {
             // unreachable; maybe upgrade to C++23 to get the unreachable attribute
         }
     }

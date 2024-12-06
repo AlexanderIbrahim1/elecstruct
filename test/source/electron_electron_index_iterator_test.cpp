@@ -8,9 +8,7 @@
 
 #include "elecstruct/integrals/electron_electron_index_iterator.hpp"
 
-
 using Indices = std::tuple<std::int64_t, std::int64_t, std::int64_t, std::int64_t, std::int64_t>;
-
 
 auto indices_via_standard_nested_loops(
     std::int64_t angmom_0,
@@ -22,17 +20,17 @@ auto indices_via_standard_nested_loops(
     auto output = std::vector<Indices> {};
 
     for (std::int64_t idx_l_01 {0}; idx_l_01 < angmom_0 + angmom_1 + 1; ++idx_l_01)
-    for (std::int64_t idx_r_01 {0}; idx_r_01 < static_cast<std::int64_t>(idx_l_01 / 2) + 1; ++idx_r_01)
-    for (std::int64_t idx_l_23 {0}; idx_l_23 < angmom_2 + angmom_3 + 1; ++idx_l_23)
-    for (std::int64_t idx_r_23 {0}; idx_r_23 < static_cast<std::int64_t>(idx_l_23 / 2) + 1; ++idx_r_23)
-    for (std::int64_t idx_i {0}; idx_i < static_cast<std::int64_t>((idx_l_01 + idx_l_23 - 2 * (idx_r_01 + idx_r_23)) / 2) + 1; ++idx_i)
-    {
-        output.emplace_back(idx_l_01, idx_r_01, idx_l_23, idx_r_23, idx_i);
-    }
+        for (std::int64_t idx_r_01 {0}; idx_r_01 < static_cast<std::int64_t>(idx_l_01 / 2) + 1; ++idx_r_01)
+            for (std::int64_t idx_l_23 {0}; idx_l_23 < angmom_2 + angmom_3 + 1; ++idx_l_23)
+                for (std::int64_t idx_r_23 {0}; idx_r_23 < static_cast<std::int64_t>(idx_l_23 / 2) + 1; ++idx_r_23)
+                    for (std::int64_t idx_i {0};
+                         idx_i < static_cast<std::int64_t>((idx_l_01 + idx_l_23 - 2 * (idx_r_01 + idx_r_23)) / 2) + 1;
+                         ++idx_i) {
+                        output.emplace_back(idx_l_01, idx_r_01, idx_l_23, idx_r_23, idx_i);
+                    }
 
     return output;
 }
-
 
 auto indices_via_custom_iterator(
     std::int64_t angmom_0,
@@ -51,7 +49,6 @@ auto indices_via_custom_iterator(
 
     return output;
 }
-
 
 TEST_CASE("electron-electron integral index iterator")
 {

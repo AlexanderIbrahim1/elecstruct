@@ -98,4 +98,4 @@ auto ParsedInformation::verbose() const -> Verbose
     return std::any_cast<T>(info_.at(key));
 }
 
-}  // anonymous namespace
+}  // namespace elec

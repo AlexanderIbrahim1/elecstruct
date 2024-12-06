@@ -21,8 +21,7 @@ auto gauss_product_coeff(double exponent0, double exponent1, std::int64_t angmom
     return std::pow(argument, power);
 }
 
-} // anonymous namespace
-
+}  // anonymous namespace
 
 namespace elec
 {

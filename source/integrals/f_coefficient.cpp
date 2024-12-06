@@ -10,16 +10,15 @@
 namespace
 {
 
-auto range_limits(
-    std::int64_t angmom_j,
-    std::int64_t angmom_l,
-    std::int64_t angmom_m
-) -> std::tuple<std::int64_t, std::int64_t>
+auto range_limits(std::int64_t angmom_j, std::int64_t angmom_l, std::int64_t angmom_m)
+    -> std::tuple<std::int64_t, std::int64_t>
 {
-    const auto minimum = [&]() {
+    const auto minimum = [&]()
+    {
         if (angmom_j > angmom_m) {
             return angmom_j - angmom_m;
-        } else {
+        }
+        else {
             return std::int64_t {0};
         }
     }();
@@ -30,7 +29,6 @@ auto range_limits(
 }
 
 }  // anonymous namespace
-
 
 namespace elec
 {

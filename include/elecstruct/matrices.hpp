@@ -5,9 +5,8 @@
 #include <Eigen/Dense>
 
 #include "elecstruct/atoms.hpp"
-#include "elecstruct/integrals/two_electron_integral_grid.hpp"
 #include "elecstruct/basis/basis.hpp"
-
+#include "elecstruct/integrals/two_electron_integral_grid.hpp"
 
 namespace elec
 {
@@ -24,14 +23,13 @@ auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis, c
     Calculates the core Hamiltonian matrix, which is the sum of the kinetic energy matrix
     and all the nuclear-electron interaction matrices.
 */
-auto core_hamiltonian_matrix(
-    const std::vector<AtomicOrbitalInfoSTO3G>& basis,
-    const std::vector<AtomInfo>& atoms
-) -> Eigen::MatrixXd;
+auto core_hamiltonian_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis, const std::vector<AtomInfo>& atoms)
+    -> Eigen::MatrixXd;
 
 auto two_electron_integral_grid(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> TwoElectronIntegralGrid;
 
-auto density_matrix_restricted_hartree_fock(const Eigen::MatrixXd& coefficient_mtx, std::size_t n_electrons) -> Eigen::MatrixXd;
+auto density_matrix_restricted_hartree_fock(const Eigen::MatrixXd& coefficient_mtx, std::size_t n_electrons)
+    -> Eigen::MatrixXd;
 
 auto electron_electron_matrix(
     const std::vector<AtomicOrbitalInfoSTO3G>& basis,

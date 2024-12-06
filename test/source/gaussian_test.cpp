@@ -8,8 +8,8 @@
 #include "elecstruct/basis/basis.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/geometry.hpp"
-#include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/integrals/overlap_integrals.hpp"
+#include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/orbitals.hpp"
 
 constexpr auto ABS_TOL = double {1.0e-8};
@@ -24,7 +24,7 @@ TEST_CASE("gaussian product")
         const auto exponent1 = double {1.0 / 3.0};
 
         const auto expected_centre = coord::Cartesian3D {0.2, 0.0, 0.0};
-        const auto expected_coefficient = double {0.449328964117}; // from DESMOS
+        const auto expected_coefficient = double {0.449328964117};  // from DESMOS
 
         const auto [centre, coeff] = elec::math::gaussian_product(centre0, centre1, exponent0, exponent1);
 
@@ -78,7 +78,8 @@ TEST_CASE("unnormalized overlap integrals")
         const auto angmom0 = elec::AngularMomentumNumbers {0, 0, 0};
         const auto angmom1 = elec::AngularMomentumNumbers {0, 0, 0};
 
-        [[maybe_unused]] const auto [new_centre, new_info] = elec::math::gaussian_product(centre0, centre1, exponent0, exponent1);
+        [[maybe_unused]] const auto [new_centre, new_info] =
+            elec::math::gaussian_product(centre0, centre1, exponent0, exponent1);
 
         // clang-format off
         const auto unorm_overlap_x = elec::unnormalized_overlap_integral_1d(

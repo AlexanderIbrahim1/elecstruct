@@ -34,16 +34,12 @@ auto calculate_idx_r_max_(std::int64_t idx_l) noexcept -> std::int64_t
 
 }  // anonymous namespace
 
-
 namespace elec
 {
 
 // --- ElectronElectronIndexIterator
 
-ElectronElectronIndexIterator::ElectronElectronIndexIterator(
-    std::int64_t idx_l_01_max,
-    std::int64_t idx_l_23_max
-)
+ElectronElectronIndexIterator::ElectronElectronIndexIterator(std::int64_t idx_l_01_max, std::int64_t idx_l_23_max)
     : idx_l_01_max_ {idx_l_01_max}
     , idx_l_23_max_ {idx_l_23_max}
 {}
@@ -122,7 +118,6 @@ auto operator!=(const ElectronElectronIndexIterator& left, const ElectronElectro
 {
     return !(left == right);
 }
-
 
 // --- ElectronElectronIndexGenerator
 

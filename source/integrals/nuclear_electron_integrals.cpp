@@ -4,10 +4,10 @@
 #include "elecstruct/basis/basis.hpp"
 #include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/geometry.hpp"
-#include "elecstruct/integrals/f_coefficient.hpp"
 #include "elecstruct/integrals/boys.hpp"
-#include "elecstruct/mathtools/gaussian.hpp"
+#include "elecstruct/integrals/f_coefficient.hpp"
 #include "elecstruct/integrals/nuclear_electron_index_iterator.hpp"
+#include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/mathtools/misc.hpp"
 #include "elecstruct/orbitals.hpp"
 
@@ -75,7 +75,6 @@ auto nuclear_a_factor(
 
 }  // anonymous namespace
 
-
 namespace elec
 {
 
@@ -90,7 +89,8 @@ auto nuclear_electron_integral_contraction(
     double nuclear_charge
 ) -> double
 {
-    const auto [pos_product, coeff_product] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, exponent0, exponent1);
+    const auto [pos_product, coeff_product] =
+        elec::math::gaussian_product(pos_gauss0, pos_gauss1, exponent0, exponent1);
 
     const auto norm0 = elec::math::gaussian_norm(angmom_0, exponent0);
     const auto norm1 = elec::math::gaussian_norm(angmom_1, exponent1);
@@ -128,7 +128,7 @@ auto nuclear_electron_integral_contraction(
     }
     // clang-format on
 
-    return - (2.0 * M_PI / g_value) * coeff_product * nuclear_charge * norm0 * norm1 * integral;
+    return -(2.0 * M_PI / g_value) * coeff_product * nuclear_charge * norm0 * norm1 * integral;
 }
 
 }  // namespace elec

@@ -2,8 +2,8 @@
 #include <stdexcept>
 #include <string_view>
 
-#include "extern/tomlplusplus/toml.hpp"
 #include "extern/mapbox/eternal.hpp"
+#include "extern/tomlplusplus/toml.hpp"
 
 #include "elecstruct/input_file_parser/input_file_options.hpp"
 
@@ -14,8 +14,8 @@ using estr = mapbox::eternal::string;
 using IFG = elec::InitialFockGuess;
 
 constexpr auto map_string_to_initial_fock_guess = mapbox::eternal::map<estr, IFG>({
-    {"zero", IFG::ZERO_MATRIX},
-    {"extended_huckel", IFG::EXTENDED_HUCKEL_MATRIX},
+    {"zero",             IFG::ZERO_MATRIX            },
+    {"extended_huckel",  IFG::EXTENDED_HUCKEL_MATRIX },
     {"core_hamiltonian", IFG::CORE_HAMILTONIAN_MATRIX}
 });
 

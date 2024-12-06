@@ -1,5 +1,5 @@
-#include "elecstruct/cartesian3d.hpp"
 #include "elecstruct/geometry.hpp"
+#include "elecstruct/cartesian3d.hpp"
 
 namespace coord
 {

@@ -10,14 +10,14 @@
 
 #include "elecstruct/restricted_hartree_fock/step.hpp"
 
-
 namespace elec
 {
 
 /*
     Create a new matrix with the sorted columns.
 */
-auto matrix_with_sorted_columns(const Eigen::MatrixXd& matrix, const std::vector<Eigen::Index>& indices) -> Eigen::MatrixXd
+auto matrix_with_sorted_columns(const Eigen::MatrixXd& matrix, const std::vector<Eigen::Index>& indices)
+    -> Eigen::MatrixXd
 {
     const auto size = matrix.cols();
 
@@ -40,7 +40,8 @@ auto matrix_with_sorted_columns(const Eigen::MatrixXd& matrix, const std::vector
 */
 auto indices_to_sort(const Eigen::VectorXd& elements) -> std::vector<Eigen::Index>
 {
-    auto indices = [&]() {
+    auto indices = [&]()
+    {
         const auto size = static_cast<std::size_t>(elements.size());
 
         auto indices_ = std::vector<Eigen::Index> {};
@@ -58,7 +59,6 @@ auto indices_to_sort(const Eigen::VectorXd& elements) -> std::vector<Eigen::Inde
 
     return indices;
 }
-
 
 auto new_density_matrix(
     const Eigen::MatrixXd& fock_mtx,
@@ -86,11 +86,7 @@ auto new_density_matrix(
     return new_density_mtx;
 }
 
-
-auto density_matrix_difference(
-    const Eigen::MatrixXd& old_density_mtx,
-    const Eigen::MatrixXd& new_density_mtx
-) -> double
+auto density_matrix_difference(const Eigen::MatrixXd& old_density_mtx, const Eigen::MatrixXd& new_density_mtx) -> double
 {
     const auto size = old_density_mtx.cols();
 
@@ -104,7 +100,6 @@ auto density_matrix_difference(
 
     return 0.5 * std::sqrt(difference);
 }
-
 
 auto electron_energy(
     const Eigen::MatrixXd& density_mtx,
@@ -125,10 +120,7 @@ auto electron_energy(
     return energy;
 }
 
-
-auto nuclear_energy(
-    const std::vector<AtomInfo>& atoms
-) -> double
+auto nuclear_energy(const std::vector<AtomInfo>& atoms) -> double
 {
     const auto size = atoms.size();
 
@@ -146,7 +138,6 @@ auto nuclear_energy(
 
     return energy;
 }
-
 
 auto total_energy(
     const Eigen::MatrixXd& density_mtx,

@@ -7,7 +7,6 @@
 #include "elecstruct/basis/basis.hpp"
 #include "elecstruct/input_file_parser/input_file_options.hpp"
 
-
 namespace elec
 {
 

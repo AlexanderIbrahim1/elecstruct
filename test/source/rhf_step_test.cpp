@@ -6,9 +6,7 @@
 
 #include "elecstruct/restricted_hartree_fock/step.hpp"
 
-
 constexpr auto ABS_TOLERANCE = double {1.0e-6};
-
 
 TEST_CASE("sorted_indices")
 {
@@ -26,9 +24,7 @@ TEST_CASE("matrix_with_sorted_columns")
     const auto indices = std::vector<Eigen::Index> {2, 1, 0};
 
     auto input = Eigen::MatrixXd {3, 3};
-    input << 0.0, 0.1, 0.2,
-             1.0, 1.1, 1.2,
-             2.0, 2.1, 2.2;
+    input << 0.0, 0.1, 0.2, 1.0, 1.1, 1.2, 2.0, 2.1, 2.2;
 
     const auto output = elec::matrix_with_sorted_columns(input, indices);
 

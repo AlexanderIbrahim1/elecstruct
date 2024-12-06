@@ -7,10 +7,10 @@
 #include "elecstruct/atoms.hpp"
 #include "elecstruct/basis/basis.hpp"
 #include "elecstruct/input_file_parser/input_file_options.hpp"
+#include "elecstruct/input_file_parser/input_file_parser.hpp"
 #include "elecstruct/matrices.hpp"
 #include "elecstruct/restricted_hartree_fock/initial_density_matrix.hpp"
 #include "elecstruct/restricted_hartree_fock/step.hpp"
-#include "elecstruct/input_file_parser/input_file_parser.hpp"
 
 #include "elecstruct/restricted_hartree_fock/restricted_hartree_fock.hpp"
 
@@ -32,26 +32,31 @@ void maybe_print(elec::Verbose is_verbose, std::string_view text)
     }
 }
 
-[[maybe_unused]]
-void maybe_print(elec::Verbose is_verbose, const elec::TwoElectronIntegralGrid& grid, std::size_t n_basis_functions, std::string_view name)
+[[maybe_unused]] void maybe_print(
+    elec::Verbose is_verbose,
+    const elec::TwoElectronIntegralGrid& grid,
+    std::size_t n_basis_functions,
+    std::string_view name
+)
 {
     if (is_verbose == elec::Verbose::TRUE) {
         std::cout << name << '\n';
 
         for (std::size_t i0 {0}; i0 < n_basis_functions; ++i0)
-        for (std::size_t i1 {0}; i1 < n_basis_functions; ++i1)
-        for (std::size_t i2 {0}; i2 < n_basis_functions; ++i2)
-        for (std::size_t i3 {0}; i3 < n_basis_functions; ++i3) {
-            std::cout << "(" << i0 << ", " << i1 << ", " << i2 << ", " << i3 << ") = ";
-            std::cout << grid.get(i0, i1, i2, i3) << '\n';
-        }
+            for (std::size_t i1 {0}; i1 < n_basis_functions; ++i1)
+                for (std::size_t i2 {0}; i2 < n_basis_functions; ++i2)
+                    for (std::size_t i3 {0}; i3 < n_basis_functions; ++i3) {
+                        std::cout << "(" << i0 << ", " << i1 << ", " << i2 << ", " << i3 << ") = ";
+                        std::cout << grid.get(i0, i1, i2, i3) << '\n';
+                    }
     }
 }
 
 void maybe_print_divider(elec::Verbose is_verbose)
 {
     if (is_verbose == elec::Verbose::TRUE) {
-        std::cout << "----------------------------------------------------------------------------------------------------\n";
+        std::cout
+            << "----------------------------------------------------------------------------------------------------\n";
     }
 }
 
@@ -63,26 +68,24 @@ auto inital_fock_guess_matrix(
 {
     using IFG = elec::InitialFockGuess;
 
-    switch (guess)
-    {
-        case IFG::ZERO_MATRIX: {
+    switch (guess) {
+        case IFG::ZERO_MATRIX : {
             const auto size = static_cast<std::size_t>(overlap_mtx.cols());
             return elec::zero_matrix(size);
         }
-        case IFG::CORE_HAMILTONIAN_MATRIX: {
+        case IFG::CORE_HAMILTONIAN_MATRIX : {
             return elec::core_hamiltonian_guess(core_hamiltonian_mtx);
         }
-        case IFG::EXTENDED_HUCKEL_MATRIX: {
+        case IFG::EXTENDED_HUCKEL_MATRIX : {
             return elec::extended_huckel_guess(overlap_mtx, core_hamiltonian_mtx);
         }
-        default: {
+        default : {
             throw std::runtime_error {"UNREACHABLE: unknown InitialFockGuess passed to function!"};
         }
     }
 }
 
 }  // anonymous namespace
-
 
 namespace elec
 {

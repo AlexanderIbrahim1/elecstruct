@@ -37,4 +37,4 @@ private:
     std::unordered_map<InputFileKey, std::any> info_ {};
 };
 
-}  // anonymous namespace
+}  // namespace elec

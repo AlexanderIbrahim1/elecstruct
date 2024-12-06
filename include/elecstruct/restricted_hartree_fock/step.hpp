@@ -6,14 +6,14 @@
 
 #include "elecstruct/atoms.hpp"
 
-
 namespace elec
 {
 
 /*
     Create a new matrix with the sorted columns.
 */
-auto matrix_with_sorted_columns(const Eigen::MatrixXd& matrix, const std::vector<Eigen::Index>& indices) -> Eigen::MatrixXd;
+auto matrix_with_sorted_columns(const Eigen::MatrixXd& matrix, const std::vector<Eigen::Index>& indices)
+    -> Eigen::MatrixXd;
 
 /*
     Returns a vector of indices such that if the elements in the Eigen::VectorXd `elements` were rearranged
@@ -35,10 +35,8 @@ auto new_density_matrix(
     determine how similar the current density matrix is to the density matrix from the previous
     step.
 */
-auto density_matrix_difference(
-    const Eigen::MatrixXd& old_density_mtx,
-    const Eigen::MatrixXd& new_density_mtx
-) -> double;
+auto density_matrix_difference(const Eigen::MatrixXd& old_density_mtx, const Eigen::MatrixXd& new_density_mtx)
+    -> double;
 
 /*
     This function returns the sum of the:
@@ -54,9 +52,7 @@ auto electron_energy(
 /*
     This function returns the sum of the nuclear-nuclear repulsion energies.
 */
-auto nuclear_energy(
-    const std::vector<AtomInfo>& atoms
-) -> double;
+auto nuclear_energy(const std::vector<AtomInfo>& atoms) -> double;
 
 /*
     This function returns the sum of the:

@@ -14,7 +14,8 @@ auto neg_1_power(std::int64_t arg) -> std::int64_t
 {
     if (arg % 2 == 0) {
         return 1;
-    } else {
+    }
+    else {
         return -1;
     }
 }

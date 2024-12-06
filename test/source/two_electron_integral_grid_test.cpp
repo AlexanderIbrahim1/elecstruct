@@ -7,9 +7,7 @@
 
 #include "elecstruct/integrals/two_electron_integral_grid.hpp"
 
-
 using Indices = std::tuple<std::size_t, std::size_t, std::size_t, std::size_t>;
-
 
 constexpr auto swap_0_and_1(const Indices& indices) noexcept -> Indices
 {
@@ -26,13 +24,12 @@ constexpr auto swap_01_and_23(const Indices& indices) noexcept -> Indices
     return {std::get<2>(indices), std::get<3>(indices), std::get<0>(indices), std::get<1>(indices)};
 }
 
-
-enum class SwapInstruction {
+enum class SwapInstruction
+{
     INDICES_01,
     INDICES_23,
     INDICES_01_23
 };
-
 
 constexpr auto swap_indices(const std::vector<SwapInstruction>& swaps, const Indices& original) noexcept -> Indices
 {
@@ -46,7 +43,8 @@ constexpr auto swap_indices(const std::vector<SwapInstruction>& swaps, const Ind
         }
         else if (instr == SI::INDICES_23) {
             indices = swap_2_and_3(indices);
-        } else {
+        }
+        else {
             indices = swap_01_and_23(indices);
         }
     }
@@ -54,19 +52,12 @@ constexpr auto swap_indices(const std::vector<SwapInstruction>& swaps, const Ind
     return indices;
 }
 
-
 auto yoshimine_helper(const Indices& indices) noexcept -> std::size_t
 {
     const auto yoshi = elec::yoshimine_sort;
 
-    return yoshi(
-        std::get<0>(indices),
-        std::get<1>(indices),
-        std::get<2>(indices),
-        std::get<3>(indices)
-    );
+    return yoshi(std::get<0>(indices), std::get<1>(indices), std::get<2>(indices), std::get<3>(indices));
 }
-
 
 TEST_CASE("yoshimine indices")
 {
@@ -78,7 +69,10 @@ TEST_CASE("yoshimine indices")
     };
 
     const auto pair = GENERATE(
-        TestPair {{1, 1, 1, 1}, 5},
+        TestPair {
+            {1, 1, 1, 1},
+            5
+    },
         TestPair {{2, 1, 1, 1}, 12},
         TestPair {{2, 2, 1, 1}, 17},
         TestPair {{2, 1, 2, 1}, 14},
@@ -90,7 +84,6 @@ TEST_CASE("yoshimine indices")
 
     REQUIRE(pair.expected == actual);
 }
-
 
 TEST_CASE("yoshimine sort on {0, 1, 2, 3}")
 {
@@ -163,7 +156,6 @@ TEST_CASE("yoshimine sort multiple swaps")
     REQUIRE(yoshimine_original == yoshimine_new);
 }
 
-
 TEST_CASE("two_electron_integral_grid")
 {
     SECTION("before and after setting")
@@ -186,23 +178,43 @@ TEST_CASE("two_electron_integral_grid")
 
     SECTION("swapping does not change existence")
     {
-        const auto original = Indices{4, 3, 5, 1};
-        const auto swapped_01 = Indices{3, 4, 5, 1};
-        const auto swapped_23 = Indices{4, 3, 1, 5};
-        const auto swapped_01_23 = Indices{5, 1, 4, 3};
+        const auto original = Indices {4, 3, 5, 1};
+        const auto swapped_01 = Indices {3, 4, 5, 1};
+        const auto swapped_23 = Indices {4, 3, 1, 5};
+        const auto swapped_01_23 = Indices {5, 1, 4, 3};
 
         auto grid = elec::TwoElectronIntegralGrid {};
 
-        REQUIRE(!grid.exists(std::get<0>(original), std::get<1>(original), std::get<2>(original), std::get<3>(original)));
-        REQUIRE(!grid.exists(std::get<0>(swapped_01), std::get<1>(swapped_01), std::get<2>(swapped_01), std::get<3>(swapped_01)));
-        REQUIRE(!grid.exists(std::get<0>(swapped_23), std::get<1>(swapped_23), std::get<2>(swapped_23), std::get<3>(swapped_23)));
-        REQUIRE(!grid.exists(std::get<0>(swapped_01_23), std::get<1>(swapped_01_23), std::get<2>(swapped_01_23), std::get<3>(swapped_01_23)));
+        REQUIRE(!grid.exists(std::get<0>(original), std::get<1>(original), std::get<2>(original), std::get<3>(original))
+        );
+        REQUIRE(!grid.exists(
+            std::get<0>(swapped_01), std::get<1>(swapped_01), std::get<2>(swapped_01), std::get<3>(swapped_01)
+        ));
+        REQUIRE(!grid.exists(
+            std::get<0>(swapped_23), std::get<1>(swapped_23), std::get<2>(swapped_23), std::get<3>(swapped_23)
+        ));
+        REQUIRE(!grid.exists(
+            std::get<0>(swapped_01_23),
+            std::get<1>(swapped_01_23),
+            std::get<2>(swapped_01_23),
+            std::get<3>(swapped_01_23)
+        ));
 
         grid.set(std::get<0>(original), std::get<1>(original), std::get<2>(original), std::get<3>(original), 1.0);
 
-        REQUIRE(grid.exists(std::get<0>(original), std::get<1>(original), std::get<2>(original), std::get<3>(original)));
-        REQUIRE(grid.exists(std::get<0>(swapped_01), std::get<1>(swapped_01), std::get<2>(swapped_01), std::get<3>(swapped_01)));
-        REQUIRE(grid.exists(std::get<0>(swapped_23), std::get<1>(swapped_23), std::get<2>(swapped_23), std::get<3>(swapped_23)));
-        REQUIRE(grid.exists(std::get<0>(swapped_01_23), std::get<1>(swapped_01_23), std::get<2>(swapped_01_23), std::get<3>(swapped_01_23)));
+        REQUIRE(grid.exists(std::get<0>(original), std::get<1>(original), std::get<2>(original), std::get<3>(original))
+        );
+        REQUIRE(grid.exists(
+            std::get<0>(swapped_01), std::get<1>(swapped_01), std::get<2>(swapped_01), std::get<3>(swapped_01)
+        ));
+        REQUIRE(grid.exists(
+            std::get<0>(swapped_23), std::get<1>(swapped_23), std::get<2>(swapped_23), std::get<3>(swapped_23)
+        ));
+        REQUIRE(grid.exists(
+            std::get<0>(swapped_01_23),
+            std::get<1>(swapped_01_23),
+            std::get<2>(swapped_01_23),
+            std::get<3>(swapped_01_23)
+        ));
     }
 }

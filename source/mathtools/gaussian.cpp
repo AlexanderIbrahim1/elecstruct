@@ -25,13 +25,12 @@ auto gaussian_product_coefficient(
 {
     const auto diff = centre1 - centre0;
     const auto norm_sq = coord::dot_product(diff, diff);
-    const auto expon_scaling = - (exponent0 * exponent1) / (exponent0 + exponent1);
+    const auto expon_scaling = -(exponent0 * exponent1) / (exponent0 + exponent1);
 
     return std::exp(expon_scaling * norm_sq);
 }
 
 }  // anonymous namespace
-
 
 namespace elec::math
 {

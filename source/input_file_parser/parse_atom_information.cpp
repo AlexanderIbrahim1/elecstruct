@@ -74,4 +74,4 @@ auto parse_atoms(const toml::table& table) -> std::vector<elec::AtomInfo>
     return atom_information;
 }
 
-} // anonymous namespace
+}  // anonymous namespace

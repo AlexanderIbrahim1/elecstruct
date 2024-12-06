@@ -4,12 +4,12 @@
 #include <Eigen/Dense>
 
 #include "elecstruct/atoms.hpp"
-#include "elecstruct/integrals/two_electron_integral_grid.hpp"
 #include "elecstruct/basis/basis.hpp"
-#include "elecstruct/integrals/overlap_integrals.hpp"
+#include "elecstruct/integrals/electron_electron_integrals.hpp"
 #include "elecstruct/integrals/kinetic_integrals.hpp"
 #include "elecstruct/integrals/nuclear_electron_integrals.hpp"
-#include "elecstruct/integrals/electron_electron_integrals.hpp"
+#include "elecstruct/integrals/overlap_integrals.hpp"
+#include "elecstruct/integrals/two_electron_integral_grid.hpp"
 
 #include "elecstruct/matrices.hpp"
 
@@ -55,8 +55,6 @@ auto electron_electron_integral(
 
 }  // anonymous namespace
 
-
-
 namespace elec
 {
 
@@ -87,7 +85,9 @@ auto overlap_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> Eigen::
             for (const auto info0 : basis0.gaussians) {
                 for (const auto info1 : basis1.gaussians) {
                     const auto coeff = info0.contraction_coeff * info1.contraction_coeff;
-                    const auto overlap = overlap_integral_contraction(angmom_0, angmom_1, pos0, pos1, info0.exponent_coeff, info1.exponent_coeff);
+                    const auto overlap = overlap_integral_contraction(
+                        angmom_0, angmom_1, pos0, pos1, info0.exponent_coeff, info1.exponent_coeff
+                    );
 
                     element += coeff * overlap;
                 }
@@ -102,7 +102,6 @@ auto overlap_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> Eigen::
 
     return output;
 }
-
 
 auto transformation_matrix(const Eigen::MatrixXd& s_overlap) -> Eigen::MatrixXd
 {
@@ -134,7 +133,6 @@ auto transformation_matrix(const Eigen::MatrixXd& s_overlap) -> Eigen::MatrixXd
     return transformation_mtx;
 }
 
-
 auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> Eigen::MatrixXd
 {
     const auto size = basis.size();
@@ -154,7 +152,9 @@ auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> Eigen::
             for (const auto info0 : basis0.gaussians) {
                 for (const auto info1 : basis1.gaussians) {
                     const auto coeff = info0.contraction_coeff * info1.contraction_coeff;
-                    const auto overlap = kinetic_integral_contraction(angmom_0, angmom_1, pos0, pos1, info0.exponent_coeff, info1.exponent_coeff);
+                    const auto overlap = kinetic_integral_contraction(
+                        angmom_0, angmom_1, pos0, pos1, info0.exponent_coeff, info1.exponent_coeff
+                    );
                     element += coeff * overlap;
                 }
             }
@@ -168,7 +168,6 @@ auto kinetic_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis) -> Eigen::
 
     return output;
 }
-
 
 auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis, const AtomInfo& atom) -> Eigen::MatrixXd
 {
@@ -213,15 +212,12 @@ auto nuclear_electron_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis, c
     return output;
 }
 
-
 /*
     Calculates the core Hamiltonian matrix, which is the sum of the kinetic energy matrix
     and all the nuclear-electron interaction matrices.
 */
-auto core_hamiltonian_matrix(
-    const std::vector<AtomicOrbitalInfoSTO3G>& basis,
-    const std::vector<AtomInfo>& atoms
-) -> Eigen::MatrixXd
+auto core_hamiltonian_matrix(const std::vector<AtomicOrbitalInfoSTO3G>& basis, const std::vector<AtomInfo>& atoms)
+    -> Eigen::MatrixXd
 {
     auto output = kinetic_matrix(basis);
 
@@ -233,7 +229,6 @@ auto core_hamiltonian_matrix(
     return output;
 }
 
-
 /*
     NOTE: I'm pretty sure exchanging i0 <-> i1, and i2 <-> i3, only change the result by a complex
     conjugate; once I get the code running, I should take advantage of that symmetry
@@ -244,18 +239,17 @@ auto two_electron_integral_grid(const std::vector<AtomicOrbitalInfoSTO3G>& basis
     auto integral_grid = TwoElectronIntegralGrid {};
 
     for (std::size_t i0 {0}; i0 < size; ++i0)
-    for (std::size_t i1 {0}; i1 < size; ++i1)
-    for (std::size_t i2 {0}; i2 < size; ++i2)
-    for (std::size_t i3 {0}; i3 < size; ++i3) {
-        if (!integral_grid.exists(i0, i1, i2, i3)) {
-            const auto integral = electron_electron_integral(basis[i0], basis[i1], basis[i2], basis[i3]);
-            integral_grid.set(i0, i1, i2, i3, integral);
-        }
-    }
+        for (std::size_t i1 {0}; i1 < size; ++i1)
+            for (std::size_t i2 {0}; i2 < size; ++i2)
+                for (std::size_t i3 {0}; i3 < size; ++i3) {
+                    if (!integral_grid.exists(i0, i1, i2, i3)) {
+                        const auto integral = electron_electron_integral(basis[i0], basis[i1], basis[i2], basis[i3]);
+                        integral_grid.set(i0, i1, i2, i3, integral);
+                    }
+                }
 
     return integral_grid;
 }
-
 
 /*
     NOTE: the density elements are actually given by the sum of:
@@ -264,7 +258,8 @@ auto two_electron_integral_grid(const std::vector<AtomicOrbitalInfoSTO3G>& basis
     I think the examples used here all have real elements, so it won't matter
       - but it might change if the orbitals start off using complex coefficients
 */
-auto density_matrix_restricted_hartree_fock(const Eigen::MatrixXd& coefficient_mtx, std::size_t n_electrons) -> Eigen::MatrixXd
+auto density_matrix_restricted_hartree_fock(const Eigen::MatrixXd& coefficient_mtx, std::size_t n_electrons)
+    -> Eigen::MatrixXd
 {
     const auto size = coefficient_mtx.cols();
     const auto half = static_cast<Eigen::Index>(n_electrons / 2);
@@ -335,6 +330,5 @@ auto fock_matrix(
 
     return fock_mtx;
 }
-
 
 }  // namespace elec

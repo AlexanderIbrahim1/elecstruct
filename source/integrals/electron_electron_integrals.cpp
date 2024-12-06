@@ -22,7 +22,6 @@ struct PositionDifferences1D
     double diff_2;
     double diff_3;
     double diff_prod;
-
 };
 
 auto make_position_differences(
@@ -106,8 +105,12 @@ auto electron_electron_b_factor(
 
     // numerator
     const auto theta01 = electron_electron_theta_factor(
-        indices.idx_l_01, angmoms.angmom_0, angmoms.angmom_1, indices.idx_r_01,
-        differences.diff_0, differences.diff_1,
+        indices.idx_l_01,
+        angmoms.angmom_0,
+        angmoms.angmom_1,
+        indices.idx_r_01,
+        differences.diff_0,
+        differences.diff_1,
         info.g_value_01
     );
 
@@ -116,8 +119,12 @@ auto electron_electron_b_factor(
     }
 
     const auto theta23 = electron_electron_theta_factor(
-        indices.idx_l_23, angmoms.angmom_2, angmoms.angmom_3, indices.idx_r_23,
-        differences.diff_2, differences.diff_3,
+        indices.idx_l_23,
+        angmoms.angmom_2,
+        angmoms.angmom_3,
+        indices.idx_r_23,
+        differences.diff_2,
+        differences.diff_3,
         info.g_value_23
     );
 
@@ -147,7 +154,6 @@ auto electron_electron_b_factor(
     return {b_factor, false};
 }
 
-
 auto boys_index(
     const elec::ElectronElectronIntegralIndices& indices_x,
     const elec::ElectronElectronIntegralIndices& indices_y,
@@ -171,7 +177,6 @@ auto boys_index(
 
 }  // anonymous namespace
 
-
 namespace elec
 {
 
@@ -190,8 +195,10 @@ auto electron_electron_integral_contraction(
     double exponent3
 ) -> double
 {
-    const auto [pos_product_01, coeff_product_01] = elec::math::gaussian_product(pos_gauss0, pos_gauss1, exponent0, exponent1);
-    const auto [pos_product_23, coeff_product_23] = elec::math::gaussian_product(pos_gauss2, pos_gauss3, exponent2, exponent3);
+    const auto [pos_product_01, coeff_product_01] =
+        elec::math::gaussian_product(pos_gauss0, pos_gauss1, exponent0, exponent1);
+    const auto [pos_product_23, coeff_product_23] =
+        elec::math::gaussian_product(pos_gauss2, pos_gauss3, exponent2, exponent3);
 
     // clang-format off
     const auto differences_x = make_position_differences(pos_gauss0.x, pos_gauss1.x, pos_gauss2.x, pos_gauss3.x, pos_product_01.x, pos_product_23.x);

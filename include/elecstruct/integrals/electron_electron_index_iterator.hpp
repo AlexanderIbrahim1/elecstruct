@@ -1,7 +1,7 @@
 #pragma once
 
-#include <iterator>
 #include <cstdint>
+#include <iterator>
 
 namespace elec
 {
@@ -39,17 +39,17 @@ public:
     using const_iterator    = const_pointer;
     // clang-format on
 
-    explicit ElectronElectronIndexIterator(
-        std::int64_t idx_l_01_max,
-        std::int64_t idx_l_23_max
-    );
+    explicit ElectronElectronIndexIterator(std::int64_t idx_l_01_max, std::int64_t idx_l_23_max);
 
     auto operator*() const noexcept -> value_type;
     auto operator->() const noexcept -> value_type;
     auto operator++() noexcept -> ElectronElectronIndexIterator&;
     auto operator++(int) noexcept -> ElectronElectronIndexIterator;
     bool operator==(const ElectronElectronIndexIterator&) const noexcept;
-    friend auto operator!=(const ElectronElectronIndexIterator& left, const ElectronElectronIndexIterator& right) noexcept -> bool;
+    friend auto operator!=(
+        const ElectronElectronIndexIterator& left,
+        const ElectronElectronIndexIterator& right
+    ) noexcept -> bool;
     void set_to_end() noexcept;
 
 private:
@@ -65,7 +65,6 @@ private:
     std::int64_t idx_r_23_ {0};
     std::int64_t idx_i_ {0};
 };
-
 
 class ElectronElectronIndexGenerator
 {

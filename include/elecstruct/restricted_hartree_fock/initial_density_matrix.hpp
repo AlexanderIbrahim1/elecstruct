@@ -27,16 +27,12 @@ auto zero_matrix(std::size_t size) -> Eigen::MatrixXd;
 
     Equation 12, middle of the right column on page 25
 */
-auto extended_huckel_guess(
-    const Eigen::MatrixXd& overlap_mtx,
-    const Eigen::MatrixXd& core_hamiltonian_mtx
-) -> Eigen::MatrixXd;
+auto extended_huckel_guess(const Eigen::MatrixXd& overlap_mtx, const Eigen::MatrixXd& core_hamiltonian_mtx)
+    -> Eigen::MatrixXd;
 
 /*
     Approximate the Fock operator using the Core Hamiltonian matrix.
 */
-auto core_hamiltonian_guess(
-    const Eigen::MatrixXd& core_hamiltonian_mtx
-) -> Eigen::MatrixXd;
+auto core_hamiltonian_guess(const Eigen::MatrixXd& core_hamiltonian_mtx) -> Eigen::MatrixXd;
 
 }  // namespace elec

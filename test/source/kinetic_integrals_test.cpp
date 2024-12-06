@@ -32,7 +32,7 @@ TEST_CASE("cyclic shifts")
 
     SECTION("Cartesian3D")
     {
-        const auto positions = coord::Cartesian3D{1.0, 2.0, 3.0};
+        const auto positions = coord::Cartesian3D {1.0, 2.0, 3.0};
 
         const auto directed_orig = elec::DirectedCartesian3D {positions};
         const auto directed_left = elec::left_cyclic_shift(directed_orig);

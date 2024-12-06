@@ -18,12 +18,7 @@
 constexpr auto ABS_TOLERANCE = double {1.0e-6};
 constexpr auto REL_TOLERANCE = double {1.0e-6};
 
-
-auto is_column_equal(
-    const Eigen::VectorXd& vec0,
-    const Eigen::VectorXd& vec1,
-    double tolerance
-) -> bool
+auto is_column_equal(const Eigen::VectorXd& vec0, const Eigen::VectorXd& vec1, double tolerance) -> bool
 {
     if (vec0.size() != vec1.size()) {
         return false;
@@ -40,16 +35,10 @@ auto is_column_equal(
     return true;
 }
 
-
-auto is_column_equal_within_sign(
-    const Eigen::VectorXd& vec0,
-    const Eigen::VectorXd& vec1,
-    double tolerance
-) -> bool
+auto is_column_equal_within_sign(const Eigen::VectorXd& vec0, const Eigen::VectorXd& vec1, double tolerance) -> bool
 {
     return is_column_equal(vec0, vec1, tolerance) || is_column_equal(vec0, -vec1, tolerance);
 }
-
 
 auto are_columns_equal_within_sign(
     const std::vector<Eigen::Vector2d>& vec0,
@@ -72,7 +61,6 @@ auto are_columns_equal_within_sign(
     return true;
 }
 
-
 TEST_CASE("overlap matrix : 1s orbital")
 {
     using AOL = elec::AtomicOrbitalLabel;
@@ -90,13 +78,13 @@ TEST_CASE("overlap matrix : 1s orbital")
     REQUIRE_THAT(overlap_mtx(0, 0), Catch::Matchers::WithinRel(1.0, REL_TOLERANCE));
 }
 
-
 TEST_CASE("transformation matrix")
 {
     // this test performs a comparison with a result from the Python code
     const auto tolerance = 1.0e-5;
 
-    const auto input = [&]() {
+    const auto input = [&]()
+    {
         auto input_ = Eigen::MatrixXd {2, 2};
         input_(0, 0) = 5.0;
         input_(1, 0) = 1.0;
@@ -125,13 +113,10 @@ TEST_CASE("transformation matrix")
     REQUIRE(are_columns_equal_within_sign(expected_columns, actual_columns, tolerance));
 }
 
-
 TEST_CASE("transformation matrix applied to overlap matrix gives identity")
 {
     auto overlap_mtx = Eigen::MatrixXd {3, 3};
-    overlap_mtx << 1.0, 0.2, 0.3,
-                   0.2, 1.0, 0.1,
-                   0.3, 0.1, 1.0;
+    overlap_mtx << 1.0, 0.2, 0.3, 0.2, 1.0, 0.1, 0.3, 0.1, 1.0;
 
     const auto transform_mtx = elec::transformation_matrix(overlap_mtx);
 
@@ -159,30 +144,24 @@ TEST_CASE("example overlap matrix to transformation matrix")
         example taken for water from online
         SOURCE: https://www.han-sur-lesse-winterschool.nl/downloads/2021/slides_filot.pdf
     */
-    
+
     auto overlap_mtx = Eigen::MatrixXd {7, 7};
 
-    overlap_mtx << 1.0000,  0.2367,  0.0000,  0.0000,  0.0000,  0.1584,  0.1584,
-                   0.2367,  1.0000,  0.0000,  0.0000,  0.0000,  0.8098,  0.8098,
-                   0.0000,  0.0000,  1.0000,  0.0000,  0.0000,  0.3714, -0.3714,
-                   0.0000,  0.0000,  0.0000,  1.0000,  0.0000,  0.0000,  0.0000,
-                   0.0000,  0.0000,  0.0000,  0.0000,  1.0000, -0.2322, -0.2322,
-                   0.1584,  0.8098,  0.3714,  0.0000, -0.2322,  1.0000,  0.6158,
-                   0.1584,  0.8098, -0.3714,  0.0000, -0.2322,  0.6158,  1.0000;
+    overlap_mtx << 1.0000, 0.2367, 0.0000, 0.0000, 0.0000, 0.1584, 0.1584, 0.2367, 1.0000, 0.0000, 0.0000, 0.0000,
+        0.8098, 0.8098, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000, 0.3714, -0.3714, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000,
+        0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, -0.2322, -0.2322, 0.1584, 0.8098, 0.3714, 0.0000,
+        -0.2322, 1.0000, 0.6158, 0.1584, 0.8098, -0.3714, 0.0000, -0.2322, 0.6158, 1.0000;
 
     auto expected_transform_mtx = Eigen::MatrixXd {7, 7};
-    expected_transform_mtx << -0.1769, -0.0000,  0.8737, -0.0000, -0.5128, -0.0000,  0.1205,
-                               2.7839,  0.0000, -0.2202, -0.0000, -0.1818, -0.0000,  0.3609,
-                               0.0000, -1.7232,  0.0000,  0.0000, -0.0000,  0.7607,  0.0000,
-                              -0.0000,  0.0000, -0.0000, -1.0000,  0.0000,  0.0000,  0.0000,
-                              -0.7851, -0.0000, -0.5239, -0.0000, -0.8095, -0.0000, -0.0983,
-                              -1.5636,  2.1266, -0.1140,  0.0000,  0.0704,  0.3082,  0.3391,
-                              -1.5636, -2.1266, -0.1140, -0.0000,  0.0704, -0.3082,  0.3391;
-    
+    expected_transform_mtx << -0.1769, -0.0000, 0.8737, -0.0000, -0.5128, -0.0000, 0.1205, 2.7839, 0.0000, -0.2202,
+        -0.0000, -0.1818, -0.0000, 0.3609, 0.0000, -1.7232, 0.0000, 0.0000, -0.0000, 0.7607, 0.0000, -0.0000, 0.0000,
+        -0.0000, -1.0000, 0.0000, 0.0000, 0.0000, -0.7851, -0.0000, -0.5239, -0.0000, -0.8095, -0.0000, -0.0983,
+        -1.5636, 2.1266, -0.1140, 0.0000, 0.0704, 0.3082, 0.3391, -1.5636, -2.1266, -0.1140, -0.0000, 0.0704, -0.3082,
+        0.3391;
+
     const auto actual_transform_mtx = elec::transformation_matrix(overlap_mtx);
 
     for (Eigen::Index i {0}; i < 7; ++i) {
         REQUIRE(is_column_equal_within_sign(expected_transform_mtx.col(i), actual_transform_mtx.col(i), tolerance));
     }
-
 }

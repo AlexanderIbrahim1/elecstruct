@@ -23,7 +23,7 @@ auto main(int argc, const char** argv) -> int
     parser.parse_all();
 
     const auto& info = parser.parsed_information();
-    
+
     auto atoms = info.atom_information();
     elec::fill_atomic_orbitals_sto3g(atoms);
 

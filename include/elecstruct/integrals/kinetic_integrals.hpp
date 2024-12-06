@@ -57,12 +57,14 @@ struct DirectedCartesian3D
 };
 
 template <typename T>
-auto left_cyclic_shift(const T& coordinates) -> T {
+auto left_cyclic_shift(const T& coordinates) -> T
+{
     return T {coordinates.other0, coordinates.other1, coordinates.main};
 }
 
 template <typename T>
-auto right_cyclic_shift(const T& coordinates) -> T {
+auto right_cyclic_shift(const T& coordinates) -> T
+{
     return T {coordinates.other1, coordinates.main, coordinates.other0};
 }
 

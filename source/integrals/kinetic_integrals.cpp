@@ -3,8 +3,8 @@
 
 #include "elecstruct/basis/basis.hpp"
 #include "elecstruct/cartesian3d.hpp"
-#include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/integrals/overlap_integrals.hpp"
+#include "elecstruct/mathtools/gaussian.hpp"
 #include "elecstruct/orbitals.hpp"
 
 #include "elecstruct/integrals/kinetic_integrals.hpp"

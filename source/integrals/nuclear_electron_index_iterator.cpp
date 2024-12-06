@@ -29,7 +29,6 @@ auto calculate_idx_r_max_(std::int64_t idx_l) noexcept -> std::int64_t
 
 }  // anonymous namespace
 
-
 namespace elec
 {
 
@@ -92,7 +91,6 @@ auto operator!=(const NuclearElectronIndexIterator& left, const NuclearElectronI
 {
     return !(left == right);
 }
-
 
 // --- NuclearElectronIndexGenerator
 

@@ -19,14 +19,13 @@ auto get_h2_basis() -> std::vector<elec::AtomicOrbitalInfoSTO3G>
 
     const auto atoms = std::vector<elec::AtomInfo> {
         elec::AtomInfo {elec::AtomLabel::H, pos0, {AOL::S1}},
-        elec::AtomInfo {elec::AtomLabel::H, pos1, {AOL::S1}}
+         elec::AtomInfo {elec::AtomLabel::H, pos1, {AOL::S1}}
     };
 
     const auto basis = elec::create_atomic_orbitals_sto3g(atoms);
 
     return basis;
 }
-
 
 TEST_CASE("h2 two-electron integrals")
 {

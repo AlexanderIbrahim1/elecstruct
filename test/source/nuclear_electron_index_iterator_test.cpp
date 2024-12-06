@@ -8,20 +8,15 @@
 
 #include "elecstruct/integrals/nuclear_electron_index_iterator.hpp"
 
-
 using Indices = std::tuple<std::int64_t, std::int64_t, std::int64_t>;
-
 
 auto indices_via_standard_nested_loops(std::int64_t angmom_0, std::int64_t angmom_1) -> std::vector<Indices>
 {
     auto output = std::vector<Indices> {};
 
-    for (std::int64_t idx_l {0}; idx_l < angmom_0 + angmom_1 + 1; ++idx_l)
-    {
-        for (std::int64_t idx_r {0}; idx_r < static_cast<std::int64_t>(idx_l / 2) + 1; ++idx_r)
-        {
-            for (std::int64_t idx_i {0}; idx_i < static_cast<std::int64_t>((idx_l - 2 * idx_r) / 2) + 1; ++idx_i)
-            {
+    for (std::int64_t idx_l {0}; idx_l < angmom_0 + angmom_1 + 1; ++idx_l) {
+        for (std::int64_t idx_r {0}; idx_r < static_cast<std::int64_t>(idx_l / 2) + 1; ++idx_r) {
+            for (std::int64_t idx_i {0}; idx_i < static_cast<std::int64_t>((idx_l - 2 * idx_r) / 2) + 1; ++idx_i) {
                 output.push_back({idx_l, idx_r, idx_i});
             }
         }
@@ -29,7 +24,6 @@ auto indices_via_standard_nested_loops(std::int64_t angmom_0, std::int64_t angmo
 
     return output;
 }
-
 
 auto indices_via_custom_iterator(std::int64_t angmom_0, std::int64_t angmom_1) -> std::vector<Indices>
 {
@@ -41,7 +35,6 @@ auto indices_via_custom_iterator(std::int64_t angmom_0, std::int64_t angmom_1) -
 
     return output;
 }
-
 
 TEST_CASE("nuclear-electron integral index iterator")
 {

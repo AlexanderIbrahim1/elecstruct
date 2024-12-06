@@ -39,49 +39,47 @@ constexpr auto T_DATA_ = std::array<double, 12> {
     0.11764705882352941e00,
     0.10526315789473684e00,
     0.95238095238095233e-01,
-    0.86956521739130432e-01
-};
+    0.86956521739130432e-01};
 
 constexpr auto ZZ_DATA_ = std::array<std::complex<double>, 10> {
-    std::complex {0.64304020652330500e01, 0.18243694739308491e02},
-    std::complex {0.64304020652330500e01, -0.18243694739308491e02},
-    std::complex {-0.12572081889410178e01, 0.14121366415342502e02},
+    std::complex {0.64304020652330500e01,  0.18243694739308491e02 },
+    std::complex {0.64304020652330500e01,  -0.18243694739308491e02},
+    std::complex {-0.12572081889410178e01, 0.14121366415342502e02 },
     std::complex {-0.12572081889410178e01, -0.14121366415342502e02},
-    std::complex {-0.54103079551670268e01, 0.10457909575828442e02},
+    std::complex {-0.54103079551670268e01, 0.10457909575828442e02 },
     std::complex {-0.54103079551670268e01, -0.10457909575828442e02},
-    std::complex {-0.78720025594983341e01, 0.69309284623985663e01},
+    std::complex {-0.78720025594983341e01, 0.69309284623985663e01 },
     std::complex {-0.78720025594983341e01, -0.69309284623985663e01},
-    std::complex {-0.92069621609035313e01, 0.34559308619699376e01},
+    std::complex {-0.92069621609035313e01, 0.34559308619699376e01 },
     std::complex {-0.92069621609035313e01, -0.34559308619699376e01}
 };
 
 constexpr auto FACT_DATA_ = std::array<std::complex<double>, 10> {
-    std::complex {0.13249210991966042e-02, 0.91787356295447745e-03},
+    std::complex {0.13249210991966042e-02, 0.91787356295447745e-03 },
     std::complex {0.13249210991966042e-02, -0.91787356295447745e-03},
-    std::complex {0.55545905103006735e-01, -0.35151540664451613e01},
-    std::complex {0.55545905103006735e-01, 0.35151540664451613e01},
-    std::complex {-0.11456407675096416e03, 0.19213789620924834e03},
-    std::complex {-0.11456407675096416e03, -0.19213789620924834e03},
-    std::complex {0.20915556220686653e04, -0.15825742912360638e04},
-    std::complex {0.20915556220686653e04, 0.15825742912360638e04},
-    std::complex {-0.94779394228935325e04, 0.30814443710192086e04},
-    std::complex {-0.94779394228935325e04, -0.30814443710192086e04}
+    std::complex {0.55545905103006735e-01, -0.35151540664451613e01 },
+    std::complex {0.55545905103006735e-01, 0.35151540664451613e01  },
+    std::complex {-0.11456407675096416e03, 0.19213789620924834e03  },
+    std::complex {-0.11456407675096416e03, -0.19213789620924834e03 },
+    std::complex {0.20915556220686653e04,  -0.15825742912360638e04 },
+    std::complex {0.20915556220686653e04,  0.15825742912360638e04  },
+    std::complex {-0.94779394228935325e04, 0.30814443710192086e04  },
+    std::complex {-0.94779394228935325e04, -0.30814443710192086e04 }
 };
 
 // WW_DATA: list[complex] = [
 constexpr auto WW_DATA_ = std::array<std::complex<double>, 10> {
     std::complex {-0.83418049867878959e-08, -0.70958810331788253e-08},
-    std::complex {-0.83418050437598581e-08, 0.70958810084577824e-08},
-    std::complex {0.82436739552884774e-07, -0.27704117936134414e-06},
-    std::complex {0.82436739547688584e-07, 0.27704117938414886e-06},
-    std::complex {0.19838416382728666e-05, 0.78321058613942770e-06},
-    std::complex {0.19838416382681279e-05, -0.78321058613180811e-06},
-    std::complex {-0.47372729839268780e-05, 0.58076919074212929e-05},
+    std::complex {-0.83418050437598581e-08, 0.70958810084577824e-08 },
+    std::complex {0.82436739552884774e-07,  -0.27704117936134414e-06},
+    std::complex {0.82436739547688584e-07,  0.27704117938414886e-06 },
+    std::complex {0.19838416382728666e-05,  0.78321058613942770e-06 },
+    std::complex {0.19838416382681279e-05,  -0.78321058613180811e-06},
+    std::complex {-0.47372729839268780e-05, 0.58076919074212929e-05 },
     std::complex {-0.47372729839287016e-05, -0.58076919074154416e-05},
     std::complex {-0.68186014282131608e-05, -0.13515261354290787e-04},
-    std::complex {-0.68186014282138385e-05, 0.13515261354295612e-04}
+    std::complex {-0.68186014282138385e-05, 0.13515261354295612e-04 }
 };
-
 
 /*
     NOTE: the check to make sure that n <= 12 should be done outside of this function.
@@ -148,7 +146,7 @@ auto boys_fast_small_(double x, std::size_t n) -> double
 
     std::array<double, BOYS_ORDER_UPPER_BOUND_> values;
     values[12] = 2.0 * rtmp + tmp;
-    
+
     if (n == 12) {
         return values[12];
     }
@@ -175,21 +173,19 @@ auto boys_fast_small_(double x, std::size_t n) -> double
 
 }  // anonymous namespace
 
-
 namespace elec
 {
 
 auto boys_beylkin_sharma(double x, std::size_t n) -> double
 {
     if (n >= BOYS_ORDER_UPPER_BOUND_) {
-        throw std::runtime_error {
-            "This implementation only works for the Boys function up to and including order 12."
-        };
+        throw std::runtime_error {"This implementation only works for the Boys function up to and including order 12."};
     }
 
     if (std::fabs(x) >= LARGE_CUTOFF_) {
         return boys_fast_large_(x, n);
-    } else {
+    }
+    else {
         return boys_fast_small_(x, n);
     }
 }

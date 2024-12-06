@@ -3,8 +3,8 @@
 #include <stdexcept>
 #include <string_view>
 
-#include "extern/tomlplusplus/toml.hpp"
 #include "extern/mapbox/eternal.hpp"
+#include "extern/tomlplusplus/toml.hpp"
 
 #include "elecstruct/input_file_parser/input_file_options.hpp"
 
@@ -12,7 +12,7 @@ namespace
 {
 
 constexpr auto map_bool_to_verbose = mapbox::eternal::map<bool, elec::Verbose>({
-    {true, elec::Verbose::TRUE},
+    {true,  elec::Verbose::TRUE },
     {false, elec::Verbose::FALSE}
 });
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <iterator>
 #include <cstdint>
+#include <iterator>
 #include <tuple>
 
 namespace elec
@@ -28,7 +28,8 @@ public:
     auto operator++() noexcept -> NuclearElectronIndexIterator&;
     auto operator++(int) noexcept -> NuclearElectronIndexIterator;
     bool operator==(const NuclearElectronIndexIterator&) const noexcept;
-    friend auto operator!=(const NuclearElectronIndexIterator& left, const NuclearElectronIndexIterator& right) noexcept -> bool;
+    friend auto operator!=(const NuclearElectronIndexIterator& left, const NuclearElectronIndexIterator& right) noexcept
+        -> bool;
 
     void set_to_end() noexcept;
 
@@ -41,7 +42,6 @@ private:
     std::int64_t idx_r_ {0};
     std::int64_t idx_i_ {0};
 };
-
 
 class NuclearElectronIndexGenerator
 {

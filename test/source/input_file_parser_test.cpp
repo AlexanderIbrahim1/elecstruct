@@ -2,16 +2,15 @@
 #include <sstream>
 
 #include <catch2/catch_test_macros.hpp>
-#include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <catch2/generators/catch_generators.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 
 #include "elecstruct/geometry.hpp"
 #include "elecstruct/input_file_parser/input_file_parser.hpp"
 
-
 TEST_CASE("parse ATOM_INFORMATION")
 {
-    constexpr auto ABS_TOL = double{1.0e-8};
+    constexpr auto ABS_TOL = double {1.0e-8};
 
     SECTION("one atom at origin")
     {
@@ -127,7 +126,8 @@ TEST_CASE("parse INITIAL_FOCK_GUESS")
         );
 
         auto input_stream = std::stringstream {};
-        input_stream << "initial_fock_guess = " << "\"" << pair.input << "\"" << '\n';
+        input_stream << "initial_fock_guess = "
+                     << "\"" << pair.input << "\"" << '\n';
 
         auto parser = elec::InputFileParser {input_stream};
         parser.parse(elec::InputFileKey::INITIAL_FOCK_GUESS);
@@ -336,10 +336,7 @@ TEST_CASE("parse VERBOSE")
             elec::Verbose expected;
         };
 
-        const auto pair = GENERATE(
-            TestPair {true, elec::Verbose::TRUE},
-            TestPair {false, elec::Verbose::FALSE}
-        );
+        const auto pair = GENERATE(TestPair {true, elec::Verbose::TRUE}, TestPair {false, elec::Verbose::FALSE});
 
         auto input_stream = std::stringstream {};
         input_stream << "verbose = " << std::boolalpha << pair.input << '\n';

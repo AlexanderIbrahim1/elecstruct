@@ -12,26 +12,32 @@ namespace elec
 */
 auto yoshimine_sort(std::size_t a, std::size_t b, std::size_t c, std::size_t d) noexcept -> std::size_t
 {
-    const auto ab = [&]() {
+    const auto ab = [&]()
+    {
         if (a > b) {
             return a * (a + 1) / 2 + b;
-        } else {
+        }
+        else {
             return b * (b + 1) / 2 + a;
         }
     }();
 
-    const auto cd = [&]() {
+    const auto cd = [&]()
+    {
         if (c > d) {
             return c * (c + 1) / 2 + d;
-        } else {
+        }
+        else {
             return d * (d + 1) / 2 + c;
         }
     }();
 
-    const auto abcd = [&]() {
+    const auto abcd = [&]()
+    {
         if (ab > cd) {
             return ab * (ab + 1) / 2 + cd;
-        } else {
+        }
+        else {
             return cd * (cd + 1) / 2 + ab;
         }
     }();
@@ -43,20 +49,23 @@ auto yoshimine_sort(std::size_t a, std::size_t b, std::size_t c, std::size_t d) 
     The TwoElectronIntegralGrid is a wrapper around a hashmap that converts the four indices
     into a Yoshimine index before interfacing with the hashmap.
 */
-auto TwoElectronIntegralGrid::exists(std::size_t i0, std::size_t i1, std::size_t i2, std::size_t i3) const noexcept -> bool
+auto TwoElectronIntegralGrid::exists(std::size_t i0, std::size_t i1, std::size_t i2, std::size_t i3) const noexcept
+    -> bool
 {
     const auto i_yoshimine = yoshimine_sort(i0, i1, i2, i3);
 
     return integrals_.find(i_yoshimine) != integrals_.end();
-} 
+}
 
-auto TwoElectronIntegralGrid::set(std::size_t i0, std::size_t i1, std::size_t i2, std::size_t i3, double value) noexcept -> void
+auto TwoElectronIntegralGrid::set(std::size_t i0, std::size_t i1, std::size_t i2, std::size_t i3, double value) noexcept
+    -> void
 {
     const auto i_yoshimine = yoshimine_sort(i0, i1, i2, i3);
     integrals_[i_yoshimine] = value;
 }
 
-auto TwoElectronIntegralGrid::get(std::size_t i0, std::size_t i1, std::size_t i2, std::size_t i3) const noexcept -> double
+auto TwoElectronIntegralGrid::get(std::size_t i0, std::size_t i1, std::size_t i2, std::size_t i3) const noexcept
+    -> double
 {
     const auto i_yoshimine = yoshimine_sort(i0, i1, i2, i3);
 
@@ -64,4 +73,3 @@ auto TwoElectronIntegralGrid::get(std::size_t i0, std::size_t i1, std::size_t i2
 }
 
 }  // namespace elec
-
