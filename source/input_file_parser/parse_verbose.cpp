@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <sstream>
 #include <stdexcept>
 #include <string_view>
@@ -10,35 +11,33 @@
 namespace
 {
 
-using estr = mapbox::eternal::string;
-
-constexpr auto map_string_to_verbose = mapbox::eternal::map<estr, elec::Verbose>({
-    {"true", elec::Verbose::TRUE},
-    {"false", elec::Verbose::FALSE}
+constexpr auto map_bool_to_verbose = mapbox::eternal::map<bool, elec::Verbose>({
+    {true, elec::Verbose::TRUE},
+    {false, elec::Verbose::FALSE}
 });
 
 auto parse_verbose(const toml::table& table) -> elec::Verbose
 {
-    const auto verbose_string = table["verbose"].as_string();
-    if (!verbose_string) {
+    const auto verbose_toml = table["verbose"].as_boolean();
+    if (!verbose_toml) {
         throw std::runtime_error {"Failed to parse 'verbose'\n"};
     }
 
-    const auto str = *verbose_string->value_exact<std::string>();
+    const auto verbose = *verbose_toml->value_exact<bool>();
 
-    if (map_string_to_verbose.find(str.c_str()) == map_string_to_verbose.end()) {
+    if (map_bool_to_verbose.find(verbose) == map_bool_to_verbose.end()) {
         auto err_msg = std::stringstream {};
         err_msg << "ERROR: Invalid choice of 'verbose'.\n";
         err_msg << "Allowed options: \n";
-        for (const auto& item : map_string_to_verbose) {
-            err_msg << "  - " << item.first.c_str() << '\n';
+        for (const auto& item : map_bool_to_verbose) {
+            err_msg << "  - " << std::boolalpha << item.first << '\n';
         }
         err_msg << '\n';
 
         throw std::runtime_error {err_msg.str()};
     }
 
-    return map_string_to_verbose.at(str.c_str());
+    return map_bool_to_verbose.at(verbose);
 }
 
 }  // anonymous namespace

@@ -20,6 +20,7 @@ struct AtomicOrbitalInfoSTO3G
     std::array<GaussianContractionInfo, 3> gaussians;
 };
 
+void fill_atomic_orbitals_sto3g(std::vector<AtomInfo>& atom_infos);
 auto create_atomic_orbitals_sto3g(const std::vector<AtomInfo>& atom_infos) -> std::vector<AtomicOrbitalInfoSTO3G>;
 
 }  // namespace elec

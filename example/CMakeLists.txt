@@ -27,4 +27,11 @@ target_include_directories(
     SYSTEM PRIVATE "${EIGEN_PATH}"
 )
 
+add_example(main)
+target_include_directories(
+    main
+    ${warning_guard}
+    SYSTEM PRIVATE "${EIGEN_PATH}"
+)
+
 add_folders(Example)

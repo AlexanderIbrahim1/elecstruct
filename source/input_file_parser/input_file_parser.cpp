@@ -118,6 +118,8 @@ auto InputFileParser::parse_all() -> void
     parse(IFK::MAX_HARTREE_FOCK_ITERATIONS);
     parse(IFK::TOL_CHANGE_DENSITY_MATRIX);
     parse(IFK::TOL_CHANGE_HARTREE_FOCK_ENERGY);
+    parse(IFK::N_ELECTRONS);
+    parse(IFK::VERBOSE);
 }
 
 auto InputFileParser::parsed_information() const -> const ParsedInformation&

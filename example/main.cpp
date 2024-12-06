@@ -24,15 +24,25 @@ auto main(int argc, const char** argv) -> int
 
     const auto& info = parser.parsed_information();
     
-    const auto atoms = info.atom_information();
-    const auto inital_fock = info.initial_fock_guess();
-    const auto max_iterations = info.max_hartree_fock_iterations();
-    const auto tol_change_density_matrix = info.tol_change_density_matrix();
-    const auto tol_change_hartree_fock_energy = info.tol_change_hartree_fock_energy();
-    const auto n_electrons = info.n_electrons();
-    const auto verbose = info.verbose();
+    auto atoms = info.atom_information();
+    elec::fill_atomic_orbitals_sto3g(atoms);
+
+//     for (const auto& atom : atoms) {
+//         std::cout << "atom.label = " << static_cast<int>(atom.label) << '\n';
+//         std::cout << "atom.pos = " << atom.position << '\n';
+//         for (const auto& orbital : atom.orbitals) {
+//             std::cout << "orbital: " << static_cast<int>(orbital) << '\n';
+//         }
+//     }
 
     const auto basis = elec::create_atomic_orbitals_sto3g(atoms);
+    const auto initial_fock = info.initial_fock_guess();
+    const auto n_electrons = info.n_electrons();
+    const auto max_iter = info.max_hartree_fock_iterations();
+    const auto tolerance = info.tol_change_density_matrix();
+    const auto verbose = info.verbose();
+
+    elec::perform_restricted_hartree_fock(atoms, basis, initial_fock, n_electrons, max_iter, tolerance, verbose);
 
     return 0;
 }

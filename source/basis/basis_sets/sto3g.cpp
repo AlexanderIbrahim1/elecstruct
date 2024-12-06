@@ -71,6 +71,38 @@ constexpr auto gaussian_constants_sto3g = mapbox::eternal::map<elec::AtomicOrbit
 namespace elec
 {
 
+void fill_atomic_orbitals_sto3g(std::vector<AtomInfo>& atom_infos)
+{
+    using AL = AtomLabel;
+    using AOL = AtomicOrbitalLabel;
+
+    for (auto& atom : atom_infos) {
+        switch (atom.label)
+        {
+            case AL::H:
+            case AL::He: {
+                atom.orbitals.push_back(AOL::S1);
+                break;
+            };
+            case AL::Li:
+            case AL::Be:
+            case AL::B:
+            case AL::C:
+            case AL::N:
+            case AL::O:
+            case AL::F: {
+                atom.orbitals.push_back(AOL::S1);
+                atom.orbitals.push_back(AOL::S2);
+                atom.orbitals.push_back(AOL::P2);
+                break;
+            }
+            default: {
+                throw std::runtime_error {"UNREACHABLE: no atoms beyond 'F' on the periodic table have been implemented yet."};
+            }
+        }
+    }
+}
+
 auto create_atomic_orbitals_sto3g(const std::vector<AtomInfo>& atom_infos) -> std::vector<AtomicOrbitalInfoSTO3G>
 {
     using AOL = AtomicOrbitalLabel;

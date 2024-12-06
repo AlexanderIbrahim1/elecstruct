@@ -10,6 +10,7 @@
 #include "elecstruct/matrices.hpp"
 #include "elecstruct/restricted_hartree_fock/initial_density_matrix.hpp"
 #include "elecstruct/restricted_hartree_fock/step.hpp"
+#include "elecstruct/input_file_parser/input_file_parser.hpp"
 
 #include "elecstruct/restricted_hartree_fock/restricted_hartree_fock.hpp"
 
@@ -54,6 +55,32 @@ void maybe_print_divider(elec::Verbose is_verbose)
     }
 }
 
+auto inital_fock_guess_matrix(
+    elec::InitialFockGuess guess,
+    const Eigen::MatrixXd& overlap_mtx,
+    const Eigen::MatrixXd& core_hamiltonian_mtx
+) -> Eigen::MatrixXd
+{
+    using IFG = elec::InitialFockGuess;
+
+    switch (guess)
+    {
+        case IFG::ZERO_MATRIX: {
+            const auto size = static_cast<std::size_t>(overlap_mtx.cols());
+            return elec::zero_matrix(size);
+        }
+        case IFG::CORE_HAMILTONIAN_MATRIX: {
+            return elec::core_hamiltonian_guess(core_hamiltonian_mtx);
+        }
+        case IFG::EXTENDED_HUCKEL_MATRIX: {
+            return elec::extended_huckel_guess(overlap_mtx, core_hamiltonian_mtx);
+        }
+        default: {
+            throw std::runtime_error {"UNREACHABLE: unknown InitialFockGuess passed to function!"};
+        }
+    }
+}
+
 }  // anonymous namespace
 
 
@@ -66,9 +93,10 @@ namespace elec
 void perform_restricted_hartree_fock(
     const std::vector<AtomInfo>& atoms,
     const std::vector<AtomicOrbitalInfoSTO3G>& basis,
+    InitialFockGuess initial_fock,
     std::size_t n_electrons,
     std::size_t n_max_iter,
-    double density_mtx_convergence,
+    double tolerance_change_density_matrix,
     Verbose is_verbose
 )
 {
@@ -127,10 +155,8 @@ void perform_restricted_hartree_fock(
     std::cout << "\nPerforming iteration 0\n";
 
     std::cout << "Calculating the initial Fock matrix\n";
-    // auto fock_mtx = core_hamiltonian_mtx.eval();
-    const auto huckel_constant = double {1.75};
-    auto fock_mtx = extended_huckel_guess(overlap_mtx, core_hamiltonian_mtx, huckel_constant);
-    // auto fock_mtx = zero_matrix(basis.size());
+    auto fock_mtx = inital_fock_guess_matrix(initial_fock, overlap_mtx, core_hamiltonian_mtx);
+
     maybe_print_divider(is_verbose);
 
     std::cout << "Calculating initial density matrix\n";
@@ -140,7 +166,7 @@ void perform_restricted_hartree_fock(
     std::cout << "Total energy = " << tot_energy << '\n';
 
     // --- REMAINING ITERATIONS ---
-    for (std::size_t i_iter {1}; i_iter < n_max_iter; ++i_iter) {
+    for (std::size_t i_iter {1}; i_iter <= n_max_iter; ++i_iter) {
         std::cout << "\nPerforming iteration " << i_iter << '\n';
 
         std::cout << "Calculating the Fock matrix\n";
@@ -156,7 +182,7 @@ void perform_restricted_hartree_fock(
         const auto difference = density_matrix_difference(prev_density_mtx, density_mtx);
         std::cout << "Density matrix difference = " << std::fixed << std::setprecision(12) << difference << '\n';
 
-        if (difference < density_mtx_convergence) {
+        if (difference < tolerance_change_density_matrix) {
             std::cout << "\nConverged!\n";
             std::cout << "The total energy is " << tot_energy << " A.U. \n";
             return;

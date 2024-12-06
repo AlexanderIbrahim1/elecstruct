@@ -29,8 +29,7 @@ auto zero_matrix(std::size_t size) -> Eigen::MatrixXd;
 */
 auto extended_huckel_guess(
     const Eigen::MatrixXd& overlap_mtx,
-    const Eigen::MatrixXd& core_hamiltonian_mtx,
-    double huckel_constant
+    const Eigen::MatrixXd& core_hamiltonian_mtx
 ) -> Eigen::MatrixXd;
 
 /*

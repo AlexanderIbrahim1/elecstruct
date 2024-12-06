@@ -34,13 +34,14 @@ auto main() -> int
     };
 
     const auto basis = elec::create_atomic_orbitals_sto3g(atoms);
+    const auto initial_fock = elec::InitialFockGuess::ZERO_MATRIX;
 
     const auto n_electrons = std::size_t {10};
     const auto n_max_iter = std::size_t {100};
     const auto tolerance = double {1.0e-8};
     const auto verbose = elec::Verbose::TRUE;
 
-    elec::perform_restricted_hartree_fock(atoms, basis, n_electrons, n_max_iter, tolerance, verbose);
+    elec::perform_restricted_hartree_fock(atoms, basis, initial_fock, n_electrons, n_max_iter, tolerance, verbose);
 
     return 0;
 }

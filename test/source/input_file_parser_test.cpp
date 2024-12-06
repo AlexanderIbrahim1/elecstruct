@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <sstream>
 
 #include <catch2/catch_test_macros.hpp>
@@ -331,17 +332,17 @@ TEST_CASE("parse VERBOSE")
     {
         struct TestPair
         {
-            std::string input;
+            bool input;
             elec::Verbose expected;
         };
 
         const auto pair = GENERATE(
-            TestPair {"true", elec::Verbose::TRUE},
-            TestPair {"false", elec::Verbose::FALSE}
+            TestPair {true, elec::Verbose::TRUE},
+            TestPair {false, elec::Verbose::FALSE}
         );
 
         auto input_stream = std::stringstream {};
-        input_stream << "verbose = " << "\"" << pair.input << "\"" << '\n';
+        input_stream << "verbose = " << std::boolalpha << pair.input << '\n';
 
         auto parser = elec::InputFileParser {input_stream};
         parser.parse(elec::InputFileKey::VERBOSE);
@@ -355,7 +356,7 @@ TEST_CASE("parse VERBOSE")
     SECTION("invalid throws")
     {
         auto input_stream = std::stringstream {};
-        input_stream << R"(verbose = "invalid_type"\n)";
+        input_stream << R"(verbose = invalid_type\n)";
 
         auto parser = elec::InputFileParser {input_stream};
 
